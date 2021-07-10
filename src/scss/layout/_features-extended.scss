@@ -20,8 +20,9 @@
 	display: flex;
 	flex-wrap: wrap;
 	margin-top: -24px;
-
+	background: #000;
 	&:last-of-type {
+		background: #000;
 		margin-bottom: -24px;
 	}
 
@@ -35,6 +36,7 @@
 }
 
 .feature-extended-image {
+	background: #000;
 	position: relative;
 	margin-bottom: 32px;
 
