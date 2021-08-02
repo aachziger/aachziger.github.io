@@ -126,3 +126,11 @@
         margin-bottom: 0;
     }
 }
+@media (min-width: 1440px){
+	.site-footer::before{
+		left:0 !important;
+		background-size: 100% 582px !important;
+		width:100% !important;
+	}
+
+}

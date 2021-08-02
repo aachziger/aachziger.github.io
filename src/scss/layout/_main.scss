@@ -1,9 +1,9 @@
 .is-boxed {
-    background-color: #000;
+    background: #0B0D19;
 }
 
 .body-wrap {
-    background: #000;
+    background: #0B0D19;
     overflow: hidden;
     /* Sticky footer */
     display: flex;
@@ -12,22 +12,19 @@
 }
 
 .boxed-container {
-    max-width: 1440px;
+    max-width: 100%;
     margin: 0 auto;
-    @include shadow;
-    background: #000;
+    //@include shadow;
 }
 
 main {
     flex: 1 0 auto;
-    background-color: color(bg, 1i);
 }
 
 .section-inner {
     position: relative; /* To always display inner elements above pseudo decorative stuff */
     padding-top: 48px;
     padding-bottom: 48px;
-    background: #000;
 }
 
 @include media( '>medium' ) {
