@@ -25,7 +25,6 @@
 		max-width: $container__width-sm;
         padding-left: 0;
         padding-right: 0;
-				background-color: color(bg, 1i);
     }
 }
 
@@ -33,7 +32,6 @@
 .screen-reader-text {
 	clip: rect(1px, 1px, 1px, 1px);
 	position: absolute !important;
-	background-color: color(bg, 1i);
 	height: 1px;
 	width: 1px;
 	overflow: hidden;
@@ -54,7 +52,7 @@
 	    line-height: 16px;
 	    text-decoration: none;
 		text-transform: uppercase;
-	    background-color: color(bg, 1i);
+	    background-color: color(bg, 1);
 	    color: color(primary, 1) !important;
 	    border: none;
 		height: auto;
