@@ -1,5 +1,3 @@
-# Zero Death Games
-
 Landing page.
 
 check out:
