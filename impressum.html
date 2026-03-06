@@ -56,9 +56,17 @@
         .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
         .logo img { width: 32px; height: 32px; border-radius: 7px; }
         .logo-name { font-family: var(--font-d); font-size: 15px; font-weight: 600; color: var(--text); }
+        .header-right { display: flex; align-items: center; gap: 16px; }
         .back-link { font-size: 14px; font-weight: 500; color: var(--text-2); transition: color .2s; }
         .back-link:hover { color: var(--text); text-decoration: none; }
         .back-link::before { content: '← '; }
+        .lang-btn {
+            background: none; border: 1px solid var(--border);
+            color: var(--text-2); font-family: var(--font); font-size: 13px;
+            font-weight: 600; letter-spacing: .5px; padding: 4px 10px;
+            border-radius: 6px; cursor: pointer; transition: color .2s, border-color .2s;
+        }
+        .lang-btn:hover { color: var(--text); border-color: rgba(255,255,255,.2); }
 
         /* Main content */
         main {
@@ -122,17 +130,20 @@
             <img src="dist/images/blueYellow.gif" alt="Logo">
             <span class="logo-name">Andrei Achziger</span>
         </a>
-        <a href="index.html" class="back-link">Back to Home</a>
+        <div class="header-right">
+            <button class="lang-btn" id="lang-btn" aria-label="Switch language">DE</button>
+            <a href="index.html" class="back-link" data-i18n="imp.back">Back to Home</a>
+        </div>
     </div>
 </header>
 
 <main>
-    <div class="page-eyebrow">Legal</div>
-    <h1 class="page-title">Impressum</h1>
+    <div class="page-eyebrow" data-i18n="imp.eyebrow">Legal</div>
+    <h1 class="page-title" data-i18n="imp.title">Impressum</h1>
 
     <div class="imp-card">
-        <h2>Contact Information</h2>
-        <p>
+        <h2 data-i18n="imp.contact.heading">Contact Information</h2>
+        <p data-i18n-html="imp.contact.body">
             Name: Andrei Achziger<br>
             Address: Gleiwitzer Straße 6, 49163 Bohmte, Germany<br>
             Email: <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website">andrei.zerodeathgames@gmail.com</a>
@@ -140,18 +151,72 @@
     </div>
 
     <div class="imp-card">
-        <h2>Legal Notice</h2>
-        <p>This Impressum is provided in accordance with applicable legal requirements.</p>
-        <p>The content on this website and associated applications are provided for general information purposes. Andrei Achziger makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Any reliance you place on such information is therefore strictly at your own risk.</p>
+        <h2 data-i18n="imp.legal.heading">Legal Notice</h2>
+        <p data-i18n="imp.legal.p1">This Impressum is provided in accordance with applicable legal requirements.</p>
+        <p data-i18n="imp.legal.p2">The content on this website and associated applications are provided for general information purposes. Andrei Achziger makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Any reliance you place on such information is therefore strictly at your own risk.</p>
     </div>
 </main>
 
 <footer class="site-footer">
     <div class="footer-row">
-        <span class="footer-copy">© 2026 Andrei Achziger · Some rights reserved</span>
-        <a href="index.html" class="footer-home">← Home</a>
+        <span class="footer-copy" data-i18n="imp.footer.copy">© 2026 Andrei Achziger · Some rights reserved</span>
+        <a href="index.html" class="footer-home" data-i18n="imp.footer.home">← Home</a>
     </div>
 </footer>
 
+<script>
+    const T = {
+        en: {
+            'imp.eyebrow':         'Legal',
+            'imp.title':           'Impressum',
+            'imp.back':            'Back to Home',
+            'imp.contact.heading': 'Contact Information',
+            'imp.contact.body':    'Name: Andrei Achziger<br>Address: Gleiwitzer Stra\u00dfe 6, 49163 Bohmte, Germany<br>Email: <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website">andrei.zerodeathgames@gmail.com</a>',
+            'imp.legal.heading':   'Legal Notice',
+            'imp.legal.p1':        'This Impressum is provided in accordance with applicable legal requirements.',
+            'imp.legal.p2':        'The content on this website and associated applications are provided for general information purposes. Andrei Achziger makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Any reliance you place on such information is therefore strictly at your own risk.',
+            'imp.footer.copy':     '\u00a9 2026 Andrei Achziger \u00b7 Some rights reserved',
+            'imp.footer.home':     '\u2190 Home',
+        },
+        de: {
+            'imp.eyebrow':         'Rechtliches',
+            'imp.title':           'Impressum',
+            'imp.back':            'Zur\u00fcck zur Startseite',
+            'imp.contact.heading': 'Kontaktinformationen',
+            'imp.contact.body':    'Name: Andrei Achziger<br>Adresse: Gleiwitzer Stra\u00dfe 6, 49163 Bohmte, Deutschland<br>E-Mail: <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Kontakt von der Website">andrei.zerodeathgames@gmail.com</a>',
+            'imp.legal.heading':   'Rechtlicher Hinweis',
+            'imp.legal.p1':        'Dieses Impressum wird gem\u00e4\u00df den geltenden gesetzlichen Anforderungen bereitgestellt.',
+            'imp.legal.p2':        'Die Inhalte dieser Website und der zugeh\u00f6rigen Anwendungen dienen ausschlie\u00dflich allgemeinen Informationszwecken. Andrei Achziger \u00fcbernimmt keinerlei Gew\u00e4hr, weder ausdr\u00fccklich noch stillschweigend, hinsichtlich der Vollst\u00e4ndigkeit, Richtigkeit, Zuverl\u00e4ssigkeit, Eignung oder Verf\u00fcgbarkeit der Website oder der darin enthaltenen Informationen, Produkte, Dienstleistungen oder Grafiken f\u00fcr irgendwelche Zwecke. Jegliche Nutzung dieser Informationen erfolgt auf eigenes Risiko.',
+            'imp.footer.copy':     '\u00a9 2026 Andrei Achziger \u00b7 Einige Rechte vorbehalten',
+            'imp.footer.home':     '\u2190 Startseite',
+        }
+    };
+
+    function applyLang(lang) {
+        const t = T[lang] || T.en;
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+            const v = t[el.dataset.i18n];
+            if (v !== undefined) el.textContent = v;
+        });
+        document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+            const v = t[el.dataset.i18nHtml];
+            if (v !== undefined) el.innerHTML = v;
+        });
+        document.documentElement.lang = lang;
+        const btn = document.getElementById('lang-btn');
+        if (btn) btn.textContent = lang === 'de' ? 'EN' : 'DE';
+    }
+    function getLang() {
+        return localStorage.getItem('aach_lang') ||
+               ((navigator.language || '').toLowerCase().startsWith('de') ? 'de' : 'en');
+    }
+    function toggleLang() {
+        const next = document.documentElement.lang === 'de' ? 'en' : 'de';
+        localStorage.setItem('aach_lang', next);
+        applyLang(next);
+    }
+    applyLang(getLang());
+    document.getElementById('lang-btn').addEventListener('click', toggleLang);
+</script>
 </body>
 </html>
