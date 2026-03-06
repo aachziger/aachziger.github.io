@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Andrei Achziger — iOS Developer & Indie Game Creator. Apps: MergeKey, Fishy Watch, Weltraum.">
+    <meta name="description" content="Andrei Achziger — iOS Developer &amp; Indie Game Creator. Apps: MergeKey, Fishy Watch, Weltraum.">
     <title>Andrei Achziger</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -102,6 +102,7 @@
             font-family: var(--font-d); font-size: 15px; font-weight: 600;
             letter-spacing: -.2px; color: var(--text);
         }
+        nav { display: flex; align-items: center; gap: 8px; }
         nav ul { display: flex; gap: 30px; list-style: none; }
         nav a { font-size: 14px; font-weight: 500; color: var(--text-2); transition: color .2s; }
         nav a:hover { color: var(--text); }
@@ -110,6 +111,16 @@
             padding: 8px 20px; border-radius: 100px; transition: opacity .2s !important;
         }
         .nav-btn:hover { opacity: .8; }
+
+        /* ─── Language toggle ───────────────────────────────────── */
+        .lang-btn {
+            background: none; border: 1px solid var(--border);
+            border-radius: 100px; padding: 6px 14px;
+            font-family: var(--font); font-size: 12px; font-weight: 700;
+            letter-spacing: .8px; color: var(--text-2);
+            cursor: pointer; transition: all .2s; margin-left: 8px;
+        }
+        .lang-btn:hover { border-color: var(--border-h); color: var(--text); }
 
         /* ─── Hero ──────────────────────────────────────────────── */
         .hero {
@@ -224,12 +235,10 @@
             transition: opacity .65s ease, transform .65s ease;
         }
         .app-row.visible { opacity:1; transform:translateY(0); }
-
         .app-row.flip .app-visual { order: 2; }
         .app-row.flip .app-body   { order: 1; }
 
         .app-visual { display: flex; justify-content: center; align-items: center; }
-
         .mockup-shell { position: relative; display: inline-block; }
 
         .glow {
@@ -261,33 +270,21 @@
             text-transform: uppercase; color: var(--text-3);
             margin-bottom: 16px; align-self: flex-start;
         }
-
         .app-banner-img { max-width: 220px; height: auto; margin-bottom: 14px; }
-
         .app-title {
             font-family: var(--font-d);
             font-size: 38px; font-weight: 700; letter-spacing: -1.5px; line-height: 1.08;
             color: var(--text); margin-bottom: 14px;
         }
-        .app-desc {
-            font-size: 16px; color: var(--text-2); line-height: 1.75; margin-bottom: 28px;
-        }
-
+        .app-desc { font-size: 16px; color: var(--text-2); line-height: 1.75; margin-bottom: 28px; }
         .app-perks { display: flex; flex-direction: column; gap: 9px; margin-bottom: 36px; }
         .app-perk  { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-2); }
-        .dot {
-            width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
-        }
+        .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
         .dot-b { background: var(--blue);   box-shadow: 0 0 8px rgba(79,142,247,.7); }
         .dot-g { background: var(--green);  box-shadow: 0 0 8px rgba(62,207,96,.7); }
         .dot-p { background: var(--purple); box-shadow: 0 0 8px rgba(124,92,245,.7); }
-
-        .badge-link img {
-            height: 50px; width: auto;
-            transition: transform .2s, opacity .2s;
-        }
+        .badge-link img { height: 50px; width: auto; transition: transform .2s, opacity .2s; }
         .badge-link img:hover { transform: scale(1.06); opacity: .85; }
-
         .row-sep { height: 1px; background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent); }
 
         /* ─── About ─────────────────────────────────────────────── */
@@ -298,7 +295,8 @@
         .tag {
             background: var(--card); border: 1px solid var(--border);
             border-radius: 100px; padding: 5px 14px;
-            font-size: 13px; color: var(--text-2); transition: background .2s, border-color .2s, color .2s;
+            font-size: 13px; color: var(--text-2);
+            transition: background .2s, border-color .2s, color .2s;
             position: relative; overflow: visible; cursor: default;
         }
         .tag:hover { background: var(--card-h); border-color: var(--border-h); color: var(--text); }
@@ -306,22 +304,15 @@
         /* Hover emoji pop */
         .tag::after {
             content: attr(data-emoji);
-            position: absolute;
-            bottom: calc(100% + 5px);
-            left: 50%;
+            position: absolute; bottom: calc(100% + 5px); left: 50%;
             transform: translateX(-50%) scale(0) translateY(4px);
-            font-size: 22px;
-            line-height: 1;
-            pointer-events: none;
-            opacity: 0;
+            font-size: 22px; line-height: 1; pointer-events: none; opacity: 0;
             transition: transform .25s cubic-bezier(.34,1.56,.64,1), opacity .18s ease;
-            z-index: 10;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,.5));
+            z-index: 10; filter: drop-shadow(0 2px 6px rgba(0,0,0,.5));
         }
         .tag:hover::after {
             transform: translateX(-50%) scale(1) translateY(0);
-            opacity: 1;
-            animation: tagWobble .55s .05s ease both;
+            opacity: 1; animation: tagWobble .55s .05s ease both;
         }
         @keyframes tagWobble {
             0%   { transform: translateX(-50%) scale(1)    rotate(0deg); }
@@ -348,14 +339,10 @@
         .tech { position: relative; z-index: 1; padding: 90px 0; }
         .tech-head { text-align: center; margin-bottom: 56px; }
         .tech-head .sb { margin: 0 auto; }
-
-        .tech-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
-        }
+        .tech-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
         .tech-card {
             background: var(--card); border: 1px solid var(--border);
-            border-radius: var(--r-md); padding: 26px 24px;
-            transition: all .3s;
+            border-radius: var(--r-md); padding: 26px 24px; transition: all .3s;
         }
         .tech-card:hover { background: var(--card-h); border-color: var(--border-h); transform: translateY(-4px); }
         .tech-card-label {
@@ -363,32 +350,20 @@
             text-transform: uppercase; color: var(--text-3);
             margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
         }
-        .tech-card-label .dot { flex-shrink: 0; }
         .tech-pills { display: flex; flex-wrap: wrap; gap: 7px; }
         .tech-pill {
             background: rgba(255,255,255,.05); border: 1px solid var(--border);
             border-radius: 6px; padding: 4px 10px;
-            font-size: 12px; font-weight: 500; color: var(--text-2);
-            letter-spacing: .2px;
+            font-size: 12px; font-weight: 500; color: var(--text-2); letter-spacing: .2px;
         }
-
-        @media (max-width: 1000px) {
-            .tech-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 480px) {
-            .tech-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 1000px) { .tech-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px)  { .tech-grid { grid-template-columns: 1fr; } }
 
         /* ─── Services ──────────────────────────────────────────── */
         .services { position: relative; z-index: 1; padding: 90px 0; }
         .services-head { text-align: center; margin-bottom: 56px; }
         .services-head .sb { margin: 0 auto; }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-        }
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
         .srv {
             background: var(--card); border: 1px solid var(--border);
             border-radius: var(--r-lg); padding: 32px 28px;
@@ -396,39 +371,22 @@
             transition: background .3s, border-color .3s, transform .3s;
         }
         .srv::before {
-            content: '';
-            position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            opacity: 0;
-            transition: opacity .3s;
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            opacity: 0; transition: opacity .3s;
         }
         .srv:hover { background: var(--card-h); border-color: var(--border-h); transform: translateY(-5px); }
         .srv:hover::before { opacity: 1; }
-
         .srv-1::before { background: linear-gradient(90deg, var(--blue), var(--purple)); }
         .srv-2::before { background: linear-gradient(90deg, #a855f7, #ec4899); }
         .srv-3::before { background: linear-gradient(90deg, var(--green), #06b6d4); }
         .srv-4::before { background: linear-gradient(90deg, var(--orange), #f59e0b); }
         .srv-5::before { background: linear-gradient(90deg, #06b6d4, var(--blue)); }
         .srv-6::before { background: linear-gradient(90deg, var(--purple), var(--blue)); }
-
-        .srv-icon {
-            font-size: 32px; margin-bottom: 16px; display: block;
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,.4));
-        }
-        .srv-title {
-            font-family: var(--font-d); font-size: 18px; font-weight: 700;
-            color: var(--text); margin-bottom: 10px; letter-spacing: -.3px;
-        }
-        .srv-desc {
-            font-size: 14px; color: var(--text-2); line-height: 1.7; margin-bottom: 16px;
-        }
+        .srv-icon { font-size: 32px; margin-bottom: 16px; display: block; filter: drop-shadow(0 2px 8px rgba(0,0,0,.4)); }
+        .srv-title { font-family: var(--font-d); font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 10px; letter-spacing: -.3px; }
+        .srv-desc { font-size: 14px; color: var(--text-2); line-height: 1.7; margin-bottom: 16px; }
         .srv-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-        .srv-tag {
-            background: rgba(255,255,255,.05); border: 1px solid var(--border);
-            border-radius: 5px; padding: 3px 9px;
-            font-size: 11px; font-weight: 500; color: var(--text-3); letter-spacing: .3px;
-        }
-
+        .srv-tag { background: rgba(255,255,255,.05); border: 1px solid var(--border); border-radius: 5px; padding: 3px 9px; font-size: 11px; font-weight: 500; color: var(--text-3); letter-spacing: .3px; }
         @media (max-width: 900px) { .services-grid { grid-template-columns: 1fr 1fr; } }
         @media (max-width: 560px) { .services-grid { grid-template-columns: 1fr; } }
 
@@ -437,18 +395,14 @@
         .contact-box {
             background: var(--card); border: 1px solid var(--border);
             border-radius: var(--r-xl); padding: 68px 52px;
-            max-width: 660px; margin: 0 auto;
-            position: relative; overflow: hidden;
+            max-width: 660px; margin: 0 auto; position: relative; overflow: hidden;
         }
         .contact-box::before {
             content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
             width: 55%; height: 1px;
             background: linear-gradient(90deg, transparent, rgba(79,142,247,.55), transparent);
         }
-        .contact-title {
-            font-family: var(--font-d); font-size: 42px; font-weight: 700;
-            letter-spacing: -1.8px; color: var(--text); margin-bottom: 12px;
-        }
+        .contact-title { font-family: var(--font-d); font-size: 42px; font-weight: 700; letter-spacing: -1.8px; color: var(--text); margin-bottom: 12px; }
         .contact-sub { font-size: 16px; color: var(--text-2); line-height: 1.7; margin-bottom: 36px; }
         .email-btn {
             display: inline-flex; align-items: center; gap: 10px;
@@ -456,10 +410,7 @@
             background: rgba(62,207,96,.08); border: 1px solid rgba(62,207,96,.22);
             color: var(--green); font-weight: 600; font-size: 16px; transition: all .2s;
         }
-        .email-btn:hover {
-            background: rgba(62,207,96,.14); border-color: rgba(62,207,96,.45);
-            transform: translateY(-2px);
-        }
+        .email-btn:hover { background: rgba(62,207,96,.14); border-color: rgba(62,207,96,.45); transform: translateY(-2px); }
 
         /* ─── Privacy ───────────────────────────────────────────── */
         .privacy { position: relative; z-index: 1; padding: 0 0 72px; }
@@ -468,10 +419,7 @@
             border-radius: var(--r-lg); padding: 40px 44px;
             max-width: 820px; margin: 0 auto;
         }
-        .privacy-box h3 {
-            font-family: var(--font-d); font-size: 18px; font-weight: 600;
-            color: var(--text); margin-bottom: 14px;
-        }
+        .privacy-box h3 { font-family: var(--font-d); font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
         .privacy-box p { font-size: 13px; color: var(--text-3); line-height: 1.75; margin-bottom: 10px; }
         .privacy-box p:last-child { margin-bottom: 0; }
 
@@ -486,11 +434,8 @@
         /* ─── Responsive ────────────────────────────────────────── */
         @media (max-width: 800px) {
             nav ul { display: none; }
-            .app-row {
-                grid-template-columns: 1fr; gap: 36px; padding: 52px 0; text-align: center;
-            }
-            .app-row.flip .app-visual,
-            .app-row.flip .app-body { order: unset; }
+            .app-row { grid-template-columns: 1fr; gap: 36px; padding: 52px 0; text-align: center; }
+            .app-row.flip .app-visual, .app-row.flip .app-body { order: unset; }
             .app-visual { order: -1; }
             .app-label, .badge-link { align-self: center; }
             .app-perks { align-items: center; }
@@ -521,12 +466,13 @@
             </a>
             <nav>
                 <ul>
-                    <li><a href="#apps">Apps</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#tech">Skills</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#contact" class="nav-btn">Contact</a></li>
+                    <li><a href="#apps"     data-i18n="nav.apps">Apps</a></li>
+                    <li><a href="#about"    data-i18n="nav.about">About</a></li>
+                    <li><a href="#tech"     data-i18n="nav.skills">Skills</a></li>
+                    <li><a href="#services" data-i18n="nav.services">Services</a></li>
+                    <li><a href="#contact"  data-i18n="nav.contact" class="nav-btn">Contact</a></li>
                 </ul>
+                <button class="lang-btn" id="lang-btn" aria-label="Switch language">DE</button>
             </nav>
         </div>
     </div>
@@ -536,19 +482,19 @@
 <section class="hero">
     <div class="wrap-sm">
         <div class="hero-inner">
-            <div class="hero-chip">Philosopher &amp; Software Engineer</div>
+            <div class="hero-chip" data-i18n="hero.chip">Philosopher &amp; Software Engineer</div>
             <h1 class="hero-title">
-                Hello, I'm<br><span class="accent">Andrei</span> 👋
+                <span data-i18n="hero.greeting">Hello, I'm</span><br><span class="accent">Andrei</span> 👋
             </h1>
-            <p class="hero-sub">
+            <p class="hero-sub" data-i18n="hero.sub">
                 Bridging cognition and technology. I build mobile apps, cross-platform tools, and games — things that are useful, playful, and a little unexpected. B.Sc. Cognitive Science, lifelong curious mind.
             </p>
             <div class="hero-actions">
-                <a href="#apps" class="btn btn-primary">See My Apps</a>
-                <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+                <a href="#apps"    class="btn btn-primary" data-i18n="hero.cta_apps">See My Apps</a>
+                <a href="#contact" class="btn btn-ghost"   data-i18n="hero.cta_contact">Get in Touch</a>
             </div>
             <div class="scroll-cue">
-                <span>Scroll</span>
+                <span data-i18n="hero.scroll">Scroll</span>
                 <div class="scroll-cue-line"></div>
             </div>
         </div>
@@ -560,9 +506,9 @@
     <div class="wrap">
 
         <div class="apps-head">
-            <div class="eyebrow">My Applications</div>
-            <h2 class="sh">Apps built with ❤️</h2>
-            <p class="sb">From smart keyboards to Apple Watch games — here's what I've shipped to the App Store.</p>
+            <div class="eyebrow" data-i18n="apps.eyebrow">My Applications</div>
+            <h2 class="sh"      data-i18n="apps.heading">Apps built with ❤️</h2>
+            <p class="sb"       data-i18n="apps.desc">From smart keyboards to Apple Watch games — here's what I've shipped to the App Store.</p>
         </div>
 
         <!-- MergeKey -->
@@ -574,15 +520,13 @@
                 </div>
             </div>
             <div class="app-body">
-                <span class="app-label">Keyboard · Productivity</span>
+                <span class="app-label" data-i18n="mk.label">Keyboard · Productivity</span>
                 <img src="dist/images/MergeKey Banner.png" alt="MergeKey" class="app-banner-img">
-                <p class="app-desc">
-                    The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.
-                </p>
+                <p class="app-desc" data-i18n="mk.desc">The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.</p>
                 <div class="app-perks">
-                    <div class="app-perk"><span class="dot dot-b"></span>Dynamic, adaptive word learning</div>
-                    <div class="app-perk"><span class="dot dot-b"></span>Reduces typos in real time</div>
-                    <div class="app-perk"><span class="dot dot-b"></span>Fully customizable personal dictionary</div>
+                    <div class="app-perk"><span class="dot dot-b"></span><span data-i18n="mk.perk1">Dynamic, adaptive word learning</span></div>
+                    <div class="app-perk"><span class="dot dot-b"></span><span data-i18n="mk.perk2">Reduces typos in real time</span></div>
+                    <div class="app-perk"><span class="dot dot-b"></span><span data-i18n="mk.perk3">Fully customizable personal dictionary</span></div>
                 </div>
                 <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link">
                     <img src="src/images/DownloadAppStore.svg" alt="Download MergeKey on the App Store">
@@ -601,15 +545,13 @@
                 </div>
             </div>
             <div class="app-body">
-                <span class="app-label">🐠 Apple Watch · Game</span>
+                <span class="app-label" data-i18n="fw.label">🐠 Apple Watch · Game</span>
                 <h3 class="app-title">Fishy Watch</h3>
-                <p class="app-desc">
-                    A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.
-                </p>
+                <p class="app-desc" data-i18n="fw.desc">A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.</p>
                 <div class="app-perks">
-                    <div class="app-perk"><span class="dot dot-g"></span>Dozens of fish to catch &amp; collect</div>
-                    <div class="app-perk"><span class="dot dot-g"></span>Feed and interact with your catch</div>
-                    <div class="app-perk"><span class="dot dot-g"></span>Designed natively for Apple Watch</div>
+                    <div class="app-perk"><span class="dot dot-g"></span><span data-i18n="fw.perk1">Dozens of fish to catch &amp; collect</span></div>
+                    <div class="app-perk"><span class="dot dot-g"></span><span data-i18n="fw.perk2">Feed and interact with your catch</span></div>
+                    <div class="app-perk"><span class="dot dot-g"></span><span data-i18n="fw.perk3">Designed natively for Apple Watch</span></div>
                 </div>
                 <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link">
                     <img src="src/images/DownloadAppStore.svg" alt="Download Fishy Watch on the App Store">
@@ -628,15 +570,13 @@
                 </div>
             </div>
             <div class="app-body">
-                <span class="app-label">🛰 Multiplayer · Strategy</span>
+                <span class="app-label" data-i18n="wt.label">🛰 Multiplayer · Strategy</span>
                 <h3 class="app-title">Weltraum</h3>
-                <p class="app-desc">
-                    Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center. 👩‍🚀👨‍🚀
-                </p>
+                <p class="app-desc" data-i18n="wt.desc">Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center. 👩‍🚀👨‍🚀</p>
                 <div class="app-perks">
-                    <div class="app-perk"><span class="dot dot-p"></span>Real-time multiplayer via Bluetooth</div>
-                    <div class="app-perk"><span class="dot dot-p"></span>Game Center integration</div>
-                    <div class="app-perk"><span class="dot dot-p"></span>Unique orbit-based mechanics</div>
+                    <div class="app-perk"><span class="dot dot-p"></span><span data-i18n="wt.perk1">Real-time multiplayer via Bluetooth</span></div>
+                    <div class="app-perk"><span class="dot dot-p"></span><span data-i18n="wt.perk2">Game Center integration</span></div>
+                    <div class="app-perk"><span class="dot dot-p"></span><span data-i18n="wt.perk3">Unique orbit-based mechanics</span></div>
                 </div>
                 <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link">
                     <img src="src/images/DownloadAppStore.svg" alt="Download Weltraum on the App Store">
@@ -654,43 +594,43 @@
     <div class="wrap">
         <div class="about-grid">
             <div>
-                <div class="eyebrow">About Me</div>
-                <h2 class="sh">More than<br>just code</h2>
-                <p class="sb">I studied Cognitive Science — an intersection of CS, AI, psychology, philosophy, and neuroscience. That lens shapes everything I build. Beyond the screen I keep myself busy with:</p>
+                <div class="eyebrow" data-i18n="about.eyebrow">About Me</div>
+                <h2 class="sh" data-i18n-html="about.heading">More than<br>just code</h2>
+                <p class="sb" data-i18n="about.desc">I studied Cognitive Science — an intersection of CS, AI, psychology, philosophy, and neuroscience. That lens shapes everything I build. Beyond the screen I keep myself busy with:</p>
                 <div class="tags">
-                    <span class="tag" data-emoji="🧠">Philosophy</span>
-                    <span class="tag" data-emoji="🧬">Neuroscience</span>
-                    <span class="tag" data-emoji="📊">Data Visualization</span>
-                    <span class="tag" data-emoji="♟️">Chess</span>
-                    <span class="tag" data-emoji="🛹">Skateboarding</span>
-                    <span class="tag" data-emoji="🤖">AI</span>
-                    <span class="tag" data-emoji="🏃">Running</span>
-                    <span class="tag" data-emoji="🎸">Guitar</span>
-                    <span class="tag" data-emoji="🐾">Animals</span>
-                    <span class="tag" data-emoji="💬">Languages</span>
-                    <span class="tag" data-emoji="🕸️">Graph Theory</span>
-                    <span class="tag" data-emoji="🔢">Mathematics</span>
-                    <span class="tag" data-emoji="₿">Blockchain</span>
-                    <span class="tag" data-emoji="🚀">Space</span>
-                    <span class="tag" data-emoji="🎮">Video Games</span>
+                    <span class="tag" data-emoji="🧠" data-i18n="tag.philosophy">Philosophy</span>
+                    <span class="tag" data-emoji="🧬" data-i18n="tag.neuro">Neuroscience</span>
+                    <span class="tag" data-emoji="📊" data-i18n="tag.dataviz">Data Visualization</span>
+                    <span class="tag" data-emoji="♟️" data-i18n="tag.chess">Chess</span>
+                    <span class="tag" data-emoji="🛹" data-i18n="tag.skate">Skateboarding</span>
+                    <span class="tag" data-emoji="🤖" data-i18n="tag.ai">AI</span>
+                    <span class="tag" data-emoji="🏃" data-i18n="tag.running">Running</span>
+                    <span class="tag" data-emoji="🎸" data-i18n="tag.guitar">Guitar</span>
+                    <span class="tag" data-emoji="🐾" data-i18n="tag.animals">Animals</span>
+                    <span class="tag" data-emoji="💬" data-i18n="tag.langs">Languages</span>
+                    <span class="tag" data-emoji="🕸️" data-i18n="tag.graphs">Graph Theory</span>
+                    <span class="tag" data-emoji="🔢" data-i18n="tag.maths">Mathematics</span>
+                    <span class="tag" data-emoji="₿"  data-i18n="tag.blockchain">Blockchain</span>
+                    <span class="tag" data-emoji="🚀" data-i18n="tag.space">Space</span>
+                    <span class="tag" data-emoji="🎮" data-i18n="tag.games">Video Games</span>
                 </div>
             </div>
             <div class="stats-grid">
                 <div class="stat">
                     <div class="stat-num">10+</div>
-                    <div class="stat-lbl">Projects developed</div>
+                    <div class="stat-lbl" data-i18n="stat.projects_lbl">Projects developed</div>
                 </div>
                 <div class="stat">
                     <div class="stat-num">3</div>
-                    <div class="stat-lbl">Apps live on the App Store</div>
+                    <div class="stat-lbl" data-i18n="stat.apps_lbl">Apps live on the App Store</div>
                 </div>
                 <div class="stat">
                     <div class="stat-num">4</div>
-                    <div class="stat-lbl">Human languages, written &amp; spoken</div>
+                    <div class="stat-lbl" data-i18n="stat.langs_lbl">Human languages, written &amp; spoken</div>
                 </div>
                 <div class="stat">
                     <div class="stat-num">🎮</div>
-                    <div class="stat-lbl">Gamer &amp; game dev at heart</div>
+                    <div class="stat-lbl" data-i18n="stat.gamer_lbl">Gamer &amp; game dev at heart</div>
                 </div>
             </div>
         </div>
@@ -702,131 +642,84 @@
 <!-- ═══════════ TECH STACK ════════════════════════════════════════ -->
 <section class="tech" id="tech">
     <div class="wrap">
-
         <div class="tech-head">
-            <div class="eyebrow">Technical Skills</div>
-            <h2 class="sh">Built across the full stack</h2>
-            <p class="sb">From native iOS to cloud infrastructure — a broad toolkit shaped by years of diverse professional projects.</p>
+            <div class="eyebrow" data-i18n="tech.eyebrow">Technical Skills</div>
+            <h2 class="sh"       data-i18n="tech.heading">Built across the full stack</h2>
+            <p class="sb"        data-i18n="tech.desc">From native iOS to cloud infrastructure — a broad toolkit shaped by years of diverse professional projects.</p>
         </div>
-
         <div class="tech-grid">
-
-            <!-- iOS / Apple -->
             <div class="tech-card">
-                <div class="tech-card-label"><span class="dot dot-b"></span>iOS &amp; Apple Platforms</div>
+                <div class="tech-card-label"><span class="dot dot-b"></span><span data-i18n="tech.lbl.ios">iOS &amp; Apple Platforms</span></div>
                 <div class="tech-pills">
-                    <span class="tech-pill">Swift</span>
-                    <span class="tech-pill">SwiftUI</span>
-                    <span class="tech-pill">UIKit</span>
-                    <span class="tech-pill">WatchKit</span>
-                    <span class="tech-pill">CoreML</span>
-                    <span class="tech-pill">ARKit</span>
-                    <span class="tech-pill">CoreBluetooth</span>
-                    <span class="tech-pill">SpriteKit</span>
-                    <span class="tech-pill">CoreMotion</span>
-                    <span class="tech-pill">AVFoundation</span>
-                    <span class="tech-pill">StoreKit</span>
-                    <span class="tech-pill">Objective-C</span>
+                    <span class="tech-pill">Swift</span><span class="tech-pill">SwiftUI</span>
+                    <span class="tech-pill">UIKit</span><span class="tech-pill">WatchKit</span>
+                    <span class="tech-pill">CoreML</span><span class="tech-pill">ARKit</span>
+                    <span class="tech-pill">CoreBluetooth</span><span class="tech-pill">SpriteKit</span>
+                    <span class="tech-pill">CoreMotion</span><span class="tech-pill">AVFoundation</span>
+                    <span class="tech-pill">StoreKit</span><span class="tech-pill">Objective-C</span>
                 </div>
             </div>
-
-            <!-- Mobile Cross-Platform -->
             <div class="tech-card">
-                <div class="tech-card-label"><span class="dot dot-g"></span>Mobile &amp; Cross-Platform</div>
+                <div class="tech-card-label"><span class="dot dot-g"></span><span data-i18n="tech.lbl.cross">Mobile &amp; Cross-Platform</span></div>
                 <div class="tech-pills">
-                    <span class="tech-pill">React Native</span>
-                    <span class="tech-pill">Flutter</span>
-                    <span class="tech-pill">.NET MAUI</span>
-                    <span class="tech-pill">Xamarin</span>
-                    <span class="tech-pill">Ionic</span>
-                    <span class="tech-pill">Cordova</span>
-                    <span class="tech-pill">Dart</span>
-                    <span class="tech-pill">C#</span>
+                    <span class="tech-pill">React Native</span><span class="tech-pill">Flutter</span>
+                    <span class="tech-pill">.NET MAUI</span><span class="tech-pill">Xamarin</span>
+                    <span class="tech-pill">Ionic</span><span class="tech-pill">Cordova</span>
+                    <span class="tech-pill">Dart</span><span class="tech-pill">C#</span>
                 </div>
             </div>
-
-            <!-- Web -->
             <div class="tech-card">
-                <div class="tech-card-label"><span class="dot dot-p"></span>Web &amp; Backend</div>
+                <div class="tech-card-label"><span class="dot dot-p"></span><span data-i18n="tech.lbl.web">Web &amp; Backend</span></div>
                 <div class="tech-pills">
-                    <span class="tech-pill">TypeScript</span>
-                    <span class="tech-pill">JavaScript</span>
-                    <span class="tech-pill">Angular</span>
-                    <span class="tech-pill">Node.js</span>
-                    <span class="tech-pill">HTML / CSS</span>
-                    <span class="tech-pill">REST APIs</span>
+                    <span class="tech-pill">TypeScript</span><span class="tech-pill">JavaScript</span>
+                    <span class="tech-pill">Angular</span><span class="tech-pill">Node.js</span>
+                    <span class="tech-pill">HTML / CSS</span><span class="tech-pill">REST APIs</span>
                     <span class="tech-pill">Firebase</span>
                 </div>
             </div>
-
-            <!-- Cloud & DevOps -->
             <div class="tech-card">
-                <div class="tech-card-label"><span class="dot dot-b" style="background:var(--orange);box-shadow:0 0 8px rgba(255,108,80,.7)"></span>Cloud &amp; DevOps</div>
+                <div class="tech-card-label"><span class="dot dot-b" style="background:var(--orange);box-shadow:0 0 8px rgba(255,108,80,.7)"></span><span data-i18n="tech.lbl.cloud">Cloud &amp; DevOps</span></div>
                 <div class="tech-pills">
-                    <span class="tech-pill">Kubernetes</span>
-                    <span class="tech-pill">Docker</span>
-                    <span class="tech-pill">GCP</span>
-                    <span class="tech-pill">Microsoft Azure</span>
-                    <span class="tech-pill">GitLab CI</span>
-                    <span class="tech-pill">GitHub</span>
+                    <span class="tech-pill">Kubernetes</span><span class="tech-pill">Docker</span>
+                    <span class="tech-pill">GCP</span><span class="tech-pill">Microsoft Azure</span>
+                    <span class="tech-pill">GitLab CI</span><span class="tech-pill">GitHub</span>
                     <span class="tech-pill">Git</span>
                 </div>
             </div>
-
-            <!-- Connectivity -->
             <div class="tech-card">
-                <div class="tech-card-label"><span class="dot dot-g"></span>Connectivity &amp; Hardware</div>
+                <div class="tech-card-label"><span class="dot dot-g"></span><span data-i18n="tech.lbl.hw">Connectivity &amp; Hardware</span></div>
                 <div class="tech-pills">
-                    <span class="tech-pill">NFC</span>
-                    <span class="tech-pill">Bluetooth LE</span>
-                    <span class="tech-pill">Multipeer Connectivity</span>
-                    <span class="tech-pill">IoT</span>
-                    <span class="tech-pill">Tinkerforge</span>
-                    <span class="tech-pill">Game Center</span>
+                    <span class="tech-pill">NFC</span><span class="tech-pill">Bluetooth LE</span>
+                    <span class="tech-pill">Multipeer Connectivity</span><span class="tech-pill">IoT</span>
+                    <span class="tech-pill">Tinkerforge</span><span class="tech-pill">Game Center</span>
                 </div>
             </div>
-
-            <!-- AI & Machine Learning -->
             <div class="tech-card">
-                <div class="tech-card-label"><span class="dot dot-p"></span>AI &amp; Machine Learning</div>
+                <div class="tech-card-label"><span class="dot dot-p"></span><span data-i18n="tech.lbl.ai">AI &amp; Machine Learning</span></div>
                 <div class="tech-pills">
-                    <span class="tech-pill">CoreML</span>
-                    <span class="tech-pill">Vision Framework</span>
-                    <span class="tech-pill">LLM APIs</span>
-                    <span class="tech-pill">Prompt Engineering</span>
-                    <span class="tech-pill">Computer Vision</span>
-                    <span class="tech-pill">Python</span>
+                    <span class="tech-pill">CoreML</span><span class="tech-pill">Vision Framework</span>
+                    <span class="tech-pill">LLM APIs</span><span class="tech-pill">Prompt Engineering</span>
+                    <span class="tech-pill">Computer Vision</span><span class="tech-pill">Python</span>
                     <span class="tech-pill">Firebase ML</span>
                 </div>
             </div>
-
-            <!-- Game Dev & 3D -->
             <div class="tech-card">
-                <div class="tech-card-label"><span class="dot dot-b" style="background:#f59e0b;box-shadow:0 0 8px rgba(245,158,11,.7)"></span>Game Dev &amp; 3D</div>
+                <div class="tech-card-label"><span class="dot dot-b" style="background:#f59e0b;box-shadow:0 0 8px rgba(245,158,11,.7)"></span><span data-i18n="tech.lbl.game">Game Dev &amp; 3D</span></div>
                 <div class="tech-pills">
-                    <span class="tech-pill">Unity</span>
-                    <span class="tech-pill">Blender</span>
-                    <span class="tech-pill">C#</span>
-                    <span class="tech-pill">SpriteKit</span>
-                    <span class="tech-pill">ARKit</span>
-                    <span class="tech-pill">SceneKit</span>
+                    <span class="tech-pill">Unity</span><span class="tech-pill">Blender</span>
+                    <span class="tech-pill">C#</span><span class="tech-pill">SpriteKit</span>
+                    <span class="tech-pill">ARKit</span><span class="tech-pill">SceneKit</span>
                     <span class="tech-pill">Aseprite</span>
                 </div>
             </div>
-
-            <!-- Design & Tools -->
             <div class="tech-card">
-                <div class="tech-card-label"><span class="dot dot-g"></span>Design &amp; Tools</div>
+                <div class="tech-card-label"><span class="dot dot-g"></span><span data-i18n="tech.lbl.design">Design &amp; Tools</span></div>
                 <div class="tech-pills">
-                    <span class="tech-pill">Figma</span>
-                    <span class="tech-pill">Adobe Ps / Ai / Ae</span>
-                    <span class="tech-pill">Sketch</span>
-                    <span class="tech-pill">AutoCAD</span>
-                    <span class="tech-pill">C++</span>
-                    <span class="tech-pill">Java</span>
+                    <span class="tech-pill">Figma</span><span class="tech-pill">Adobe Ps / Ai / Ae</span>
+                    <span class="tech-pill">Sketch</span><span class="tech-pill">AutoCAD</span>
+                    <span class="tech-pill">C++</span><span class="tech-pill">Java</span>
                 </div>
             </div>
-
         </div>
     </div>
 </section>
@@ -836,87 +729,48 @@
 <!-- ═══════════ SERVICES ══════════════════════════════════════════ -->
 <section class="services" id="services">
     <div class="wrap">
-
         <div class="services-head">
-            <div class="eyebrow">Consulting &amp; Expertise</div>
-            <h2 class="sh">How I can help</h2>
-            <p class="sb">Years of diverse projects across startups, industry, and indie dev have shaped a broad skill set. Here's where I add real value.</p>
+            <div class="eyebrow" data-i18n="srv.eyebrow">Consulting &amp; Expertise</div>
+            <h2 class="sh"       data-i18n="srv.heading">How I can help</h2>
+            <p class="sb"        data-i18n="srv.desc">Years of diverse projects across startups, industry, and indie dev have shaped a broad skill set. Here's where I add real value.</p>
         </div>
-
         <div class="services-grid">
-
             <div class="srv srv-1">
                 <span class="srv-icon">📱</span>
-                <h3 class="srv-title">Mobile App Development</h3>
-                <p class="srv-desc">Native iOS in Swift/SwiftUI or cross-platform with React Native and Flutter. From initial concept through App Store submission — including WatchKit, CoreBluetooth, and hardware integrations.</p>
-                <div class="srv-tags">
-                    <span class="srv-tag">Swift / SwiftUI</span>
-                    <span class="srv-tag">React Native</span>
-                    <span class="srv-tag">Flutter</span>
-                    <span class="srv-tag">App Store</span>
-                </div>
+                <h3 class="srv-title" data-i18n="srv1.title">Mobile App Development</h3>
+                <p  class="srv-desc"  data-i18n="srv1.desc">Native iOS in Swift/SwiftUI or cross-platform with React Native and Flutter. From initial concept through App Store submission — including WatchKit, CoreBluetooth, and hardware integrations.</p>
+                <div class="srv-tags"><span class="srv-tag">Swift / SwiftUI</span><span class="srv-tag">React Native</span><span class="srv-tag">Flutter</span><span class="srv-tag">App Store</span></div>
             </div>
-
             <div class="srv srv-2">
                 <span class="srv-icon">🤖</span>
-                <h3 class="srv-title">AI Integration</h3>
-                <p class="srv-desc">Embedding AI into your product — on-device with CoreML/Vision, in the cloud with LLM APIs, or custom computer vision models. Proven experience fine-tuning and deploying real-time ML pipelines.</p>
-                <div class="srv-tags">
-                    <span class="srv-tag">CoreML</span>
-                    <span class="srv-tag">LLM APIs</span>
-                    <span class="srv-tag">Computer Vision</span>
-                    <span class="srv-tag">Prompt Engineering</span>
-                </div>
+                <h3 class="srv-title" data-i18n="srv2.title">AI Integration</h3>
+                <p  class="srv-desc"  data-i18n="srv2.desc">Embedding AI into your product — on-device with CoreML/Vision, in the cloud with LLM APIs, or custom computer vision models. Proven experience fine-tuning and deploying real-time ML pipelines.</p>
+                <div class="srv-tags"><span class="srv-tag">CoreML</span><span class="srv-tag">LLM APIs</span><span class="srv-tag">Computer Vision</span><span class="srv-tag">Prompt Engineering</span></div>
             </div>
-
             <div class="srv srv-3">
                 <span class="srv-icon">🌐</span>
-                <h3 class="srv-title">Web &amp; Frontend</h3>
-                <p class="srv-desc">Modern, responsive web apps with Angular, TypeScript, and Node.js. Clean UI/UX grounded in Figma, with a keen eye on performance and accessibility.</p>
-                <div class="srv-tags">
-                    <span class="srv-tag">TypeScript</span>
-                    <span class="srv-tag">Angular</span>
-                    <span class="srv-tag">Node.js</span>
-                    <span class="srv-tag">Figma</span>
-                </div>
+                <h3 class="srv-title" data-i18n="srv3.title">Web &amp; Frontend</h3>
+                <p  class="srv-desc"  data-i18n="srv3.desc">Modern, responsive web apps with Angular, TypeScript, and Node.js. Clean UI/UX grounded in Figma, with a keen eye on performance and accessibility.</p>
+                <div class="srv-tags"><span class="srv-tag">TypeScript</span><span class="srv-tag">Angular</span><span class="srv-tag">Node.js</span><span class="srv-tag">Figma</span></div>
             </div>
-
             <div class="srv srv-4">
                 <span class="srv-icon">☁️</span>
-                <h3 class="srv-title">Cloud &amp; DevOps</h3>
-                <p class="srv-desc">Containerised, scalable infrastructure on GCP or Azure. Kubernetes orchestration, Docker pipelines, and GitLab CI/CD — building systems that are reliable and easy to maintain.</p>
-                <div class="srv-tags">
-                    <span class="srv-tag">Kubernetes</span>
-                    <span class="srv-tag">Docker</span>
-                    <span class="srv-tag">GCP / Azure</span>
-                    <span class="srv-tag">CI / CD</span>
-                </div>
+                <h3 class="srv-title" data-i18n="srv4.title">Cloud &amp; DevOps</h3>
+                <p  class="srv-desc"  data-i18n="srv4.desc">Containerised, scalable infrastructure on GCP or Azure. Kubernetes orchestration, Docker pipelines, and GitLab CI/CD — building systems that are reliable and easy to maintain.</p>
+                <div class="srv-tags"><span class="srv-tag">Kubernetes</span><span class="srv-tag">Docker</span><span class="srv-tag">GCP / Azure</span><span class="srv-tag">CI / CD</span></div>
             </div>
-
             <div class="srv srv-5">
                 <span class="srv-icon">🔗</span>
-                <h3 class="srv-title">Hardware &amp; Connectivity</h3>
-                <p class="srv-desc">NFC and Bluetooth LE integrations, IoT sensor systems, and industrial hardware interfaces. Experience connecting the physical world to apps — from medical devices to factory floors.</p>
-                <div class="srv-tags">
-                    <span class="srv-tag">NFC</span>
-                    <span class="srv-tag">Bluetooth LE</span>
-                    <span class="srv-tag">IoT</span>
-                    <span class="srv-tag">.NET MAUI</span>
-                </div>
+                <h3 class="srv-title" data-i18n="srv5.title">Hardware &amp; Connectivity</h3>
+                <p  class="srv-desc"  data-i18n="srv5.desc">NFC and Bluetooth LE integrations, IoT sensor systems, and industrial hardware interfaces. Experience connecting the physical world to apps — from medical devices to factory floors.</p>
+                <div class="srv-tags"><span class="srv-tag">NFC</span><span class="srv-tag">Bluetooth LE</span><span class="srv-tag">IoT</span><span class="srv-tag">.NET MAUI</span></div>
             </div>
-
             <div class="srv srv-6">
                 <span class="srv-icon">💡</span>
-                <h3 class="srv-title">Tech Consulting</h3>
-                <p class="srv-desc">Interdisciplinary background in Cognitive Science, AI, and engineering — great for architecture reviews, stack decisions, MVP scoping, code quality, and turning complex ideas into working prototypes fast.</p>
-                <div class="srv-tags">
-                    <span class="srv-tag">Architecture</span>
-                    <span class="srv-tag">MVP Scoping</span>
-                    <span class="srv-tag">Code Review</span>
-                    <span class="srv-tag">Prototyping</span>
-                </div>
+                <h3 class="srv-title" data-i18n="srv6.title">Tech Consulting</h3>
+                <p  class="srv-desc"  data-i18n="srv6.desc">Interdisciplinary background in Cognitive Science, AI, and engineering — great for architecture reviews, stack decisions, MVP scoping, code quality, and turning complex ideas into working prototypes fast.</p>
+                <div class="srv-tags"><span class="srv-tag">Architecture</span><span class="srv-tag">MVP Scoping</span><span class="srv-tag">Code Review</span><span class="srv-tag">Prototyping</span></div>
             </div>
-
         </div>
     </div>
 </section>
@@ -927,8 +781,8 @@
 <section class="contact" id="contact">
     <div class="wrap">
         <div class="contact-box">
-            <h2 class="contact-title">Let's talk</h2>
-            <p class="contact-sub">Have a question, need support for one of my apps, or just want to say hi? I'm happy to hear from you.</p>
+            <h2 class="contact-title" data-i18n="contact.title">Let's talk</h2>
+            <p  class="contact-sub"   data-i18n="contact.sub">Have a question, need support for one of my apps, or just want to say hi? I'm happy to hear from you.</p>
             <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website" class="email-btn">
                 ✉️&nbsp; andrei.zerodeathgames@gmail.com
             </a>
@@ -940,10 +794,10 @@
 <section class="privacy">
     <div class="wrap">
         <div class="privacy-box">
-            <h3>Privacy Policy</h3>
-            <p>Apps provided by Andrei Achziger are intended for use as is. This page informs visitors about my policies regarding the collection, use, and disclosure of personal information. If you choose to use my services, your personal information will not be stored, distributed, or analyzed by me.</p>
-            <p>Andrei Achziger does not take responsibility for data processed by third-party platforms such as Google, as I have no access to or insight into their data collection and processing practices. Any data collection via those platforms is primarily used to serve relevant ads.</p>
-            <p>This policy may be updated when necessary — please check this page periodically for changes. Updates take effect immediately upon posting. — Andrei Achziger</p>
+            <h3 data-i18n="privacy.heading">Privacy Policy</h3>
+            <p data-i18n="privacy.p1">Apps provided by Andrei Achziger are intended for use as is. This page informs visitors about my policies regarding the collection, use, and disclosure of personal information. If you choose to use my services, your personal information will not be stored, distributed, or analyzed by me.</p>
+            <p data-i18n="privacy.p2">Andrei Achziger does not take responsibility for data processed by third-party platforms such as Google, as I have no access to or insight into their data collection and processing practices. Any data collection via those platforms is primarily used to serve relevant ads.</p>
+            <p data-i18n="privacy.p3">This policy may be updated when necessary — please check this page periodically for changes. Updates take effect immediately upon posting. — Andrei Achziger</p>
         </div>
     </div>
 </section>
@@ -952,32 +806,204 @@
 <footer class="site-footer">
     <div class="wrap">
         <div class="footer-row">
-            <span class="footer-copy">© 2026 Andrei Achziger · Some rights reserved</span>
+            <span class="footer-copy" data-i18n="footer.copy">© 2026 Andrei Achziger · Some rights reserved</span>
             <ul class="footer-links">
-                <li><a href="impressum.html">Impressum</a></li>
-                <li><a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website">Email</a></li>
+                <li><a href="impressum.html" data-i18n="footer.impressum">Impressum</a></li>
+                <li><a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website" data-i18n="footer.email">Email</a></li>
             </ul>
         </div>
     </div>
 </footer>
 
+<!-- ═══════════ Scripts ════════════════════════════════════════════ -->
 <script>
-    // Sticky header effect
-    const hdr = document.getElementById('hdr');
-    window.addEventListener('scroll', () => {
-        hdr.classList.toggle('scrolled', window.scrollY > 48);
-    }, { passive: true });
+// ── i18n ──────────────────────────────────────────────────────────
+const T = {
+    en: {
+        'nav.apps':'Apps', 'nav.about':'About', 'nav.skills':'Skills',
+        'nav.services':'Services', 'nav.contact':'Contact',
 
-    // Scroll-reveal for app rows
-    const io = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-            if (e.isIntersecting) {
-                e.target.classList.add('visible');
-                io.unobserve(e.target);
-            }
-        });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('[data-reveal]').forEach(r => io.observe(r));
+        'hero.chip':'Philosopher & Software Engineer',
+        'hero.greeting':"Hello, I'm",
+        'hero.sub':'Bridging cognition and technology. I build mobile apps, cross-platform tools, and games — things that are useful, playful, and a little unexpected. B.Sc. Cognitive Science, lifelong curious mind.',
+        'hero.cta_apps':'See My Apps', 'hero.cta_contact':'Get in Touch', 'hero.scroll':'Scroll',
+
+        'apps.eyebrow':'My Applications', 'apps.heading':'Apps built with ❤️',
+        'apps.desc':"From smart keyboards to Apple Watch games — here's what I've shipped to the App Store.",
+
+        'mk.label':'Keyboard · Productivity',
+        'mk.desc':'The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.',
+        'mk.perk1':'Dynamic, adaptive word learning', 'mk.perk2':'Reduces typos in real time', 'mk.perk3':'Fully customizable personal dictionary',
+
+        'fw.label':'🐠 Apple Watch · Game',
+        'fw.desc':'A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.',
+        'fw.perk1':'Dozens of fish to catch & collect', 'fw.perk2':'Feed and interact with your catch', 'fw.perk3':'Designed natively for Apple Watch',
+
+        'wt.label':'🛰 Multiplayer · Strategy',
+        'wt.desc':'Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center. 👩‍🚀👨‍🚀',
+        'wt.perk1':'Real-time multiplayer via Bluetooth', 'wt.perk2':'Game Center integration', 'wt.perk3':'Unique orbit-based mechanics',
+
+        'about.eyebrow':'About Me', 'about.heading':'More than<br>just code',
+        'about.desc':'I studied Cognitive Science — an intersection of CS, AI, psychology, philosophy, and neuroscience. That lens shapes everything I build. Beyond the screen I keep myself busy with:',
+
+        'tag.philosophy':'Philosophy', 'tag.neuro':'Neuroscience', 'tag.dataviz':'Data Visualization',
+        'tag.chess':'Chess', 'tag.skate':'Skateboarding', 'tag.ai':'AI', 'tag.running':'Running',
+        'tag.guitar':'Guitar', 'tag.animals':'Animals', 'tag.langs':'Languages',
+        'tag.graphs':'Graph Theory', 'tag.maths':'Mathematics', 'tag.blockchain':'Blockchain',
+        'tag.space':'Space', 'tag.games':'Video Games',
+
+        'stat.projects_lbl':'Projects developed', 'stat.apps_lbl':'Apps live on the App Store',
+        'stat.langs_lbl':'Human languages, written & spoken', 'stat.gamer_lbl':'Gamer & game dev at heart',
+
+        'tech.eyebrow':'Technical Skills', 'tech.heading':'Built across the full stack',
+        'tech.desc':'From native iOS to cloud infrastructure — a broad toolkit shaped by years of diverse professional projects.',
+        'tech.lbl.ios':'iOS & Apple Platforms', 'tech.lbl.cross':'Mobile & Cross-Platform',
+        'tech.lbl.web':'Web & Backend', 'tech.lbl.cloud':'Cloud & DevOps',
+        'tech.lbl.hw':'Connectivity & Hardware', 'tech.lbl.ai':'AI & Machine Learning',
+        'tech.lbl.game':'Game Dev & 3D', 'tech.lbl.design':'Design & Tools',
+
+        'srv.eyebrow':'Consulting & Expertise', 'srv.heading':'How I can help',
+        'srv.desc':"Years of diverse projects across startups, industry, and indie dev have shaped a broad skill set. Here's where I add real value.",
+        'srv1.title':'Mobile App Development',
+        'srv1.desc':'Native iOS in Swift/SwiftUI or cross-platform with React Native and Flutter. From initial concept through App Store submission — including WatchKit, CoreBluetooth, and hardware integrations.',
+        'srv2.title':'AI Integration',
+        'srv2.desc':'Embedding AI into your product — on-device with CoreML/Vision, in the cloud with LLM APIs, or custom computer vision models. Proven experience fine-tuning and deploying real-time ML pipelines.',
+        'srv3.title':'Web & Frontend',
+        'srv3.desc':'Modern, responsive web apps with Angular, TypeScript, and Node.js. Clean UI/UX grounded in Figma, with a keen eye on performance and accessibility.',
+        'srv4.title':'Cloud & DevOps',
+        'srv4.desc':'Containerised, scalable infrastructure on GCP or Azure. Kubernetes orchestration, Docker pipelines, and GitLab CI/CD — building systems that are reliable and easy to maintain.',
+        'srv5.title':'Hardware & Connectivity',
+        'srv5.desc':'NFC and Bluetooth LE integrations, IoT sensor systems, and industrial hardware interfaces. Experience connecting the physical world to apps — from medical devices to factory floors.',
+        'srv6.title':'Tech Consulting',
+        'srv6.desc':'Interdisciplinary background in Cognitive Science, AI, and engineering — great for architecture reviews, stack decisions, MVP scoping, code quality, and turning complex ideas into working prototypes fast.',
+
+        'contact.title':"Let's talk",
+        'contact.sub':"Have a question, need support for one of my apps, or just want to say hi? I'm happy to hear from you.",
+
+        'privacy.heading':'Privacy Policy',
+        'privacy.p1':'Apps provided by Andrei Achziger are intended for use as is. This page informs visitors about my policies regarding the collection, use, and disclosure of personal information. If you choose to use my services, your personal information will not be stored, distributed, or analyzed by me.',
+        'privacy.p2':'Andrei Achziger does not take responsibility for data processed by third-party platforms such as Google, as I have no access to or insight into their data collection and processing practices. Any data collection via those platforms is primarily used to serve relevant ads.',
+        'privacy.p3':'This policy may be updated when necessary — please check this page periodically for changes. Updates take effect immediately upon posting. — Andrei Achziger',
+
+        'footer.copy':'© 2026 Andrei Achziger · Some rights reserved',
+        'footer.impressum':'Impressum', 'footer.email':'Email',
+    },
+
+    de: {
+        'nav.apps':'Apps', 'nav.about':'Über mich', 'nav.skills':'Fähigkeiten',
+        'nav.services':'Leistungen', 'nav.contact':'Kontakt',
+
+        'hero.chip':'Philosoph & Software-Ingenieur',
+        'hero.greeting':'Hallo, ich bin',
+        'hero.sub':'Zwischen Kognition und Technologie. Ich baue mobile Apps, plattformübergreifende Tools und Spiele – Dinge, die nützlich, verspielt und manchmal überraschend sind. B.Sc. Kognitionswissenschaft, lebenslang neugierig.',
+        'hero.cta_apps':'Meine Apps', 'hero.cta_contact':'Kontakt aufnehmen', 'hero.scroll':'Scrollen',
+
+        'apps.eyebrow':'Meine Anwendungen', 'apps.heading':'Apps mit ❤️ gebaut',
+        'apps.desc':'Von smarten Tastaturen bis zu Apple Watch-Spielen – hier ist, was ich im App Store veröffentlicht habe.',
+
+        'mk.label':'Tastatur · Produktivität',
+        'mk.desc':'Die erste dynamische Tastatur, die dir hilft, sauberer und mit weniger Fehlern zu tippen. Bring MergeKey neue Wörter bei, und sie lernt dazu – jeder Tastendruck wird dadurch smarter.',
+        'mk.perk1':'Dynamisches, adaptives Wortlernen', 'mk.perk2':'Reduziert Tippfehler in Echtzeit', 'mk.perk3':'Vollständig anpassbares persönliches Wörterbuch',
+
+        'fw.label':'🐠 Apple Watch · Spiel',
+        'fw.desc':'Ein Angelspiel für dein Handgelenk. Fange Fische, füttere sie und spiele mit ihnen – direkt von deiner Apple Watch. Viele Arten zu entdecken; der Ozean ist nur einen Tipp entfernt.',
+        'fw.perk1':'Dutzende Fische zum Fangen & Sammeln', 'fw.perk2':'Füttere und interagiere mit deinem Fang', 'fw.perk3':'Nativ für Apple Watch entwickelt',
+
+        'wt.label':'🛰 Multiplayer · Strategie',
+        'wt.desc':'Erstelle Umlaufbahnen, halte sie und fordere andere quer durch den Kosmos heraus. Sammle alle Sterne – am besten mit 2 Spielern per Bluetooth oder Game Center. 👩‍🚀👨‍🚀',
+        'wt.perk1':'Echtzeit-Multiplayer per Bluetooth', 'wt.perk2':'Game Center-Integration', 'wt.perk3':'Einzigartige umlaufbahnbasierte Spielmechanik',
+
+        'about.eyebrow':'Über mich', 'about.heading':'Mehr als<br>nur Code',
+        'about.desc':'Ich habe Kognitionswissenschaft studiert – eine Schnittstelle aus Informatik, KI, Psychologie, Philosophie und Neurowissenschaften. Diese Perspektive prägt alles, was ich baue. Abseits des Bildschirms beschäftige ich mich mit:',
+
+        'tag.philosophy':'Philosophie', 'tag.neuro':'Neurowissenschaften', 'tag.dataviz':'Datenvisualisierung',
+        'tag.chess':'Schach', 'tag.skate':'Skateboarding', 'tag.ai':'KI', 'tag.running':'Laufen',
+        'tag.guitar':'Gitarre', 'tag.animals':'Tiere', 'tag.langs':'Sprachen',
+        'tag.graphs':'Graphentheorie', 'tag.maths':'Mathematik', 'tag.blockchain':'Blockchain',
+        'tag.space':'Weltraum', 'tag.games':'Videospiele',
+
+        'stat.projects_lbl':'Entwickelte Projekte', 'stat.apps_lbl':'Apps im App Store',
+        'stat.langs_lbl':'Menschliche Sprachen, geschrieben & gesprochen', 'stat.gamer_lbl':'Gamer & Game Dev durch und durch',
+
+        'tech.eyebrow':'Technische Fähigkeiten', 'tech.heading':'Im gesamten Stack zuhause',
+        'tech.desc':'Von nativem iOS bis zur Cloud-Infrastruktur – ein breites Werkzeugset, geformt durch Jahre vielseitiger Projekte.',
+        'tech.lbl.ios':'iOS & Apple-Plattformen', 'tech.lbl.cross':'Mobil & Plattformübergreifend',
+        'tech.lbl.web':'Web & Backend', 'tech.lbl.cloud':'Cloud & DevOps',
+        'tech.lbl.hw':'Konnektivität & Hardware', 'tech.lbl.ai':'KI & Machine Learning',
+        'tech.lbl.game':'Game Dev & 3D', 'tech.lbl.design':'Design & Tools',
+
+        'srv.eyebrow':'Beratung & Expertise', 'srv.heading':'Wie ich helfen kann',
+        'srv.desc':'Jahre vielseitiger Projekte in Startups, Industrie und Indie-Entwicklung haben ein breites Skillset geformt. Hier ist, wo ich echten Mehrwert schaffe.',
+        'srv1.title':'Mobile App-Entwicklung',
+        'srv1.desc':'Natives iOS in Swift/SwiftUI oder plattformübergreifend mit React Native und Flutter. Vom ersten Konzept bis zur App Store-Veröffentlichung – inklusive WatchKit, CoreBluetooth und Hardware-Integrationen.',
+        'srv2.title':'KI-Integration',
+        'srv2.desc':'KI in dein Produkt einbetten – auf dem Gerät mit CoreML/Vision, in der Cloud mit LLM-APIs oder eigenen Computer-Vision-Modellen. Nachgewiesene Erfahrung beim Fine-Tuning und Deployment von Echtzeit-ML-Pipelines.',
+        'srv3.title':'Web & Frontend',
+        'srv3.desc':'Moderne, responsive Webanwendungen mit Angular, TypeScript und Node.js. Klare UI/UX auf Basis von Figma, mit Fokus auf Performance und Barrierefreiheit.',
+        'srv4.title':'Cloud & DevOps',
+        'srv4.desc':'Containerisierte, skalierbare Infrastruktur auf GCP oder Azure. Kubernetes-Orchestrierung, Docker-Pipelines und GitLab CI/CD – für zuverlässige und wartbare Systeme.',
+        'srv5.title':'Hardware & Konnektivität',
+        'srv5.desc':'NFC- und Bluetooth-LE-Integrationen, IoT-Sensorsysteme und industrielle Hardware-Schnittstellen. Erfahrung in der Verbindung der physischen Welt mit Apps – von Medizingeräten bis zu Fabrikhallen.',
+        'srv6.title':'Tech-Beratung',
+        'srv6.desc':'Interdisziplinärer Hintergrund in Kognitionswissenschaft, KI und Engineering – ideal für Architektur-Reviews, Stack-Entscheidungen, MVP-Scoping, Code-Qualität und die schnelle Umsetzung komplexer Ideen in funktionierende Prototypen.',
+
+        'contact.title':'Lass uns reden',
+        'contact.sub':'Hast du eine Frage, brauchst Support für eine meiner Apps oder möchtest einfach Hallo sagen? Ich freue mich von dir zu hören.',
+
+        'privacy.heading':'Datenschutzrichtlinie',
+        'privacy.p1':'Die von Andrei Achziger bereitgestellten Apps sind zur Nutzung bestimmt wie sie sind. Diese Seite informiert Besucher über meine Richtlinien bezüglich der Erhebung, Nutzung und Offenlegung personenbezogener Daten. Wenn du meine Dienste nutzt, werden deine personenbezogenen Daten von mir nicht gespeichert, verteilt oder analysiert.',
+        'privacy.p2':'Andrei Achziger übernimmt keine Verantwortung für Daten, die von Drittanbietern wie Google verarbeitet werden, da ich keinen Zugang zu oder Einblick in deren Datenerfassungs- und Verarbeitungspraktiken habe. Jede Datenerfassung über diese Plattformen dient in erster Linie der Anzeige relevanter Werbung.',
+        'privacy.p3':'Diese Richtlinie kann bei Bedarf aktualisiert werden – bitte überprüfe diese Seite regelmäßig auf Änderungen. Änderungen treten sofort nach der Veröffentlichung in Kraft. — Andrei Achziger',
+
+        'footer.copy':'© 2026 Andrei Achziger · Alle Rechte vorbehalten',
+        'footer.impressum':'Impressum', 'footer.email':'E-Mail',
+    }
+};
+
+function applyLang(lang) {
+    const t = T[lang] || T.en;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const v = t[el.dataset.i18n];
+        if (v !== undefined) el.textContent = v;
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const v = t[el.dataset.i18nHtml];
+        if (v !== undefined) el.innerHTML = v;
+    });
+    document.documentElement.lang = lang;
+    const btn = document.getElementById('lang-btn');
+    if (btn) btn.textContent = lang === 'de' ? 'EN' : 'DE';
+    // Update meta description
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta && t['meta.desc']) meta.content = t['meta.desc'];
+}
+
+function getLang() {
+    return localStorage.getItem('aach_lang') ||
+           ((navigator.language || '').toLowerCase().startsWith('de') ? 'de' : 'en');
+}
+
+function toggleLang() {
+    const next = document.documentElement.lang === 'de' ? 'en' : 'de';
+    localStorage.setItem('aach_lang', next);
+    applyLang(next);
+}
+
+// Apply immediately (no flash)
+applyLang(getLang());
+document.getElementById('lang-btn').addEventListener('click', toggleLang);
+
+// ── Sticky header ─────────────────────────────────────────────────
+const hdr = document.getElementById('hdr');
+window.addEventListener('scroll', () => {
+    hdr.classList.toggle('scrolled', window.scrollY > 48);
+}, { passive: true });
+
+// ── Scroll-reveal for app rows ────────────────────────────────────
+const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('[data-reveal]').forEach(r => io.observe(r));
 </script>
 
 </body>
