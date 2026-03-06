@@ -225,25 +225,43 @@
 
         /* ─── Apps section ──────────────────────────────────────── */
         .apps { position: relative; z-index: 1; padding: 90px 0 100px; }
-        .apps-head { text-align: center; margin-bottom: 80px; }
+        .apps-head { text-align: center; margin-bottom: 56px; }
         .apps-head .sb { margin: 0 auto; }
 
-        .app-row {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
-            align-items: center; padding: 72px 0;
-            opacity: 0; transform: translateY(36px);
-            transition: opacity .65s ease, transform .65s ease;
+        /* Horizontal scroll track */
+        .app-track-wrap {
+            overflow-x: auto; overflow-y: visible;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            margin: 0 -28px; padding: 8px 28px 36px;
+            cursor: grab;
         }
-        .app-row.visible { opacity:1; transform:translateY(0); }
-        .app-row.flip .app-visual { order: 2; }
-        .app-row.flip .app-body   { order: 1; }
+        .app-track-wrap:active { cursor: grabbing; }
+        .app-track-wrap::-webkit-scrollbar { display: none; }
+        .app-track { display: flex; gap: 20px; padding-right: 28px; }
 
-        .app-visual { display: flex; justify-content: center; align-items: center; }
-        .mockup-shell { position: relative; display: inline-block; }
+        /* Cards */
+        .app-card {
+            flex: 0 0 340px; scroll-snap-align: start;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: var(--r-xl); padding: 32px 28px 36px;
+            display: flex; flex-direction: column;
+            transition: background .3s, border-color .3s, transform .35s cubic-bezier(.22,.61,.36,1);
+            opacity: 0; transform: translateY(28px);
+        }
+        .app-card.visible { opacity: 1; transform: translateY(0); }
+        .app-card:hover { background: var(--card-h); border-color: var(--border-h); }
+        .app-card.visible:hover { transform: translateY(-6px); }
 
+        .app-card-visual {
+            position: relative; display: flex;
+            justify-content: center; align-items: center;
+            height: 220px; margin-bottom: 28px;
+        }
         .glow {
-            position: absolute; inset: -50px; border-radius: 50%;
-            filter: blur(70px); opacity: .28; pointer-events: none; z-index: 0;
+            position: absolute; inset: -40px; border-radius: 50%;
+            filter: blur(60px); opacity: .25; pointer-events: none;
         }
         .glow-blue   { background: radial-gradient(circle, rgba(79,142,247,.9),  transparent 65%); }
         .glow-green  { background: radial-gradient(circle, rgba(62,207,96,.9),   transparent 65%); }
@@ -251,16 +269,11 @@
 
         .app-img {
             position: relative; z-index: 1;
-            max-width: 260px; height: auto; border-radius: 28px;
-            box-shadow:
-                0 2px 0 1px rgba(255,255,255,.06),
-                0 24px 60px rgba(0,0,0,.6),
-                0 48px 100px rgba(0,0,0,.35);
-            transition: transform .45s cubic-bezier(.22,.61,.36,1);
+            max-height: 210px; max-width: 100%; width: auto; border-radius: 24px;
+            box-shadow: 0 2px 0 1px rgba(255,255,255,.06), 0 20px 50px rgba(0,0,0,.6);
+            transition: transform .4s cubic-bezier(.22,.61,.36,1);
         }
-        .app-img:hover { transform: scale(1.04) rotate(-1.2deg); }
-
-        .app-body { display: flex; flex-direction: column; }
+        .app-card:hover .app-img { transform: scale(1.05) rotate(-1deg); }
 
         .app-label {
             display: inline-flex; align-items: center;
@@ -268,24 +281,22 @@
             border-radius: 100px; padding: 4px 14px;
             font-size: 11px; font-weight: 600; letter-spacing: 1px;
             text-transform: uppercase; color: var(--text-3);
-            margin-bottom: 16px; align-self: flex-start;
+            margin-bottom: 14px; align-self: flex-start;
         }
-        .app-banner-img { max-width: 220px; height: auto; margin-bottom: 14px; }
+        .app-banner-img { max-width: 200px; height: auto; margin-bottom: 12px; }
         .app-title {
-            font-family: var(--font-d);
-            font-size: 38px; font-weight: 700; letter-spacing: -1.5px; line-height: 1.08;
-            color: var(--text); margin-bottom: 14px;
+            font-family: var(--font-d); font-size: 28px; font-weight: 700;
+            letter-spacing: -1px; line-height: 1.1; color: var(--text); margin-bottom: 12px;
         }
-        .app-desc { font-size: 16px; color: var(--text-2); line-height: 1.75; margin-bottom: 28px; }
-        .app-perks { display: flex; flex-direction: column; gap: 9px; margin-bottom: 36px; }
-        .app-perk  { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-2); }
+        .app-desc { font-size: 14px; color: var(--text-2); line-height: 1.7; margin-bottom: 20px; flex: 1; }
+        .app-perks { display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+        .app-perk  { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-2); }
         .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
         .dot-b { background: var(--blue);   box-shadow: 0 0 8px rgba(79,142,247,.7); }
         .dot-g { background: var(--green);  box-shadow: 0 0 8px rgba(62,207,96,.7); }
         .dot-p { background: var(--purple); box-shadow: 0 0 8px rgba(124,92,245,.7); }
-        .badge-link img { height: 50px; width: auto; transition: transform .2s, opacity .2s; }
+        .badge-link img { height: 46px; width: auto; transition: transform .2s, opacity .2s; }
         .badge-link img:hover { transform: scale(1.06); opacity: .85; }
-        .row-sep { height: 1px; background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent); }
 
         /* ─── About ─────────────────────────────────────────────── */
         .about { position: relative; z-index: 1; padding: 90px 0; }
@@ -434,12 +445,7 @@
         /* ─── Responsive ────────────────────────────────────────── */
         @media (max-width: 800px) {
             nav ul { display: none; }
-            .app-row { grid-template-columns: 1fr; gap: 36px; padding: 52px 0; text-align: center; }
-            .app-row.flip .app-visual, .app-row.flip .app-body { order: unset; }
-            .app-visual { order: -1; }
-            .app-label, .badge-link { align-self: center; }
-            .app-perks { align-items: center; }
-            .app-banner-img { margin: 0 auto 14px; }
+            .app-card { flex: 0 0 300px; }
             .about-grid { grid-template-columns: 1fr; gap: 48px; }
             .contact-box { padding: 44px 28px; }
             .footer-row { flex-direction: column; text-align: center; }
@@ -448,6 +454,7 @@
             .hero-actions { flex-direction: column; width: 100%; }
             .btn { justify-content: center; }
             .privacy-box { padding: 28px 22px; }
+            .app-card { flex: 0 0 280px; }
         }
     </style>
 </head>
@@ -511,76 +518,66 @@
             <p class="sb"       data-i18n="apps.desc">From smart keyboards to Apple Watch games — here's what I've shipped to the App Store.</p>
         </div>
 
-        <!-- MergeKey -->
-        <div class="app-row" data-reveal>
-            <div class="app-visual">
-                <div class="mockup-shell">
-                    <div class="glow glow-blue"></div>
-                    <img src="dist/images/mergeKey.gif" alt="MergeKey keyboard app preview" class="app-img">
-                </div>
-            </div>
-            <div class="app-body">
-                <span class="app-label" data-i18n="mk.label">Keyboard · Productivity</span>
-                <img src="dist/images/MergeKey Banner.png" alt="MergeKey" class="app-banner-img">
-                <p class="app-desc" data-i18n="mk.desc">The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.</p>
-                <div class="app-perks">
-                    <div class="app-perk"><span class="dot dot-b"></span><span data-i18n="mk.perk1">Dynamic, adaptive word learning</span></div>
-                    <div class="app-perk"><span class="dot dot-b"></span><span data-i18n="mk.perk2">Reduces typos in real time</span></div>
-                    <div class="app-perk"><span class="dot dot-b"></span><span data-i18n="mk.perk3">Fully customizable personal dictionary</span></div>
-                </div>
-                <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link">
-                    <img src="src/images/DownloadAppStore.svg" alt="Download MergeKey on the App Store">
-                </a>
-            </div>
-        </div>
+        <div class="app-track-wrap">
+            <div class="app-track">
 
-        <div class="row-sep"></div>
+                <!-- MergeKey -->
+                <div class="app-card">
+                    <div class="app-card-visual">
+                        <div class="glow glow-blue"></div>
+                        <img src="dist/images/mergeKey.gif" alt="MergeKey keyboard app preview" class="app-img">
+                    </div>
+                    <span class="app-label" data-i18n="mk.label">Keyboard · Productivity</span>
+                    <img src="dist/images/MergeKey Banner.png" alt="MergeKey" class="app-banner-img">
+                    <p class="app-desc" data-i18n="mk.desc">The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.</p>
+                    <div class="app-perks">
+                        <div class="app-perk"><span class="dot dot-b"></span><span data-i18n="mk.perk1">Dynamic, adaptive word learning</span></div>
+                        <div class="app-perk"><span class="dot dot-b"></span><span data-i18n="mk.perk2">Reduces typos in real time</span></div>
+                        <div class="app-perk"><span class="dot dot-b"></span><span data-i18n="mk.perk3">Fully customizable personal dictionary</span></div>
+                    </div>
+                    <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link">
+                        <img src="src/images/DownloadAppStore.svg" alt="Download MergeKey on the App Store">
+                    </a>
+                </div>
 
-        <!-- Fishy Watch -->
-        <div class="app-row flip" data-reveal>
-            <div class="app-visual">
-                <div class="mockup-shell">
-                    <div class="glow glow-green"></div>
-                    <img src="dist/images/fishy_watch.png" alt="Fishy Watch Apple Watch game" class="app-img">
+                <!-- Fishy Watch -->
+                <div class="app-card">
+                    <div class="app-card-visual">
+                        <div class="glow glow-green"></div>
+                        <img src="dist/images/fishy_watch.png" alt="Fishy Watch Apple Watch game" class="app-img">
+                    </div>
+                    <span class="app-label" data-i18n="fw.label">🐠 Apple Watch · Game</span>
+                    <h3 class="app-title">Fishy Watch</h3>
+                    <p class="app-desc" data-i18n="fw.desc">A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.</p>
+                    <div class="app-perks">
+                        <div class="app-perk"><span class="dot dot-g"></span><span data-i18n="fw.perk1">Dozens of fish to catch &amp; collect</span></div>
+                        <div class="app-perk"><span class="dot dot-g"></span><span data-i18n="fw.perk2">Feed and interact with your catch</span></div>
+                        <div class="app-perk"><span class="dot dot-g"></span><span data-i18n="fw.perk3">Designed natively for Apple Watch</span></div>
+                    </div>
+                    <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link">
+                        <img src="src/images/DownloadAppStore.svg" alt="Download Fishy Watch on the App Store">
+                    </a>
                 </div>
-            </div>
-            <div class="app-body">
-                <span class="app-label" data-i18n="fw.label">🐠 Apple Watch · Game</span>
-                <h3 class="app-title">Fishy Watch</h3>
-                <p class="app-desc" data-i18n="fw.desc">A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.</p>
-                <div class="app-perks">
-                    <div class="app-perk"><span class="dot dot-g"></span><span data-i18n="fw.perk1">Dozens of fish to catch &amp; collect</span></div>
-                    <div class="app-perk"><span class="dot dot-g"></span><span data-i18n="fw.perk2">Feed and interact with your catch</span></div>
-                    <div class="app-perk"><span class="dot dot-g"></span><span data-i18n="fw.perk3">Designed natively for Apple Watch</span></div>
-                </div>
-                <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link">
-                    <img src="src/images/DownloadAppStore.svg" alt="Download Fishy Watch on the App Store">
-                </a>
-            </div>
-        </div>
 
-        <div class="row-sep"></div>
+                <!-- Weltraum -->
+                <div class="app-card">
+                    <div class="app-card-visual">
+                        <div class="glow glow-purple"></div>
+                        <img src="dist/images/iphone-feature-02.png" alt="Weltraum space game" class="app-img">
+                    </div>
+                    <span class="app-label" data-i18n="wt.label">🛰 Multiplayer · Strategy</span>
+                    <h3 class="app-title">Weltraum</h3>
+                    <p class="app-desc" data-i18n="wt.desc">Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center. 👩‍🚀👨‍🚀</p>
+                    <div class="app-perks">
+                        <div class="app-perk"><span class="dot dot-p"></span><span data-i18n="wt.perk1">Real-time multiplayer via Bluetooth</span></div>
+                        <div class="app-perk"><span class="dot dot-p"></span><span data-i18n="wt.perk2">Game Center integration</span></div>
+                        <div class="app-perk"><span class="dot dot-p"></span><span data-i18n="wt.perk3">Unique orbit-based mechanics</span></div>
+                    </div>
+                    <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link">
+                        <img src="src/images/DownloadAppStore.svg" alt="Download Weltraum on the App Store">
+                    </a>
+                </div>
 
-        <!-- Weltraum -->
-        <div class="app-row" data-reveal>
-            <div class="app-visual">
-                <div class="mockup-shell">
-                    <div class="glow glow-purple"></div>
-                    <img src="dist/images/iphone-feature-02.png" alt="Weltraum space game" class="app-img">
-                </div>
-            </div>
-            <div class="app-body">
-                <span class="app-label" data-i18n="wt.label">🛰 Multiplayer · Strategy</span>
-                <h3 class="app-title">Weltraum</h3>
-                <p class="app-desc" data-i18n="wt.desc">Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center. 👩‍🚀👨‍🚀</p>
-                <div class="app-perks">
-                    <div class="app-perk"><span class="dot dot-p"></span><span data-i18n="wt.perk1">Real-time multiplayer via Bluetooth</span></div>
-                    <div class="app-perk"><span class="dot dot-p"></span><span data-i18n="wt.perk2">Game Center integration</span></div>
-                    <div class="app-perk"><span class="dot dot-p"></span><span data-i18n="wt.perk3">Unique orbit-based mechanics</span></div>
-                </div>
-                <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link">
-                    <img src="src/images/DownloadAppStore.svg" alt="Download Weltraum on the App Store">
-                </a>
             </div>
         </div>
 
@@ -999,11 +996,43 @@ window.addEventListener('scroll', () => {
     hdr.classList.toggle('scrolled', window.scrollY > 48);
 }, { passive: true });
 
-// ── Scroll-reveal for app rows ────────────────────────────────────
+// ── Scroll-reveal (generic) ───────────────────────────────────────
 const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
 }, { threshold: 0.12 });
 document.querySelectorAll('[data-reveal]').forEach(r => io.observe(r));
+
+// ── App cards: staggered reveal when track scrolls into view ──────
+const trackWrap = document.querySelector('.app-track-wrap');
+if (trackWrap) {
+    const ioTrack = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.querySelectorAll('.app-card').forEach((card, i) => {
+                    setTimeout(() => card.classList.add('visible'), i * 130);
+                });
+                ioTrack.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.15 });
+    ioTrack.observe(trackWrap);
+
+    // Drag-to-scroll on desktop
+    let isDown = false, startX, scrollLeft;
+    trackWrap.addEventListener('mousedown', e => {
+        isDown = true;
+        startX = e.pageX - trackWrap.offsetLeft;
+        scrollLeft = trackWrap.scrollLeft;
+    });
+    trackWrap.addEventListener('mouseleave', () => { isDown = false; });
+    trackWrap.addEventListener('mouseup',    () => { isDown = false; });
+    trackWrap.addEventListener('mousemove',  e => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - trackWrap.offsetLeft;
+        trackWrap.scrollLeft = scrollLeft - (x - startX);
+    });
+}
 </script>
 
 </body>
