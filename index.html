@@ -349,8 +349,18 @@
         .stat {
             background: var(--card); border: 1px solid var(--border);
             border-radius: var(--r-md); padding: 26px 22px; transition: all .3s;
+            position: relative; overflow: hidden;
         }
         .stat:hover { background: var(--card-h); border-color: var(--border-h); transform: translateY(-4px); }
+        .stat::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            opacity: 0; transition: opacity .3s;
+        }
+        .stat:hover::before { opacity: 1; }
+        .stat:nth-child(4n+1)::before { background: linear-gradient(90deg, var(--blue), var(--purple)); }
+        .stat:nth-child(4n+2)::before { background: linear-gradient(90deg, var(--green), #06b6d4); }
+        .stat:nth-child(4n+3)::before { background: linear-gradient(90deg, var(--purple), var(--blue)); }
+        .stat:nth-child(4n+4)::before { background: linear-gradient(90deg, var(--orange), #f59e0b); }
         .stat-num {
             font-family: var(--font-d); font-size: 42px; font-weight: 700;
             letter-spacing: -2px; line-height: 1; color: var(--text); margin-bottom: 4px;
@@ -365,8 +375,18 @@
         .tech-card {
             background: var(--card); border: 1px solid var(--border);
             border-radius: var(--r-md); padding: 26px 24px; transition: all .3s;
+            position: relative; overflow: hidden;
         }
         .tech-card:hover { background: var(--card-h); border-color: var(--border-h); transform: translateY(-4px); }
+        .tech-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            opacity: 0; transition: opacity .3s;
+        }
+        .tech-card:hover::before { opacity: 1; }
+        .tech-card:nth-child(4n+1)::before { background: linear-gradient(90deg, var(--blue), var(--purple)); }
+        .tech-card:nth-child(4n+2)::before { background: linear-gradient(90deg, var(--green), #06b6d4); }
+        .tech-card:nth-child(4n+3)::before { background: linear-gradient(90deg, var(--orange), #f59e0b); }
+        .tech-card:nth-child(4n+4)::before { background: linear-gradient(90deg, var(--purple), var(--blue)); }
         .tech-card-label {
             font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
             text-transform: uppercase; color: var(--text-3);
@@ -420,10 +440,11 @@
             max-width: 660px; margin: 0 auto; position: relative; overflow: hidden;
         }
         .contact-box::before {
-            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 55%; height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(79,142,247,.55), transparent);
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, var(--blue), var(--purple), var(--green));
+            opacity: 0; transition: opacity .3s;
         }
+        .contact-box:hover::before { opacity: 1; }
         .contact-title { font-family: var(--font-d); font-size: 42px; font-weight: 700; letter-spacing: -1.8px; color: var(--text); margin-bottom: 12px; }
         .contact-sub { font-size: 16px; color: var(--text-2); line-height: 1.7; margin-bottom: 36px; }
         .email-btn {
@@ -791,8 +812,8 @@
         <div class="contact-box">
             <h2 class="contact-title" data-i18n="contact.title">Let's talk</h2>
             <p  class="contact-sub"   data-i18n="contact.sub">Have a question, need support for one of my apps, or just want to say hi? I'm happy to hear from you.</p>
-            <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website" class="email-btn">
-                ✉️&nbsp; andrei.zerodeathgames@gmail.com
+            <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website" class="email-btn" data-i18n="contact.btn">
+                ✉️ Mail me!
             </a>
         </div>
     </div>
@@ -887,6 +908,7 @@ const T = {
 
         'contact.title':"Let's talk",
         'contact.sub':"Have a question, need support for one of my apps, or just want to say hi? I'm happy to hear from you.",
+        'contact.btn':'✉️ Mail me!',
 
         'privacy.heading':'Privacy Policy',
         'privacy.p1':'Apps provided by Andrei Achziger are intended for use as is. This page informs visitors about my policies regarding the collection, use, and disclosure of personal information. If you choose to use my services, your personal information will not be stored, distributed, or analyzed by me.',
@@ -957,6 +979,7 @@ const T = {
 
         'contact.title':'Lass uns reden',
         'contact.sub':'Hast du eine Frage, brauchst Support für eine meiner Apps oder möchtest einfach Hallo sagen? Ich freue mich von dir zu hören.',
+        'contact.btn':'✉️ Schreib mir!',
 
         'privacy.heading':'Datenschutzrichtlinie',
         'privacy.p1':'Die von Andrei Achziger bereitgestellten Apps sind zur Nutzung bestimmt wie sie sind. Diese Seite informiert Besucher über meine Richtlinien bezüglich der Erhebung, Nutzung und Offenlegung personenbezogener Daten. Wenn du meine Dienste nutzt, werden deine personenbezogenen Daten von mir nicht gespeichert, verteilt oder analysiert.',
@@ -980,7 +1003,7 @@ function applyLang(lang) {
     });
     document.documentElement.lang = lang;
     const btn = document.getElementById('lang-btn');
-    if (btn) btn.textContent = lang === 'de' ? 'EN' : 'DE';
+    if (btn) btn.textContent = lang === 'de' ? '🇺🇸 EN' : '🇩🇪 DE';
     // Update meta description
     const meta = document.querySelector('meta[name="description"]');
     if (meta && t['meta.desc']) meta.content = t['meta.desc'];
