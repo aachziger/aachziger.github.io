@@ -247,12 +247,23 @@
             background: var(--card); border: 1px solid var(--border);
             border-radius: var(--r-xl); padding: 32px 28px 36px;
             display: flex; flex-direction: column;
+            position: relative; overflow: hidden;
             transition: background .3s, border-color .3s, transform .35s cubic-bezier(.22,.61,.36,1);
             opacity: 0; transform: translateY(28px);
         }
         .app-card.visible { opacity: 1; transform: translateY(0); }
         .app-card:hover { background: var(--card-h); border-color: var(--border-h); }
         .app-card.visible:hover { transform: translateY(-6px); }
+
+        /* Colour stripe on hover — per card */
+        .app-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            opacity: 0; transition: opacity .3s;
+        }
+        .app-card.visible:hover::before { opacity: 1; }
+        .app-card:nth-child(1)::before { background: linear-gradient(90deg, var(--blue), var(--purple)); }
+        .app-card:nth-child(2)::before { background: linear-gradient(90deg, var(--green), #06b6d4); }
+        .app-card:nth-child(3)::before { background: linear-gradient(90deg, var(--purple), var(--blue)); }
 
         .app-card-visual {
             position: relative; display: flex;
@@ -514,7 +525,7 @@
 
         <div class="apps-head">
             <div class="eyebrow" data-i18n="apps.eyebrow">My Applications</div>
-            <h2 class="sh"      data-i18n="apps.heading">Apps built with ❤️</h2>
+            <h2 class="sh"      data-i18n="apps.heading">Apps built with 🧠 &amp; ❤️</h2>
             <p class="sb"       data-i18n="apps.desc">From smart keyboards to Apple Watch games — here's what I've shipped to the App Store.</p>
         </div>
 
@@ -825,7 +836,7 @@ const T = {
         'hero.sub':'Bridging cognition and technology. I build mobile apps, cross-platform tools, and games — things that are useful, playful, and a little unexpected. B.Sc. Cognitive Science, lifelong curious mind.',
         'hero.cta_apps':'See My Apps', 'hero.cta_contact':'Get in Touch', 'hero.scroll':'Scroll',
 
-        'apps.eyebrow':'My Applications', 'apps.heading':'Apps built with ❤️',
+        'apps.eyebrow':'My Applications', 'apps.heading':'Apps built with 🧠 & ❤️',
         'apps.desc':"From smart keyboards to Apple Watch games — here's what I've shipped to the App Store.",
 
         'mk.label':'Keyboard · Productivity',
@@ -895,7 +906,7 @@ const T = {
         'hero.sub':'Zwischen Kognition und Technologie. Ich baue mobile Apps, plattformübergreifende Tools und Spiele – Dinge, die nützlich, verspielt und manchmal überraschend sind. B.Sc. Kognitionswissenschaft, lebenslang neugierig.',
         'hero.cta_apps':'Meine Apps', 'hero.cta_contact':'Kontakt aufnehmen', 'hero.scroll':'Scrollen',
 
-        'apps.eyebrow':'Meine Anwendungen', 'apps.heading':'Apps mit ❤️ gebaut',
+        'apps.eyebrow':'Meine Anwendungen', 'apps.heading':'Apps mit 🧠 & ❤️ gebaut',
         'apps.desc':'Von smarten Tastaturen bis zu Apple Watch-Spielen – hier ist, was ich im App Store veröffentlicht habe.',
 
         'mk.label':'Tastatur · Produktivität',
