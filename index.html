@@ -481,6 +481,56 @@
         }
         .footer-links a:hover { color: var(--text-display); }
 
+        /* ─── Space background ─────────────────────────────────── */
+        .space-bg {
+            position: fixed; inset: 0; z-index: 0;
+            pointer-events: none; overflow: hidden;
+        }
+        .space-bg .star {
+            position: absolute; background: var(--text-display);
+            opacity: 0;
+            animation: twinkle var(--dur) var(--delay) ease-in-out infinite;
+        }
+        .space-bg .comet {
+            position: absolute; background: var(--orange);
+            width: var(--size); height: var(--size);
+            opacity: 0;
+            /* Rotate entire comet+trail to match flight direction */
+            rotate: var(--angle);
+            animation: cometFly var(--dur) var(--delay) linear infinite;
+        }
+        .space-bg .comet::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 100%;
+            width: calc(var(--size) * 20);
+            height: var(--size);
+            background: linear-gradient(to left, var(--orange), transparent);
+            opacity: 0.6;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.05; transform: scale(0.6); }
+            50% { opacity: var(--peak); transform: scale(1); }
+        }
+
+        /* Comet flies along its local X axis (rotation handles direction) */
+        @keyframes cometFly {
+            0% {
+                opacity: 0;
+                transform: translateX(0);
+            }
+            5% { opacity: 0.85; }
+            75% { opacity: 0.85; }
+            100% {
+                opacity: 0;
+                transform: translateX(var(--travel));
+            }
+        }
+
+        /* Tone it down in light mode */
+        [data-theme="light"] .space-bg { opacity: 0.35; }
+
         /* ─── Scroll reveal ────────────────────────────────────── */
         [data-reveal] { opacity: 0; transition: opacity 300ms var(--ease); }
         [data-reveal].visible { opacity: 1; }
@@ -502,6 +552,9 @@
     </style>
 </head>
 <body>
+
+<!-- ═══════════ SPACE BACKGROUND ═════════════════════════════════ -->
+<div class="space-bg" id="space-bg" aria-hidden="true"></div>
 
 <!-- ═══════════ HEADER ════════════════════════════════════════════ -->
 <header class="site-header" id="hdr">
@@ -1099,6 +1152,58 @@ if (trackWrap) {
         trackWrap.scrollLeft = scrollLeft - (x - startX);
     });
 }
+
+// ── Space background — stars & comets ─────────────────────────────
+(function() {
+    var container = document.getElementById('space-bg');
+    if (!container) return;
+
+    // Static twinkling stars (small squares)
+    for (var i = 0; i < 60; i++) {
+        var star = document.createElement('div');
+        star.className = 'star';
+        var size = Math.random() * 2.5 + 1; // 1–3.5px
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.setProperty('--dur', (3 + Math.random() * 5) + 's');
+        star.style.setProperty('--delay', (Math.random() * 6) + 's');
+        star.style.setProperty('--peak', (0.15 + Math.random() * 0.55).toFixed(2));
+        container.appendChild(star);
+    }
+
+    // Comets — random directions, trail always aligned to path
+    var cometCount = 6;
+    for (var c = 0; c < cometCount; c++) {
+        var comet = document.createElement('div');
+        comet.className = 'comet';
+        var cSize = Math.random() * 2 + 1.5; // 1.5–3.5px
+
+        // Random angle: full 360° range, in degrees
+        var angle = Math.random() * 360;
+        // Travel distance — enough to cross viewport
+        var travel = 900 + Math.random() * 800; // 900–1700px
+
+        // Start position: place them around edges so they fly across
+        // Convert angle to radians to figure out a good start
+        var rad = angle * Math.PI / 180;
+        var startX, startY;
+        // Start from a position that makes sense for the direction
+        // Push start behind the edge they'll fly away from
+        startX = 10 + Math.random() * 60; // % across viewport
+        startY = 10 + Math.random() * 60; // % down viewport
+
+        comet.style.setProperty('--size', cSize + 'px');
+        comet.style.setProperty('--angle', angle + 'deg');
+        comet.style.setProperty('--travel', travel + 'px');
+        comet.style.left = startX + '%';
+        comet.style.top = startY + '%';
+        comet.style.setProperty('--dur', (5 + Math.random() * 10) + 's');
+        comet.style.setProperty('--delay', (c * 3 + Math.random() * 6) + 's');
+        container.appendChild(comet);
+    }
+})();
 </script>
 
 </body>
