@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,42 +8,85 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500&family=Space+Mono:wght@400;700&family=Doto&display=swap" rel="stylesheet">
 
     <style>
         /* ─── Reset ─────────────────────────────────────────────── */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+        /* ─── Nothing Design Tokens — Dark (default) ────────────── */
         :root {
-            --bg:            #06080f;
-            --bg2:           #0b0e1a;
-            --card:          rgba(255,255,255,0.04);
-            --card-h:        rgba(255,255,255,0.07);
-            --border:        rgba(255,255,255,0.08);
-            --border-h:      rgba(255,255,255,0.18);
-            --text:          #eef0ff;
-            --text-2:        #8b8fa8;
-            --text-3:        #50536b;
-            --blue:          #4f8ef7;
-            --purple:        #7c5cf5;
-            --green:         #3ecf60;
-            --orange:        #ff6c50;
-            --r-sm:          10px;
-            --r-md:          18px;
-            --r-lg:          26px;
-            --r-xl:          36px;
-            --font:          'Inter', system-ui, sans-serif;
-            --font-d:        'Space Grotesk', system-ui, sans-serif;
+            --black:           #000000;
+            --surface:         #111111;
+            --surface-raised:  #1A1A1A;
+            --border:          #222222;
+            --border-visible:  #333333;
+            --text-disabled:   #666666;
+            --text-secondary:  #999999;
+            --text-primary:    #E8E8E8;
+            --text-display:    #FFFFFF;
+            --accent:          #D71921;
+            --accent-subtle:   rgba(215,25,33,0.15);
+            --orange:          #FF6B00;
+            --orange-subtle:   rgba(255,107,0,0.15);
+            --success:         #4A9E5C;
+            --warning:         #D4A843;
+            --interactive:     #5B9BF6;
+
+            --space-xs:  4px;
+            --space-sm:  8px;
+            --space-md:  16px;
+            --space-lg:  24px;
+            --space-xl:  32px;
+            --space-2xl: 48px;
+            --space-3xl: 64px;
+            --space-4xl: 96px;
+
+            --font-body:    'Space Grotesk', 'DM Sans', system-ui, sans-serif;
+            --font-mono:    'Space Mono', 'JetBrains Mono', 'SF Mono', monospace;
+            --font-display: 'Doto', 'Space Mono', monospace;
+
+            --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        /* ─── Light Mode Tokens ─────────────────────────────────── */
+        [data-theme="light"] {
+            --black:           #F5F5F5;
+            --surface:         #FFFFFF;
+            --surface-raised:  #F0F0F0;
+            --border:          #E8E8E8;
+            --border-visible:  #CCCCCC;
+            --text-disabled:   #999999;
+            --text-secondary:  #666666;
+            --text-primary:    #1A1A1A;
+            --text-display:    #000000;
+            --interactive:     #007AFF;
+        }
+
+        /* ─── System preference auto-detect (only if no manual override) ── */
+        @media (prefers-color-scheme: light) {
+            :root:not([data-theme="dark"]):not([data-theme="light"]) {
+                --black:           #F5F5F5;
+                --surface:         #FFFFFF;
+                --surface-raised:  #F0F0F0;
+                --border:          #E8E8E8;
+                --border-visible:  #CCCCCC;
+                --text-disabled:   #999999;
+                --text-secondary:  #666666;
+                --text-primary:    #1A1A1A;
+                --text-display:    #000000;
+                --interactive:     #007AFF;
+            }
         }
 
         html { scroll-behavior: smooth; }
 
         body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: var(--font);
+            background: var(--black);
+            color: var(--text-primary);
+            font-family: var(--font-body);
             font-size: 16px;
-            line-height: 1.6;
+            line-height: 1.5;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
@@ -52,448 +95,413 @@
         img { display: block; max-width: 100%; }
 
         /* ─── Layout ─────────────────────────────────────────────── */
-        .wrap    { max-width: 1100px; margin: 0 auto; padding: 0 28px; }
-        .wrap-sm { max-width: 680px;  margin: 0 auto; padding: 0 28px; }
-
-        /* ─── Ambient orbs ──────────────────────────────────────── */
-        .orbs {
-            position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
-        }
-        .orbs span {
-            position: absolute; border-radius: 50%; filter: blur(80px);
-            animation: orbDrift 20s ease-in-out infinite alternate;
-        }
-        .orbs span:nth-child(1) {
-            width: 55vw; height: 55vw; top: -25%; left: -15%; opacity: 1;
-            background: radial-gradient(circle, rgba(79,142,247,.17), transparent 70%);
-            animation-duration: 22s;
-        }
-        .orbs span:nth-child(2) {
-            width: 45vw; height: 45vw; bottom: -10%; right: -10%; opacity: 1;
-            background: radial-gradient(circle, rgba(124,92,245,.13), transparent 70%);
-            animation-duration: 28s; animation-direction: alternate-reverse;
-        }
-        .orbs span:nth-child(3) {
-            width: 30vw; height: 30vw; top: 40%; left: 55%; opacity: 1;
-            background: radial-gradient(circle, rgba(62,207,96,.07), transparent 70%);
-            animation-duration: 18s;
-        }
-        @keyframes orbDrift {
-            from { transform: translate(0,0) scale(1); }
-            to   { transform: translate(6%,8%) scale(1.12); }
-        }
+        .wrap    { max-width: 1100px; margin: 0 auto; padding: 0 var(--space-lg); }
+        .wrap-sm { max-width: 680px;  margin: 0 auto; padding: 0 var(--space-lg); }
 
         /* ─── Header ────────────────────────────────────────────── */
         .site-header {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            padding: 22px 0;
-            transition: background .35s, border-color .35s, padding .25s;
+            padding: var(--space-md) 0;
+            background: transparent;
+            transition: background 250ms var(--ease), border-color 250ms var(--ease);
+            border-bottom: 1px solid transparent;
         }
         .site-header.scrolled {
-            background: rgba(6,8,15,.88);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            padding: 14px 0;
+            background: var(--black);
+            border-bottom-color: var(--border);
         }
         .header-row { display: flex; align-items: center; justify-content: space-between; }
-        .logo { display: flex; align-items: center; gap: 10px; }
-        .logo img { width: 34px; height: 34px; border-radius: 8px; }
+        .logo { display: flex; align-items: center; gap: var(--space-sm); }
+        .logo img { width: 32px; height: 32px; border-radius: 8px; }
         .logo-name {
-            font-family: var(--font-d); font-size: 15px; font-weight: 600;
-            letter-spacing: -.2px; color: var(--text);
+            font-family: var(--font-display); font-size: 18px; font-weight: 400;
+            letter-spacing: -0.02em;
+            color: var(--text-display);
         }
-        nav { display: flex; align-items: center; gap: 8px; }
-        nav ul { display: flex; gap: 30px; list-style: none; }
-        nav a { font-size: 14px; font-weight: 500; color: var(--text-2); transition: color .2s; }
-        nav a:hover { color: var(--text); }
-        .nav-btn {
-            background: var(--blue); color: #fff !important;
-            padding: 8px 20px; border-radius: 100px; transition: opacity .2s !important;
+        nav { display: flex; align-items: center; gap: var(--space-sm); }
+        nav ul { display: flex; gap: var(--space-lg); list-style: none; }
+        nav a {
+            font-family: var(--font-mono); font-size: 11px; font-weight: 400;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--text-disabled);
+            transition: color 200ms var(--ease);
         }
-        .nav-btn:hover { opacity: .8; }
+        nav a:hover { color: var(--text-display); }
+        .nav-contact {
+            color: var(--text-display);
+            border: 1px solid var(--border-visible);
+            border-radius: 999px;
+            padding: 8px 20px;
+            transition: border-color 200ms var(--ease);
+        }
+        .nav-contact:hover { border-color: var(--text-display); }
 
-        /* ─── Language toggle ───────────────────────────────────── */
-        .lang-btn {
-            background: none; border: 1px solid var(--border);
-            border-radius: 100px; padding: 6px 14px;
-            font-family: var(--font); font-size: 12px; font-weight: 700;
-            letter-spacing: .8px; color: var(--text-2);
-            cursor: pointer; transition: all .2s; margin-left: 8px;
+        /* ─── Header controls ──────────────────────────────────── */
+        .header-controls { display: flex; align-items: center; gap: var(--space-sm); }
+        .ctrl-btn {
+            background: none; border: 1px solid var(--border-visible);
+            border-radius: 999px; padding: 6px 14px;
+            font-family: var(--font-mono); font-size: 11px; font-weight: 400;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            color: var(--text-secondary);
+            cursor: pointer; transition: color 200ms var(--ease), border-color 200ms var(--ease);
         }
-        .lang-btn:hover { border-color: var(--border-h); color: var(--text); }
+        .ctrl-btn:hover { color: var(--text-display); border-color: var(--text-display); }
 
         /* ─── Hero ──────────────────────────────────────────────── */
         .hero {
             position: relative; z-index: 1;
             min-height: 100dvh; display: flex; align-items: center;
-            padding: 120px 0 80px; text-align: center;
+            padding: var(--space-4xl) 0 var(--space-3xl);
         }
-        .hero-inner { display: flex; flex-direction: column; align-items: center; }
+        .hero-inner {
+            display: flex; flex-direction: column; align-items: flex-start;
+            position: relative;
+        }
 
         .hero-chip {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(79,142,247,.1); border: 1px solid rgba(79,142,247,.25);
-            border-radius: 100px; padding: 6px 16px;
-            font-size: 12px; font-weight: 600; letter-spacing: .8px;
-            text-transform: uppercase; color: var(--blue); margin-bottom: 28px;
-            animation: fadeUp .7s ease both;
+            font-family: var(--font-mono); font-size: 11px; font-weight: 400;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+            display: flex; align-items: center; gap: var(--space-sm);
         }
         .hero-chip::before {
-            content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--blue);
-            animation: blink 2s ease-in-out infinite;
-        }
-        @keyframes blink {
-            0%,100% { opacity:1; transform:scale(1); }
-            50%      { opacity:.4; transform:scale(.7); }
+            content: ''; width: 6px; height: 6px; border-radius: 50%;
+            background: var(--orange);
         }
 
         .hero-title {
-            font-family: var(--font-d);
-            font-size: clamp(50px, 9vw, 92px);
-            font-weight: 700; line-height: 1.04; letter-spacing: -2.5px; margin-bottom: 24px;
-            background: linear-gradient(160deg, #ffffff 40%, rgba(255,255,255,.5) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-            animation: fadeUp .7s .1s ease both;
-        }
-        .hero-title .accent {
-            background: linear-gradient(90deg, var(--blue), var(--purple));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            font-family: var(--font-display);
+            font-size: clamp(48px, 10vw, 96px);
+            font-weight: 400; line-height: 1.0; letter-spacing: -0.03em;
+            color: var(--text-display);
+            margin-bottom: var(--space-lg);
         }
 
         .hero-sub {
-            font-size: clamp(16px, 2.2vw, 19px); color: var(--text-2);
-            max-width: 520px; line-height: 1.75; margin-bottom: 40px;
-            animation: fadeUp .7s .2s ease both;
+            font-family: var(--font-body);
+            font-size: 18px; line-height: 1.5;
+            color: var(--text-primary);
+            max-width: 520px;
+            margin-bottom: var(--space-2xl);
         }
 
-        .hero-actions {
-            display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
-            animation: fadeUp .7s .35s ease both;
+        .hero-actions { display: flex; gap: var(--space-md); flex-wrap: wrap; }
+
+        /* Dot grid background — hero only */
+        .hero::before {
+            content: ''; position: absolute; inset: 0; z-index: -1;
+            background-image: radial-gradient(circle, var(--border) 0.5px, transparent 0.5px);
+            background-size: 12px 12px;
+            opacity: 0.4;
         }
+
+        /* ─── Buttons ───────────────────────────────────────────── */
         .btn {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 13px 30px; border-radius: 100px;
-            font-family: var(--font); font-weight: 600; font-size: 15px;
-            transition: all .2s ease; cursor: pointer; border: none;
+            display: inline-flex; align-items: center; gap: var(--space-sm);
+            padding: 12px 24px; border-radius: 999px;
+            font-family: var(--font-mono); font-size: 13px; font-weight: 400;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            cursor: pointer; border: none;
+            transition: opacity 200ms var(--ease), border-color 200ms var(--ease);
+            min-height: 44px;
         }
         .btn-primary {
-            background: linear-gradient(135deg, var(--blue), var(--purple));
-            color: #fff; box-shadow: 0 4px 24px rgba(79,142,247,.35);
+            background: var(--text-display); color: var(--black);
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(79,142,247,.5); }
-        .btn-ghost {
-            background: var(--card); color: var(--text); border: 1px solid var(--border);
+        .btn-primary:hover { opacity: 0.85; }
+        .btn-secondary {
+            background: transparent; color: var(--text-primary);
+            border: 1px solid var(--border-visible);
         }
-        .btn-ghost:hover { background: var(--card-h); border-color: var(--border-h); transform: translateY(-2px); }
+        .btn-secondary:hover { border-color: var(--text-display); color: var(--text-display); }
 
-        .scroll-cue {
-            margin-top: 72px; display: flex; flex-direction: column; align-items: center; gap: 8px;
-            color: var(--text-3); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
-            animation: fadeUp .7s .6s ease both;
-        }
-        .scroll-cue-line {
-            width: 1px; height: 48px;
-            background: linear-gradient(to bottom, var(--text-3), transparent);
-            animation: lineGrow 2s ease-in-out infinite;
-        }
-        @keyframes lineGrow {
-            0%,100% { transform:scaleY(1) translateY(0); opacity:.6; }
-            50%      { transform:scaleY(1.3) translateY(6px); opacity:1; }
-        }
-        @keyframes fadeUp {
-            from { opacity:0; transform:translateY(24px); }
-            to   { opacity:1; transform:translateY(0); }
-        }
+        /* ─── Section shared ────────────────────────────────────── */
+        .section { position: relative; z-index: 1; padding: var(--space-4xl) 0; }
+        .section-head { margin-bottom: var(--space-2xl); }
 
-        /* ─── Divider ────────────────────────────────────────────── */
-        .hr { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); }
-
-        /* ─── Section labels ────────────────────────────────────── */
         .eyebrow {
-            display: inline-flex; align-items: center; gap: 10px;
-            font-size: 11px; font-weight: 600; letter-spacing: 2px;
-            text-transform: uppercase; color: var(--text-3); margin-bottom: 12px;
+            font-family: var(--font-mono); font-size: 11px; font-weight: 400;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--orange);
+            margin-bottom: var(--space-sm);
         }
-        .eyebrow::before { content:''; width:18px; height:1px; background:currentColor; }
         .sh {
-            font-family: var(--font-d);
-            font-size: clamp(30px, 4.5vw, 46px);
-            font-weight: 700; letter-spacing: -1.5px; line-height: 1.1;
-            color: var(--text); margin-bottom: 14px;
+            font-family: var(--font-display);
+            font-size: clamp(28px, 4vw, 36px);
+            font-weight: 400; letter-spacing: -0.02em; line-height: 1.1;
+            color: var(--text-display);
+            margin-bottom: var(--space-sm);
         }
-        .sb { font-size: 17px; color: var(--text-2); line-height: 1.75; max-width: 500px; }
+        .sh .accent { color: var(--orange); }
+        .sb {
+            font-size: 16px; color: var(--text-secondary); line-height: 1.5;
+            max-width: 500px;
+        }
+
+        .divider { height: 1px; background: var(--orange); opacity: 0.25; }
 
         /* ─── Apps section ──────────────────────────────────────── */
-        .apps { position: relative; z-index: 1; padding: 90px 0 100px; }
-        .apps-head { text-align: center; margin-bottom: 56px; }
+        .apps-head { text-align: center; margin-bottom: var(--space-2xl); }
         .apps-head .sb { margin: 0 auto; }
 
-        /* Horizontal scroll track */
         .app-track-wrap {
             overflow-x: auto; overflow-y: visible;
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
-            margin: 0 -28px; padding: 8px 28px 36px;
+            margin: 0 calc(-1 * var(--space-lg)); padding: var(--space-sm) var(--space-lg) var(--space-xl);
             cursor: grab;
         }
         .app-track-wrap:active { cursor: grabbing; }
         .app-track-wrap::-webkit-scrollbar { display: none; }
-        .app-track { display: flex; gap: 20px; padding-right: 28px; }
+        .app-track { display: flex; gap: var(--space-md); padding-right: var(--space-lg); }
 
-        /* Cards */
         .app-card {
             flex: 0 0 340px; scroll-snap-align: start;
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: var(--r-xl); padding: 32px 28px 36px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-top: 2px solid var(--orange);
+            border-radius: 16px; padding: var(--space-lg) var(--space-lg) var(--space-xl);
             display: flex; flex-direction: column;
-            position: relative; overflow: hidden;
-            transition: background .3s, border-color .3s, transform .35s cubic-bezier(.22,.61,.36,1);
-            opacity: 0; transform: translateY(28px);
+            transition: border-color 200ms var(--ease);
+            opacity: 0;
         }
-        .app-card.visible { opacity: 1; transform: translateY(0); }
-        .app-card:hover { background: var(--card-h); border-color: var(--border-h); }
-        .app-card.visible:hover { transform: translateY(-6px); }
-
-        /* Colour stripe on hover — per card */
-        .app-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            opacity: 0; transition: opacity .3s;
-        }
-        .app-card.visible:hover::before { opacity: 1; }
-        .app-card:nth-child(1)::before { background: linear-gradient(90deg, var(--blue), var(--purple)); }
-        .app-card:nth-child(2)::before { background: linear-gradient(90deg, var(--green), #06b6d4); }
-        .app-card:nth-child(3)::before { background: linear-gradient(90deg, var(--purple), var(--blue)); }
+        .app-card.visible { opacity: 1; transition: opacity 300ms var(--ease), border-color 200ms var(--ease); }
+        .app-card:hover { border-color: var(--border-visible); border-top-color: var(--orange); }
 
         .app-card-visual {
-            position: relative; display: flex;
-            justify-content: center; align-items: center;
-            height: 220px; margin-bottom: 28px;
+            display: flex; justify-content: center; align-items: center;
+            height: 220px; margin-bottom: var(--space-lg);
         }
-        .glow {
-            position: absolute; inset: -40px; border-radius: 50%;
-            filter: blur(60px); opacity: .25; pointer-events: none;
-        }
-        .glow-blue   { background: radial-gradient(circle, rgba(79,142,247,.9),  transparent 65%); }
-        .glow-green  { background: radial-gradient(circle, rgba(62,207,96,.9),   transparent 65%); }
-        .glow-purple { background: radial-gradient(circle, rgba(124,92,245,.9),  transparent 65%); }
-
         .app-img {
-            position: relative; z-index: 1;
-            max-height: 210px; max-width: 100%; width: auto; border-radius: 24px;
-            box-shadow: 0 2px 0 1px rgba(255,255,255,.06), 0 20px 50px rgba(0,0,0,.6);
-            transition: transform .4s cubic-bezier(.22,.61,.36,1);
+            max-height: 210px; max-width: 100%; width: auto; border-radius: 12px;
         }
-        .app-card:hover .app-img { transform: scale(1.05) rotate(-1deg); }
 
         .app-label {
-            display: inline-flex; align-items: center;
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 100px; padding: 4px 14px;
-            font-size: 11px; font-weight: 600; letter-spacing: 1px;
-            text-transform: uppercase; color: var(--text-3);
-            margin-bottom: 14px; align-self: flex-start;
+            font-family: var(--font-mono); font-size: 11px; font-weight: 400;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-visible);
+            border-radius: 999px; padding: 4px 12px;
+            margin-bottom: var(--space-md); align-self: flex-start;
         }
-        .app-banner-img { max-width: 200px; height: auto; margin-bottom: 12px; }
+        .app-banner-img { max-width: 200px; height: auto; margin-bottom: var(--space-sm); }
         .app-title {
-            font-family: var(--font-d); font-size: 28px; font-weight: 700;
-            letter-spacing: -1px; line-height: 1.1; color: var(--text); margin-bottom: 12px;
+            font-family: var(--font-display); font-size: 24px; font-weight: 400;
+            letter-spacing: -0.01em; line-height: 1.2;
+            color: var(--text-display); margin-bottom: var(--space-sm);
         }
-        .app-desc { font-size: 14px; color: var(--text-2); line-height: 1.7; margin-bottom: 20px; flex: 1; }
-        .app-perks { display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
-        .app-perk  { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-2); }
-        .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-        .dot-b { background: var(--blue);   box-shadow: 0 0 8px rgba(79,142,247,.7); }
-        .dot-g { background: var(--green);  box-shadow: 0 0 8px rgba(62,207,96,.7); }
-        .dot-p { background: var(--purple); box-shadow: 0 0 8px rgba(124,92,245,.7); }
-        .badge-link img { height: 46px; width: auto; transition: transform .2s, opacity .2s; }
-        .badge-link img:hover { transform: scale(1.06); opacity: .85; }
+        .app-desc {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.5;
+            margin-bottom: var(--space-md); flex: 1;
+        }
+        .app-perks { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--space-lg); }
+        .app-perk {
+            font-family: var(--font-mono); font-size: 12px;
+            color: var(--text-secondary); letter-spacing: 0.01em;
+        }
+        .app-perk::before { content: '— '; color: var(--text-disabled); }
+        .badge-link img {
+            height: 40px; width: auto;
+            transition: opacity 200ms var(--ease);
+        }
+        .badge-link img:hover { opacity: 0.7; }
 
         /* ─── About ─────────────────────────────────────────────── */
-        .about { position: relative; z-index: 1; padding: 90px 0; }
-        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3xl); align-items: start; }
 
-        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; overflow: visible; }
+        .tags { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-lg); }
         .tag {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 100px; padding: 5px 14px;
-            font-size: 13px; color: var(--text-2);
-            transition: background .2s, border-color .2s, color .2s;
-            position: relative; overflow: visible; cursor: default;
+            font-family: var(--font-mono); font-size: 11px; font-weight: 400;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-visible); border-radius: 999px;
+            padding: 4px 12px;
+            transition: color 200ms var(--ease), border-color 200ms var(--ease);
         }
-        .tag:hover { background: var(--card-h); border-color: var(--border-h); color: var(--text); }
-
-        /* Hover emoji pop */
+        .tag { position: relative; overflow: visible; cursor: default; }
+        .tag:hover { color: var(--text-display); border-color: var(--text-display); }
         .tag::after {
             content: attr(data-emoji);
-            position: absolute; bottom: calc(100% + 5px); left: 50%;
-            transform: translateX(-50%) scale(0) translateY(4px);
-            font-size: 22px; line-height: 1; pointer-events: none; opacity: 0;
-            transition: transform .25s cubic-bezier(.34,1.56,.64,1), opacity .18s ease;
-            z-index: 10; filter: drop-shadow(0 2px 6px rgba(0,0,0,.5));
+            position: absolute; bottom: calc(100% + 4px); left: 50%;
+            transform: translateX(-50%) scale(0); transform-origin: bottom center;
+            font-size: 20px; line-height: 1; pointer-events: none; opacity: 0;
+            transition: transform 200ms var(--ease), opacity 150ms var(--ease);
         }
         .tag:hover::after {
-            transform: translateX(-50%) scale(1) translateY(0);
-            opacity: 1; animation: tagWobble .55s .05s ease both;
-        }
-        @keyframes tagWobble {
-            0%   { transform: translateX(-50%) scale(1)    rotate(0deg); }
-            22%  { transform: translateX(-50%) scale(1.25) rotate(-14deg); }
-            44%  { transform: translateX(-50%) scale(1.15) rotate(12deg); }
-            66%  { transform: translateX(-50%) scale(1.08) rotate(-6deg); }
-            84%  { transform: translateX(-50%) scale(1.04) rotate(4deg); }
-            100% { transform: translateX(-50%) scale(1)    rotate(0deg); }
+            transform: translateX(-50%) scale(1); opacity: 1;
         }
 
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
         .stat {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: var(--r-md); padding: 26px 22px; transition: all .3s;
-            position: relative; overflow: hidden;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: var(--space-lg) var(--space-md);
+            transition: border-color 200ms var(--ease);
         }
-        .stat:hover { background: var(--card-h); border-color: var(--border-h); transform: translateY(-4px); }
-        .stat::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            opacity: 0; transition: opacity .3s;
-        }
-        .stat:hover::before { opacity: 1; }
-        .stat:nth-child(4n+1)::before { background: linear-gradient(90deg, var(--blue), var(--purple)); }
-        .stat:nth-child(4n+2)::before { background: linear-gradient(90deg, var(--green), #06b6d4); }
-        .stat:nth-child(4n+3)::before { background: linear-gradient(90deg, var(--purple), var(--blue)); }
-        .stat:nth-child(4n+4)::before { background: linear-gradient(90deg, var(--orange), #f59e0b); }
+        .stat:hover { border-color: var(--border-visible); }
         .stat-num {
-            font-family: var(--font-d); font-size: 42px; font-weight: 700;
-            letter-spacing: -2px; line-height: 1; color: var(--text); margin-bottom: 4px;
+            font-family: var(--font-mono); font-size: 42px; font-weight: 700;
+            letter-spacing: -0.02em; line-height: 1;
+            color: var(--text-display); margin-bottom: var(--space-xs);
         }
-        .stat-lbl { font-size: 12px; color: var(--text-3); font-weight: 500; letter-spacing: .3px; }
+        .stat-lbl {
+            font-family: var(--font-mono); font-size: 11px; font-weight: 400;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--text-secondary);
+        }
 
         /* ─── Tech Stack ────────────────────────────────────────── */
-        .tech { position: relative; z-index: 1; padding: 90px 0; }
-        .tech-head { text-align: center; margin-bottom: 56px; }
+        .tech-head { text-align: center; margin-bottom: var(--space-2xl); }
         .tech-head .sb { margin: 0 auto; }
-        .tech-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .tech-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md); }
         .tech-card {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: var(--r-md); padding: 26px 24px; transition: all .3s;
-            position: relative; overflow: hidden;
+            background: var(--surface); border: 1px solid var(--border);
+            border-left: 2px solid var(--orange);
+            border-radius: 12px; padding: var(--space-lg);
+            transition: border-color 200ms var(--ease);
         }
-        .tech-card:hover { background: var(--card-h); border-color: var(--border-h); transform: translateY(-4px); }
-        .tech-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            opacity: 0; transition: opacity .3s;
-        }
-        .tech-card:hover::before { opacity: 1; }
-        .tech-card:nth-child(4n+1)::before { background: linear-gradient(90deg, var(--blue), var(--purple)); }
-        .tech-card:nth-child(4n+2)::before { background: linear-gradient(90deg, var(--green), #06b6d4); }
-        .tech-card:nth-child(4n+3)::before { background: linear-gradient(90deg, var(--orange), #f59e0b); }
-        .tech-card:nth-child(4n+4)::before { background: linear-gradient(90deg, var(--purple), var(--blue)); }
+        .tech-card:hover { border-color: var(--border-visible); border-left-color: var(--orange); }
         .tech-card-label {
-            font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
-            text-transform: uppercase; color: var(--text-3);
-            margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+            font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--orange); margin-bottom: var(--space-md);
         }
-        .tech-pills { display: flex; flex-wrap: wrap; gap: 7px; }
+        .tech-pills { display: flex; flex-wrap: wrap; gap: 6px; }
         .tech-pill {
-            background: rgba(255,255,255,.05); border: 1px solid var(--border);
-            border-radius: 6px; padding: 4px 10px;
-            font-size: 12px; font-weight: 500; color: var(--text-2); letter-spacing: .2px;
+            font-family: var(--font-mono); font-size: 11px;
+            letter-spacing: 0.04em;
+            border: 1px solid var(--border-visible); border-radius: 4px;
+            padding: 3px 8px; color: var(--text-secondary);
         }
         @media (max-width: 1000px) { .tech-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 480px)  { .tech-grid { grid-template-columns: 1fr; } }
 
         /* ─── Services ──────────────────────────────────────────── */
-        .services { position: relative; z-index: 1; padding: 90px 0; }
-        .services-head { text-align: center; margin-bottom: 56px; }
+        .services-head { text-align: center; margin-bottom: var(--space-2xl); }
         .services-head .sb { margin: 0 auto; }
-        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md); }
         .srv {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: var(--r-lg); padding: 32px 28px;
-            position: relative; overflow: hidden;
-            transition: background .3s, border-color .3s, transform .3s;
+            background: var(--surface); border: 1px solid var(--border);
+            border-left: 2px solid var(--orange);
+            border-radius: 12px; padding: var(--space-lg);
+            transition: border-color 200ms var(--ease);
         }
-        .srv::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            opacity: 0; transition: opacity .3s;
+        .srv:hover { border-color: var(--border-visible); border-left-color: var(--orange); }
+        .srv-cat {
+            font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--orange); margin-bottom: var(--space-sm);
         }
-        .srv:hover { background: var(--card-h); border-color: var(--border-h); transform: translateY(-5px); }
-        .srv:hover::before { opacity: 1; }
-        .srv-1::before { background: linear-gradient(90deg, var(--blue), var(--purple)); }
-        .srv-2::before { background: linear-gradient(90deg, #a855f7, #ec4899); }
-        .srv-3::before { background: linear-gradient(90deg, var(--green), #06b6d4); }
-        .srv-4::before { background: linear-gradient(90deg, var(--orange), #f59e0b); }
-        .srv-5::before { background: linear-gradient(90deg, #06b6d4, var(--blue)); }
-        .srv-6::before { background: linear-gradient(90deg, var(--purple), var(--blue)); }
-        .srv-icon { font-size: 32px; margin-bottom: 16px; display: block; filter: drop-shadow(0 2px 8px rgba(0,0,0,.4)); }
-        .srv-title { font-family: var(--font-d); font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 10px; letter-spacing: -.3px; }
-        .srv-desc { font-size: 14px; color: var(--text-2); line-height: 1.7; margin-bottom: 16px; }
+        .srv-title {
+            font-family: var(--font-display); font-size: 18px; font-weight: 400;
+            color: var(--text-display); margin-bottom: var(--space-sm);
+            letter-spacing: -0.01em;
+        }
+        .srv-desc {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.5;
+            margin-bottom: var(--space-md);
+        }
         .srv-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-        .srv-tag { background: rgba(255,255,255,.05); border: 1px solid var(--border); border-radius: 5px; padding: 3px 9px; font-size: 11px; font-weight: 500; color: var(--text-3); letter-spacing: .3px; }
+        .srv-tag {
+            font-family: var(--font-mono); font-size: 11px;
+            letter-spacing: 0.04em;
+            border: 1px solid var(--border-visible); border-radius: 4px;
+            padding: 3px 8px; color: var(--text-secondary);
+        }
         @media (max-width: 900px) { .services-grid { grid-template-columns: 1fr 1fr; } }
         @media (max-width: 560px) { .services-grid { grid-template-columns: 1fr; } }
 
         /* ─── Contact ───────────────────────────────────────────── */
-        .contact { position: relative; z-index: 1; padding: 80px 0 90px; text-align: center; }
         .contact-box {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: var(--r-xl); padding: 68px 52px;
-            max-width: 660px; margin: 0 auto; position: relative; overflow: hidden;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 16px; padding: var(--space-3xl) var(--space-2xl);
+            max-width: 660px; margin: 0 auto; text-align: center;
+            transition: border-color 200ms var(--ease);
         }
-        .contact-box::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, var(--blue), var(--purple), var(--green));
-            opacity: 0; transition: opacity .3s;
+        .contact-box:hover { border-color: var(--border-visible); }
+        .contact-title {
+            font-family: var(--font-display); font-size: 36px; font-weight: 400;
+            letter-spacing: -0.02em; color: var(--text-display);
+            margin-bottom: var(--space-sm);
         }
-        .contact-box:hover::before { opacity: 1; }
-        .contact-title { font-family: var(--font-d); font-size: 42px; font-weight: 700; letter-spacing: -1.8px; color: var(--text); margin-bottom: 12px; }
-        .contact-sub { font-size: 16px; color: var(--text-2); line-height: 1.7; margin-bottom: 36px; }
+        .contact-title .accent { color: var(--orange); }
+        .contact-sub {
+            font-size: 16px; color: var(--text-secondary); line-height: 1.5;
+            margin-bottom: var(--space-xl);
+        }
         .email-btn {
-            display: inline-flex; align-items: center; gap: 10px;
-            padding: 15px 34px; border-radius: 100px;
-            background: rgba(62,207,96,.08); border: 1px solid rgba(62,207,96,.22);
-            color: var(--green); font-weight: 600; font-size: 16px; transition: all .2s;
+            display: inline-flex; align-items: center; gap: var(--space-sm);
+            padding: 12px 24px; border-radius: 999px;
+            background: var(--text-display); color: var(--black);
+            font-family: var(--font-mono); font-size: 13px; font-weight: 400;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            transition: opacity 200ms var(--ease);
+            min-height: 44px;
         }
-        .email-btn:hover { background: rgba(62,207,96,.14); border-color: rgba(62,207,96,.45); transform: translateY(-2px); }
+        .email-btn:hover { opacity: 0.85; }
 
         /* ─── Privacy ───────────────────────────────────────────── */
-        .privacy { position: relative; z-index: 1; padding: 0 0 72px; }
+        .privacy { position: relative; z-index: 1; padding: 0 0 var(--space-3xl); }
         .privacy-box {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: var(--r-lg); padding: 40px 44px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: var(--space-xl) var(--space-xl);
             max-width: 820px; margin: 0 auto;
         }
-        .privacy-box h3 { font-family: var(--font-d); font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 14px; }
-        .privacy-box p { font-size: 13px; color: var(--text-3); line-height: 1.75; margin-bottom: 10px; }
+        .privacy-box h3 {
+            font-family: var(--font-body); font-size: 18px; font-weight: 500;
+            color: var(--text-display); margin-bottom: var(--space-md);
+        }
+        .privacy-box p {
+            font-size: 14px; color: var(--text-secondary); line-height: 1.6;
+            margin-bottom: var(--space-sm);
+        }
         .privacy-box p:last-child { margin-bottom: 0; }
 
         /* ─── Footer ────────────────────────────────────────────── */
-        .site-footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 28px 0; }
-        .footer-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
-        .footer-copy { font-size: 13px; color: var(--text-3); }
-        .footer-links { display: flex; gap: 22px; list-style: none; }
-        .footer-links a { font-size: 13px; color: var(--text-3); transition: color .2s; }
-        .footer-links a:hover { color: var(--text); }
+        .site-footer {
+            position: relative; z-index: 1;
+            border-top: 1px solid var(--border);
+            padding: var(--space-lg) 0;
+        }
+        .footer-row {
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: var(--space-md);
+        }
+        .footer-copy {
+            font-family: var(--font-mono); font-size: 11px;
+            letter-spacing: 0.04em; color: var(--text-disabled);
+        }
+        .footer-links { display: flex; gap: var(--space-lg); list-style: none; }
+        .footer-links a {
+            font-family: var(--font-mono); font-size: 11px;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--text-disabled);
+            transition: color 200ms var(--ease);
+        }
+        .footer-links a:hover { color: var(--text-display); }
+
+        /* ─── Scroll reveal ────────────────────────────────────── */
+        [data-reveal] { opacity: 0; transition: opacity 300ms var(--ease); }
+        [data-reveal].visible { opacity: 1; }
 
         /* ─── Responsive ────────────────────────────────────────── */
         @media (max-width: 800px) {
             nav ul { display: none; }
             .app-card { flex: 0 0 300px; }
-            .about-grid { grid-template-columns: 1fr; gap: 48px; }
-            .contact-box { padding: 44px 28px; }
+            .about-grid { grid-template-columns: 1fr; gap: var(--space-2xl); }
+            .contact-box { padding: var(--space-xl) var(--space-lg); }
             .footer-row { flex-direction: column; text-align: center; }
         }
         @media (max-width: 480px) {
             .hero-actions { flex-direction: column; width: 100%; }
             .btn { justify-content: center; }
-            .privacy-box { padding: 28px 22px; }
+            .privacy-box { padding: var(--space-lg) var(--space-md); }
             .app-card { flex: 0 0 280px; }
         }
     </style>
 </head>
 <body>
-
-<!-- Ambient orbs -->
-<div class="orbs" aria-hidden="true"><span></span><span></span><span></span></div>
 
 <!-- ═══════════ HEADER ════════════════════════════════════════════ -->
 <header class="site-header" id="hdr">
@@ -509,9 +517,12 @@
                     <li><a href="#about"    data-i18n="nav.about">About</a></li>
                     <li><a href="#tech"     data-i18n="nav.skills">Skills</a></li>
                     <li><a href="#services" data-i18n="nav.services">Services</a></li>
-                    <li><a href="#contact"  data-i18n="nav.contact" class="nav-btn">Contact</a></li>
+                    <li><a href="#contact"  data-i18n="nav.contact" class="nav-contact">Contact</a></li>
                 </ul>
-                <button class="lang-btn" id="lang-btn" aria-label="Switch language">DE</button>
+                <div class="header-controls">
+                    <button class="ctrl-btn" id="theme-btn" aria-label="Toggle theme">☀️</button>
+                    <button class="ctrl-btn" id="lang-btn" aria-label="Switch language">🇩🇪</button>
+                </div>
             </nav>
         </div>
     </div>
@@ -519,34 +530,30 @@
 
 <!-- ═══════════ HERO ══════════════════════════════════════════════ -->
 <section class="hero">
-    <div class="wrap-sm">
+    <div class="wrap">
         <div class="hero-inner">
-            <div class="hero-chip" data-i18n="hero.chip">Philosopher &amp; Software Engineer</div>
+            <div class="hero-chip" data-i18n="hero.chip">Philosopher & Software Engineer</div>
             <h1 class="hero-title">
-                <span data-i18n="hero.greeting">Hello, I'm</span><br><span class="accent">Andrei</span> 👋
+                <span data-i18n="hero.greeting">Hello, I'm</span><br>Andrei
             </h1>
             <p class="hero-sub" data-i18n="hero.sub">
                 Bridging cognition and technology. I build mobile apps, cross-platform tools, and games — things that are useful, playful, and a little unexpected. B.Sc. Cognitive Science, lifelong curious mind.
             </p>
             <div class="hero-actions">
                 <a href="#apps"    class="btn btn-primary" data-i18n="hero.cta_apps">See My Apps</a>
-                <a href="#contact" class="btn btn-ghost"   data-i18n="hero.cta_contact">Get in Touch</a>
-            </div>
-            <div class="scroll-cue">
-                <span data-i18n="hero.scroll">Scroll</span>
-                <div class="scroll-cue-line"></div>
+                <a href="#contact" class="btn btn-secondary" data-i18n="hero.cta_contact">Get in Touch</a>
             </div>
         </div>
     </div>
 </section>
 
 <!-- ═══════════ APPS ══════════════════════════════════════════════ -->
-<section class="apps" id="apps">
+<section class="section" id="apps">
     <div class="wrap">
 
-        <div class="apps-head">
+        <div class="apps-head section-head">
             <div class="eyebrow" data-i18n="apps.eyebrow">My Applications</div>
-            <h2 class="sh"      data-i18n="apps.heading">Apps built with 🧠 &amp; ❤️</h2>
+            <h2 class="sh" data-i18n-html="apps.heading">Apps I've <span class="accent">shipped</span></h2>
             <p class="sb"       data-i18n="apps.desc">From smart keyboards to Apple Watch games — here's what I've shipped to the App Store.</p>
         </div>
 
@@ -556,16 +563,15 @@
                 <!-- MergeKey -->
                 <div class="app-card">
                     <div class="app-card-visual">
-                        <div class="glow glow-blue"></div>
                         <img src="dist/images/mergeKey.gif" alt="MergeKey keyboard app preview" class="app-img">
                     </div>
                     <span class="app-label" data-i18n="mk.label">Keyboard · Productivity</span>
-                    <img src="dist/images/MergeKey Banner.png" alt="MergeKey" class="app-banner-img">
+                    <h3 class="app-title">MergeKey</h3>
                     <p class="app-desc" data-i18n="mk.desc">The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.</p>
                     <div class="app-perks">
-                        <div class="app-perk"><span class="dot dot-b"></span><span data-i18n="mk.perk1">Dynamic, adaptive word learning</span></div>
-                        <div class="app-perk"><span class="dot dot-b"></span><span data-i18n="mk.perk2">Reduces typos in real time</span></div>
-                        <div class="app-perk"><span class="dot dot-b"></span><span data-i18n="mk.perk3">Fully customizable personal dictionary</span></div>
+                        <span class="app-perk" data-i18n="mk.perk1">Dynamic, adaptive word learning</span>
+                        <span class="app-perk" data-i18n="mk.perk2">Reduces typos in real time</span>
+                        <span class="app-perk" data-i18n="mk.perk3">Fully customizable personal dictionary</span>
                     </div>
                     <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link">
                         <img src="src/images/DownloadAppStore.svg" alt="Download MergeKey on the App Store">
@@ -575,16 +581,15 @@
                 <!-- Fishy Watch -->
                 <div class="app-card">
                     <div class="app-card-visual">
-                        <div class="glow glow-green"></div>
                         <img src="dist/images/fishy_watch.png" alt="Fishy Watch Apple Watch game" class="app-img">
                     </div>
-                    <span class="app-label" data-i18n="fw.label">🐠 Apple Watch · Game</span>
+                    <span class="app-label" data-i18n="fw.label">Apple Watch · Game</span>
                     <h3 class="app-title">Fishy Watch</h3>
                     <p class="app-desc" data-i18n="fw.desc">A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.</p>
                     <div class="app-perks">
-                        <div class="app-perk"><span class="dot dot-g"></span><span data-i18n="fw.perk1">Dozens of fish to catch &amp; collect</span></div>
-                        <div class="app-perk"><span class="dot dot-g"></span><span data-i18n="fw.perk2">Feed and interact with your catch</span></div>
-                        <div class="app-perk"><span class="dot dot-g"></span><span data-i18n="fw.perk3">Designed natively for Apple Watch</span></div>
+                        <span class="app-perk" data-i18n="fw.perk1">Dozens of fish to catch & collect</span>
+                        <span class="app-perk" data-i18n="fw.perk2">Feed and interact with your catch</span>
+                        <span class="app-perk" data-i18n="fw.perk3">Designed natively for Apple Watch</span>
                     </div>
                     <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link">
                         <img src="src/images/DownloadAppStore.svg" alt="Download Fishy Watch on the App Store">
@@ -594,16 +599,15 @@
                 <!-- Weltraum -->
                 <div class="app-card">
                     <div class="app-card-visual">
-                        <div class="glow glow-purple"></div>
                         <img src="dist/images/iphone-feature-02.png" alt="Weltraum space game" class="app-img">
                     </div>
-                    <span class="app-label" data-i18n="wt.label">🛰 Multiplayer · Strategy</span>
+                    <span class="app-label" data-i18n="wt.label">Multiplayer · Strategy</span>
                     <h3 class="app-title">Weltraum</h3>
-                    <p class="app-desc" data-i18n="wt.desc">Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center. 👩‍🚀👨‍🚀</p>
+                    <p class="app-desc" data-i18n="wt.desc">Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center.</p>
                     <div class="app-perks">
-                        <div class="app-perk"><span class="dot dot-p"></span><span data-i18n="wt.perk1">Real-time multiplayer via Bluetooth</span></div>
-                        <div class="app-perk"><span class="dot dot-p"></span><span data-i18n="wt.perk2">Game Center integration</span></div>
-                        <div class="app-perk"><span class="dot dot-p"></span><span data-i18n="wt.perk3">Unique orbit-based mechanics</span></div>
+                        <span class="app-perk" data-i18n="wt.perk1">Real-time multiplayer via Bluetooth</span>
+                        <span class="app-perk" data-i18n="wt.perk2">Game Center integration</span>
+                        <span class="app-perk" data-i18n="wt.perk3">Unique orbit-based mechanics</span>
                     </div>
                     <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link">
                         <img src="src/images/DownloadAppStore.svg" alt="Download Weltraum on the App Store">
@@ -616,15 +620,15 @@
     </div>
 </section>
 
-<div class="hr"></div>
+<div class="divider"></div>
 
 <!-- ═══════════ ABOUT ═════════════════════════════════════════════ -->
-<section class="about" id="about">
+<section class="section" id="about">
     <div class="wrap">
         <div class="about-grid">
             <div>
                 <div class="eyebrow" data-i18n="about.eyebrow">About Me</div>
-                <h2 class="sh" data-i18n-html="about.heading">More than<br>just code</h2>
+                <h2 class="sh" data-i18n-html="about.heading">More than<br>just <span class="accent">code</span></h2>
                 <p class="sb" data-i18n="about.desc">I studied Cognitive Science — an intersection of CS, AI, psychology, philosophy, and neuroscience. That lens shapes everything I build. Beyond the screen I keep myself busy with:</p>
                 <div class="tags">
                     <span class="tag" data-emoji="🧠" data-i18n="tag.philosophy">Philosophy</span>
@@ -639,7 +643,7 @@
                     <span class="tag" data-emoji="💬" data-i18n="tag.langs">Languages</span>
                     <span class="tag" data-emoji="🕸️" data-i18n="tag.graphs">Graph Theory</span>
                     <span class="tag" data-emoji="🔢" data-i18n="tag.maths">Mathematics</span>
-                    <span class="tag" data-emoji="₿"  data-i18n="tag.blockchain">Blockchain</span>
+                    <span class="tag" data-emoji="₿" data-i18n="tag.blockchain">Blockchain</span>
                     <span class="tag" data-emoji="🚀" data-i18n="tag.space">Space</span>
                     <span class="tag" data-emoji="🎮" data-i18n="tag.games">Video Games</span>
                 </div>
@@ -655,30 +659,30 @@
                 </div>
                 <div class="stat">
                     <div class="stat-num">4</div>
-                    <div class="stat-lbl" data-i18n="stat.langs_lbl">Human languages, written &amp; spoken</div>
+                    <div class="stat-lbl" data-i18n="stat.langs_lbl">Human languages, written & spoken</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-num">🎮</div>
-                    <div class="stat-lbl" data-i18n="stat.gamer_lbl">Gamer &amp; game dev at heart</div>
+                    <div class="stat-num">//</div>
+                    <div class="stat-lbl" data-i18n="stat.gamer_lbl">Gamer & game dev at heart</div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<div class="hr"></div>
+<div class="divider"></div>
 
 <!-- ═══════════ TECH STACK ════════════════════════════════════════ -->
-<section class="tech" id="tech">
+<section class="section" id="tech">
     <div class="wrap">
-        <div class="tech-head">
+        <div class="tech-head section-head">
             <div class="eyebrow" data-i18n="tech.eyebrow">Technical Skills</div>
-            <h2 class="sh"       data-i18n="tech.heading">Built across the full stack</h2>
+            <h2 class="sh" data-i18n-html="tech.heading">Built across the <span class="accent">full stack</span></h2>
             <p class="sb"        data-i18n="tech.desc">From native iOS to cloud infrastructure — a broad toolkit shaped by years of diverse professional projects.</p>
         </div>
         <div class="tech-grid">
             <div class="tech-card">
-                <div class="tech-card-label"><span class="dot dot-b"></span><span data-i18n="tech.lbl.ios">iOS &amp; Apple Platforms</span></div>
+                <div class="tech-card-label" data-i18n="tech.lbl.ios">iOS & Apple Platforms</div>
                 <div class="tech-pills">
                     <span class="tech-pill">Swift</span><span class="tech-pill">SwiftUI</span>
                     <span class="tech-pill">UIKit</span><span class="tech-pill">WatchKit</span>
@@ -689,7 +693,7 @@
                 </div>
             </div>
             <div class="tech-card">
-                <div class="tech-card-label"><span class="dot dot-g"></span><span data-i18n="tech.lbl.cross">Mobile &amp; Cross-Platform</span></div>
+                <div class="tech-card-label" data-i18n="tech.lbl.cross">Mobile & Cross-Platform</div>
                 <div class="tech-pills">
                     <span class="tech-pill">React Native</span><span class="tech-pill">Flutter</span>
                     <span class="tech-pill">.NET MAUI</span><span class="tech-pill">Xamarin</span>
@@ -698,7 +702,7 @@
                 </div>
             </div>
             <div class="tech-card">
-                <div class="tech-card-label"><span class="dot dot-p"></span><span data-i18n="tech.lbl.web">Web &amp; Backend</span></div>
+                <div class="tech-card-label" data-i18n="tech.lbl.web">Web & Backend</div>
                 <div class="tech-pills">
                     <span class="tech-pill">TypeScript</span><span class="tech-pill">JavaScript</span>
                     <span class="tech-pill">Angular</span><span class="tech-pill">Node.js</span>
@@ -707,7 +711,7 @@
                 </div>
             </div>
             <div class="tech-card">
-                <div class="tech-card-label"><span class="dot dot-b" style="background:var(--orange);box-shadow:0 0 8px rgba(255,108,80,.7)"></span><span data-i18n="tech.lbl.cloud">Cloud &amp; DevOps</span></div>
+                <div class="tech-card-label" data-i18n="tech.lbl.cloud">Cloud & DevOps</div>
                 <div class="tech-pills">
                     <span class="tech-pill">Kubernetes</span><span class="tech-pill">Docker</span>
                     <span class="tech-pill">GCP</span><span class="tech-pill">Microsoft Azure</span>
@@ -716,7 +720,7 @@
                 </div>
             </div>
             <div class="tech-card">
-                <div class="tech-card-label"><span class="dot dot-g"></span><span data-i18n="tech.lbl.hw">Connectivity &amp; Hardware</span></div>
+                <div class="tech-card-label" data-i18n="tech.lbl.hw">Connectivity & Hardware</div>
                 <div class="tech-pills">
                     <span class="tech-pill">NFC</span><span class="tech-pill">Bluetooth LE</span>
                     <span class="tech-pill">Multipeer Connectivity</span><span class="tech-pill">IoT</span>
@@ -724,7 +728,7 @@
                 </div>
             </div>
             <div class="tech-card">
-                <div class="tech-card-label"><span class="dot dot-p"></span><span data-i18n="tech.lbl.ai">AI &amp; Machine Learning</span></div>
+                <div class="tech-card-label" data-i18n="tech.lbl.ai">AI & Machine Learning</div>
                 <div class="tech-pills">
                     <span class="tech-pill">CoreML</span><span class="tech-pill">Vision Framework</span>
                     <span class="tech-pill">LLM APIs</span><span class="tech-pill">Prompt Engineering</span>
@@ -733,7 +737,7 @@
                 </div>
             </div>
             <div class="tech-card">
-                <div class="tech-card-label"><span class="dot dot-b" style="background:#f59e0b;box-shadow:0 0 8px rgba(245,158,11,.7)"></span><span data-i18n="tech.lbl.game">Game Dev &amp; 3D</span></div>
+                <div class="tech-card-label" data-i18n="tech.lbl.game">Game Dev & 3D</div>
                 <div class="tech-pills">
                     <span class="tech-pill">Unity</span><span class="tech-pill">Blender</span>
                     <span class="tech-pill">C#</span><span class="tech-pill">SpriteKit</span>
@@ -742,7 +746,7 @@
                 </div>
             </div>
             <div class="tech-card">
-                <div class="tech-card-label"><span class="dot dot-g"></span><span data-i18n="tech.lbl.design">Design &amp; Tools</span></div>
+                <div class="tech-card-label" data-i18n="tech.lbl.design">Design & Tools</div>
                 <div class="tech-pills">
                     <span class="tech-pill">Figma</span><span class="tech-pill">Adobe Ps / Ai / Ae</span>
                     <span class="tech-pill">Sketch</span><span class="tech-pill">AutoCAD</span>
@@ -753,49 +757,49 @@
     </div>
 </section>
 
-<div class="hr"></div>
+<div class="divider"></div>
 
 <!-- ═══════════ SERVICES ══════════════════════════════════════════ -->
-<section class="services" id="services">
+<section class="section" id="services">
     <div class="wrap">
-        <div class="services-head">
-            <div class="eyebrow" data-i18n="srv.eyebrow">Consulting &amp; Expertise</div>
-            <h2 class="sh"       data-i18n="srv.heading">How I can help</h2>
+        <div class="services-head section-head">
+            <div class="eyebrow" data-i18n="srv.eyebrow">Consulting & Expertise</div>
+            <h2 class="sh" data-i18n-html="srv.heading">How I can <span class="accent">help</span></h2>
             <p class="sb"        data-i18n="srv.desc">Years of diverse projects across startups, industry, and indie dev have shaped a broad skill set. Here's where I add real value.</p>
         </div>
         <div class="services-grid">
-            <div class="srv srv-1">
-                <span class="srv-icon">📱</span>
+            <div class="srv">
+                <div class="srv-cat">01</div>
                 <h3 class="srv-title" data-i18n="srv1.title">Mobile App Development</h3>
                 <p  class="srv-desc"  data-i18n="srv1.desc">Native iOS in Swift/SwiftUI or cross-platform with React Native and Flutter. From initial concept through App Store submission — including WatchKit, CoreBluetooth, and hardware integrations.</p>
                 <div class="srv-tags"><span class="srv-tag">Swift / SwiftUI</span><span class="srv-tag">React Native</span><span class="srv-tag">Flutter</span><span class="srv-tag">App Store</span></div>
             </div>
-            <div class="srv srv-2">
-                <span class="srv-icon">🤖</span>
+            <div class="srv">
+                <div class="srv-cat">02</div>
                 <h3 class="srv-title" data-i18n="srv2.title">AI Integration</h3>
                 <p  class="srv-desc"  data-i18n="srv2.desc">Embedding AI into your product — on-device with CoreML/Vision, in the cloud with LLM APIs, or custom computer vision models. Proven experience fine-tuning and deploying real-time ML pipelines.</p>
                 <div class="srv-tags"><span class="srv-tag">CoreML</span><span class="srv-tag">LLM APIs</span><span class="srv-tag">Computer Vision</span><span class="srv-tag">Prompt Engineering</span></div>
             </div>
-            <div class="srv srv-3">
-                <span class="srv-icon">🌐</span>
-                <h3 class="srv-title" data-i18n="srv3.title">Web &amp; Frontend</h3>
+            <div class="srv">
+                <div class="srv-cat">03</div>
+                <h3 class="srv-title" data-i18n="srv3.title">Web & Frontend</h3>
                 <p  class="srv-desc"  data-i18n="srv3.desc">Modern, responsive web apps with Angular, TypeScript, and Node.js. Clean UI/UX grounded in Figma, with a keen eye on performance and accessibility.</p>
                 <div class="srv-tags"><span class="srv-tag">TypeScript</span><span class="srv-tag">Angular</span><span class="srv-tag">Node.js</span><span class="srv-tag">Figma</span></div>
             </div>
-            <div class="srv srv-4">
-                <span class="srv-icon">☁️</span>
-                <h3 class="srv-title" data-i18n="srv4.title">Cloud &amp; DevOps</h3>
+            <div class="srv">
+                <div class="srv-cat">04</div>
+                <h3 class="srv-title" data-i18n="srv4.title">Cloud & DevOps</h3>
                 <p  class="srv-desc"  data-i18n="srv4.desc">Containerised, scalable infrastructure on GCP or Azure. Kubernetes orchestration, Docker pipelines, and GitLab CI/CD — building systems that are reliable and easy to maintain.</p>
                 <div class="srv-tags"><span class="srv-tag">Kubernetes</span><span class="srv-tag">Docker</span><span class="srv-tag">GCP / Azure</span><span class="srv-tag">CI / CD</span></div>
             </div>
-            <div class="srv srv-5">
-                <span class="srv-icon">🔗</span>
-                <h3 class="srv-title" data-i18n="srv5.title">Hardware &amp; Connectivity</h3>
+            <div class="srv">
+                <div class="srv-cat">05</div>
+                <h3 class="srv-title" data-i18n="srv5.title">Hardware & Connectivity</h3>
                 <p  class="srv-desc"  data-i18n="srv5.desc">NFC and Bluetooth LE integrations, IoT sensor systems, and industrial hardware interfaces. Experience connecting the physical world to apps — from medical devices to factory floors.</p>
                 <div class="srv-tags"><span class="srv-tag">NFC</span><span class="srv-tag">Bluetooth LE</span><span class="srv-tag">IoT</span><span class="srv-tag">.NET MAUI</span></div>
             </div>
-            <div class="srv srv-6">
-                <span class="srv-icon">💡</span>
+            <div class="srv">
+                <div class="srv-cat">06</div>
                 <h3 class="srv-title" data-i18n="srv6.title">Tech Consulting</h3>
                 <p  class="srv-desc"  data-i18n="srv6.desc">Interdisciplinary background in Cognitive Science, AI, and engineering — great for architecture reviews, stack decisions, MVP scoping, code quality, and turning complex ideas into working prototypes fast.</p>
                 <div class="srv-tags"><span class="srv-tag">Architecture</span><span class="srv-tag">MVP Scoping</span><span class="srv-tag">Code Review</span><span class="srv-tag">Prototyping</span></div>
@@ -804,16 +808,16 @@
     </div>
 </section>
 
-<div class="hr"></div>
+<div class="divider"></div>
 
 <!-- ═══════════ CONTACT ═══════════════════════════════════════════ -->
-<section class="contact" id="contact">
+<section class="section" id="contact">
     <div class="wrap">
         <div class="contact-box">
-            <h2 class="contact-title" data-i18n="contact.title">Let's talk</h2>
+            <h2 class="contact-title" data-i18n-html="contact.title">Let's <span class="accent">talk</span></h2>
             <p  class="contact-sub"   data-i18n="contact.sub">Have a question, need support for one of my apps, or just want to say hi? I'm happy to hear from you.</p>
             <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website" class="email-btn" data-i18n="contact.btn">
-                ✉️ Mail me!
+                Mail me
             </a>
         </div>
     </div>
@@ -835,7 +839,7 @@
 <footer class="site-footer">
     <div class="wrap">
         <div class="footer-row">
-            <span class="footer-copy" data-i18n="footer.copy">© 2026 Andrei Achziger · Some rights reserved</span>
+            <span class="footer-copy" data-i18n="footer.copy">&copy; 2026 Andrei Achziger &middot; Some rights reserved</span>
             <ul class="footer-links">
                 <li><a href="impressum.html" data-i18n="footer.impressum">Impressum</a></li>
                 <li><a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website" data-i18n="footer.email">Email</a></li>
@@ -846,52 +850,82 @@
 
 <!-- ═══════════ Scripts ════════════════════════════════════════════ -->
 <script>
+// ── Theme ────────────────────────────────────────────────────────
+function getTheme() {
+    const stored = localStorage.getItem('aach_theme');
+    if (stored) return stored;
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+}
+
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const btn = document.getElementById('theme-btn');
+    if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('aach_theme', next);
+    applyTheme(next);
+}
+
+applyTheme(getTheme());
+document.getElementById('theme-btn').addEventListener('click', toggleTheme);
+
+// Listen for system preference changes (only if no manual override)
+window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function(e) {
+    if (!localStorage.getItem('aach_theme')) {
+        applyTheme(e.matches ? 'light' : 'dark');
+    }
+});
+
 // ── i18n ──────────────────────────────────────────────────────────
 const T = {
     en: {
-        'nav.apps':'Apps', 'nav.about':'About', 'nav.skills':'Skills',
-        'nav.services':'Services', 'nav.contact':'Contact',
+        'nav.apps':'APPS', 'nav.about':'ABOUT', 'nav.skills':'SKILLS',
+        'nav.services':'SERVICES', 'nav.contact':'CONTACT',
 
         'hero.chip':'Philosopher & Software Engineer',
         'hero.greeting':"Hello, I'm",
         'hero.sub':'Bridging cognition and technology. I build mobile apps, cross-platform tools, and games — things that are useful, playful, and a little unexpected. B.Sc. Cognitive Science, lifelong curious mind.',
-        'hero.cta_apps':'See My Apps', 'hero.cta_contact':'Get in Touch', 'hero.scroll':'Scroll',
+        'hero.cta_apps':'SEE MY APPS', 'hero.cta_contact':'GET IN TOUCH', 'hero.scroll':'Scroll',
 
-        'apps.eyebrow':'My Applications', 'apps.heading':'Apps built with 🧠 & ❤️',
+        'apps.eyebrow':'MY APPLICATIONS', 'apps.heading':'Apps I\'ve <span class="accent">shipped</span>',
         'apps.desc':"From smart keyboards to Apple Watch games — here's what I've shipped to the App Store.",
 
-        'mk.label':'Keyboard · Productivity',
+        'mk.label':'KEYBOARD · PRODUCTIVITY',
         'mk.desc':'The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.',
         'mk.perk1':'Dynamic, adaptive word learning', 'mk.perk2':'Reduces typos in real time', 'mk.perk3':'Fully customizable personal dictionary',
 
-        'fw.label':'🐠 Apple Watch · Game',
+        'fw.label':'APPLE WATCH · GAME',
         'fw.desc':'A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.',
         'fw.perk1':'Dozens of fish to catch & collect', 'fw.perk2':'Feed and interact with your catch', 'fw.perk3':'Designed natively for Apple Watch',
 
-        'wt.label':'🛰 Multiplayer · Strategy',
-        'wt.desc':'Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center. 👩‍🚀👨‍🚀',
+        'wt.label':'MULTIPLAYER · STRATEGY',
+        'wt.desc':'Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center.',
         'wt.perk1':'Real-time multiplayer via Bluetooth', 'wt.perk2':'Game Center integration', 'wt.perk3':'Unique orbit-based mechanics',
 
-        'about.eyebrow':'About Me', 'about.heading':'More than<br>just code',
+        'about.eyebrow':'ABOUT ME', 'about.heading':'More than<br>just <span class="accent">code</span>',
         'about.desc':'I studied Cognitive Science — an intersection of CS, AI, psychology, philosophy, and neuroscience. That lens shapes everything I build. Beyond the screen I keep myself busy with:',
 
-        'tag.philosophy':'Philosophy', 'tag.neuro':'Neuroscience', 'tag.dataviz':'Data Visualization',
-        'tag.chess':'Chess', 'tag.skate':'Skateboarding', 'tag.ai':'AI', 'tag.running':'Running',
-        'tag.guitar':'Guitar', 'tag.animals':'Animals', 'tag.langs':'Languages',
-        'tag.graphs':'Graph Theory', 'tag.maths':'Mathematics', 'tag.blockchain':'Blockchain',
-        'tag.space':'Space', 'tag.games':'Video Games',
+        'tag.philosophy':'PHILOSOPHY', 'tag.neuro':'NEUROSCIENCE', 'tag.dataviz':'DATA VIZ',
+        'tag.chess':'CHESS', 'tag.skate':'SKATEBOARDING', 'tag.ai':'AI', 'tag.running':'RUNNING',
+        'tag.guitar':'GUITAR', 'tag.animals':'ANIMALS', 'tag.langs':'LANGUAGES',
+        'tag.graphs':'GRAPH THEORY', 'tag.maths':'MATHEMATICS', 'tag.blockchain':'BLOCKCHAIN',
+        'tag.space':'SPACE', 'tag.games':'VIDEO GAMES',
 
-        'stat.projects_lbl':'Projects developed', 'stat.apps_lbl':'Apps live on the App Store',
-        'stat.langs_lbl':'Human languages, written & spoken', 'stat.gamer_lbl':'Gamer & game dev at heart',
+        'stat.projects_lbl':'PROJECTS DEVELOPED', 'stat.apps_lbl':'APPS ON THE APP STORE',
+        'stat.langs_lbl':'HUMAN LANGUAGES', 'stat.gamer_lbl':'GAMER & GAME DEV',
 
-        'tech.eyebrow':'Technical Skills', 'tech.heading':'Built across the full stack',
+        'tech.eyebrow':'TECHNICAL SKILLS', 'tech.heading':'Built across the <span class="accent">full stack</span>',
         'tech.desc':'From native iOS to cloud infrastructure — a broad toolkit shaped by years of diverse professional projects.',
-        'tech.lbl.ios':'iOS & Apple Platforms', 'tech.lbl.cross':'Mobile & Cross-Platform',
-        'tech.lbl.web':'Web & Backend', 'tech.lbl.cloud':'Cloud & DevOps',
-        'tech.lbl.hw':'Connectivity & Hardware', 'tech.lbl.ai':'AI & Machine Learning',
-        'tech.lbl.game':'Game Dev & 3D', 'tech.lbl.design':'Design & Tools',
+        'tech.lbl.ios':'IOS & APPLE PLATFORMS', 'tech.lbl.cross':'MOBILE & CROSS-PLATFORM',
+        'tech.lbl.web':'WEB & BACKEND', 'tech.lbl.cloud':'CLOUD & DEVOPS',
+        'tech.lbl.hw':'CONNECTIVITY & HARDWARE', 'tech.lbl.ai':'AI & MACHINE LEARNING',
+        'tech.lbl.game':'GAME DEV & 3D', 'tech.lbl.design':'DESIGN & TOOLS',
 
-        'srv.eyebrow':'Consulting & Expertise', 'srv.heading':'How I can help',
+        'srv.eyebrow':'CONSULTING & EXPERTISE', 'srv.heading':'How I can <span class="accent">help</span>',
         'srv.desc':"Years of diverse projects across startups, industry, and indie dev have shaped a broad skill set. Here's where I add real value.",
         'srv1.title':'Mobile App Development',
         'srv1.desc':'Native iOS in Swift/SwiftUI or cross-platform with React Native and Flutter. From initial concept through App Store submission — including WatchKit, CoreBluetooth, and hardware integrations.',
@@ -906,107 +940,104 @@ const T = {
         'srv6.title':'Tech Consulting',
         'srv6.desc':'Interdisciplinary background in Cognitive Science, AI, and engineering — great for architecture reviews, stack decisions, MVP scoping, code quality, and turning complex ideas into working prototypes fast.',
 
-        'contact.title':"Let's talk",
+        'contact.title':'Let\'s <span class="accent">talk</span>',
         'contact.sub':"Have a question, need support for one of my apps, or just want to say hi? I'm happy to hear from you.",
-        'contact.btn':'✉️ Mail me!',
+        'contact.btn':'MAIL ME',
 
         'privacy.heading':'Privacy Policy',
         'privacy.p1':'Apps provided by Andrei Achziger are intended for use as is. This page informs visitors about my policies regarding the collection, use, and disclosure of personal information. If you choose to use my services, your personal information will not be stored, distributed, or analyzed by me.',
         'privacy.p2':'Andrei Achziger does not take responsibility for data processed by third-party platforms such as Google, as I have no access to or insight into their data collection and processing practices. Any data collection via those platforms is primarily used to serve relevant ads.',
         'privacy.p3':'This policy may be updated when necessary — please check this page periodically for changes. Updates take effect immediately upon posting. — Andrei Achziger',
 
-        'footer.copy':'© 2026 Andrei Achziger · Some rights reserved',
-        'footer.impressum':'Impressum', 'footer.email':'Email',
+        'footer.copy':'\u00a9 2026 Andrei Achziger \u00b7 Some rights reserved',
+        'footer.impressum':'IMPRESSUM', 'footer.email':'EMAIL',
     },
 
     de: {
-        'nav.apps':'Apps', 'nav.about':'Über mich', 'nav.skills':'Fähigkeiten',
-        'nav.services':'Leistungen', 'nav.contact':'Kontakt',
+        'nav.apps':'APPS', 'nav.about':'\u00dcBER MICH', 'nav.skills':'F\u00c4HIGKEITEN',
+        'nav.services':'LEISTUNGEN', 'nav.contact':'KONTAKT',
 
         'hero.chip':'Philosoph & Software-Ingenieur',
         'hero.greeting':'Hallo, ich bin',
-        'hero.sub':'Zwischen Kognition und Technologie. Ich baue mobile Apps, plattformübergreifende Tools und Spiele – Dinge, die nützlich, verspielt und manchmal überraschend sind. B.Sc. Kognitionswissenschaft, lebenslang neugierig.',
-        'hero.cta_apps':'Meine Apps', 'hero.cta_contact':'Kontakt aufnehmen', 'hero.scroll':'Scrollen',
+        'hero.sub':'Zwischen Kognition und Technologie. Ich baue mobile Apps, plattform\u00fcbergreifende Tools und Spiele \u2013 Dinge, die n\u00fctzlich, verspielt und manchmal \u00fcberraschend sind. B.Sc. Kognitionswissenschaft, lebenslang neugierig.',
+        'hero.cta_apps':'MEINE APPS', 'hero.cta_contact':'KONTAKT AUFNEHMEN', 'hero.scroll':'Scrollen',
 
-        'apps.eyebrow':'Meine Anwendungen', 'apps.heading':'Apps mit 🧠 & ❤️ gebaut',
-        'apps.desc':'Von smarten Tastaturen bis zu Apple Watch-Spielen – hier ist, was ich im App Store veröffentlicht habe.',
+        'apps.eyebrow':'MEINE ANWENDUNGEN', 'apps.heading':'Apps, die ich <span class="accent">ver\u00f6ffentlicht</span> habe',
+        'apps.desc':'Von smarten Tastaturen bis zu Apple Watch-Spielen \u2013 hier ist, was ich im App Store ver\u00f6ffentlicht habe.',
 
-        'mk.label':'Tastatur · Produktivität',
-        'mk.desc':'Die erste dynamische Tastatur, die dir hilft, sauberer und mit weniger Fehlern zu tippen. Bring MergeKey neue Wörter bei, und sie lernt dazu – jeder Tastendruck wird dadurch smarter.',
-        'mk.perk1':'Dynamisches, adaptives Wortlernen', 'mk.perk2':'Reduziert Tippfehler in Echtzeit', 'mk.perk3':'Vollständig anpassbares persönliches Wörterbuch',
+        'mk.label':'TASTATUR \u00b7 PRODUKTIVIT\u00c4T',
+        'mk.desc':'Die erste dynamische Tastatur, die dir hilft, sauberer und mit weniger Fehlern zu tippen. Bring MergeKey neue W\u00f6rter bei, und sie lernt dazu \u2013 jeder Tastendruck wird dadurch smarter.',
+        'mk.perk1':'Dynamisches, adaptives Wortlernen', 'mk.perk2':'Reduziert Tippfehler in Echtzeit', 'mk.perk3':'Vollst\u00e4ndig anpassbares pers\u00f6nliches W\u00f6rterbuch',
 
-        'fw.label':'🐠 Apple Watch · Spiel',
-        'fw.desc':'Ein Angelspiel für dein Handgelenk. Fange Fische, füttere sie und spiele mit ihnen – direkt von deiner Apple Watch. Viele Arten zu entdecken; der Ozean ist nur einen Tipp entfernt.',
-        'fw.perk1':'Dutzende Fische zum Fangen & Sammeln', 'fw.perk2':'Füttere und interagiere mit deinem Fang', 'fw.perk3':'Nativ für Apple Watch entwickelt',
+        'fw.label':'APPLE WATCH \u00b7 SPIEL',
+        'fw.desc':'Ein Angelspiel f\u00fcr dein Handgelenk. Fange Fische, f\u00fcttere sie und spiele mit ihnen \u2013 direkt von deiner Apple Watch. Viele Arten zu entdecken; der Ozean ist nur einen Tipp entfernt.',
+        'fw.perk1':'Dutzende Fische zum Fangen & Sammeln', 'fw.perk2':'F\u00fcttere und interagiere mit deinem Fang', 'fw.perk3':'Nativ f\u00fcr Apple Watch entwickelt',
 
-        'wt.label':'🛰 Multiplayer · Strategie',
-        'wt.desc':'Erstelle Umlaufbahnen, halte sie und fordere andere quer durch den Kosmos heraus. Sammle alle Sterne – am besten mit 2 Spielern per Bluetooth oder Game Center. 👩‍🚀👨‍🚀',
+        'wt.label':'MULTIPLAYER \u00b7 STRATEGIE',
+        'wt.desc':'Erstelle Umlaufbahnen, halte sie und fordere andere quer durch den Kosmos heraus. Sammle alle Sterne \u2013 am besten mit 2 Spielern per Bluetooth oder Game Center.',
         'wt.perk1':'Echtzeit-Multiplayer per Bluetooth', 'wt.perk2':'Game Center-Integration', 'wt.perk3':'Einzigartige umlaufbahnbasierte Spielmechanik',
 
-        'about.eyebrow':'Über mich', 'about.heading':'Mehr als<br>nur Code',
-        'about.desc':'Ich habe Kognitionswissenschaft studiert – eine Schnittstelle aus Informatik, KI, Psychologie, Philosophie und Neurowissenschaften. Diese Perspektive prägt alles, was ich baue. Abseits des Bildschirms beschäftige ich mich mit:',
+        'about.eyebrow':'\u00dcBER MICH', 'about.heading':'Mehr als<br>nur <span class="accent">Code</span>',
+        'about.desc':'Ich habe Kognitionswissenschaft studiert \u2013 eine Schnittstelle aus Informatik, KI, Psychologie, Philosophie und Neurowissenschaften. Diese Perspektive pr\u00e4gt alles, was ich baue. Abseits des Bildschirms besch\u00e4ftige ich mich mit:',
 
-        'tag.philosophy':'Philosophie', 'tag.neuro':'Neurowissenschaften', 'tag.dataviz':'Datenvisualisierung',
-        'tag.chess':'Schach', 'tag.skate':'Skateboarding', 'tag.ai':'KI', 'tag.running':'Laufen',
-        'tag.guitar':'Gitarre', 'tag.animals':'Tiere', 'tag.langs':'Sprachen',
-        'tag.graphs':'Graphentheorie', 'tag.maths':'Mathematik', 'tag.blockchain':'Blockchain',
-        'tag.space':'Weltraum', 'tag.games':'Videospiele',
+        'tag.philosophy':'PHILOSOPHIE', 'tag.neuro':'NEUROWISSENSCHAFTEN', 'tag.dataviz':'DATENVISUALISIERUNG',
+        'tag.chess':'SCHACH', 'tag.skate':'SKATEBOARDING', 'tag.ai':'KI', 'tag.running':'LAUFEN',
+        'tag.guitar':'GITARRE', 'tag.animals':'TIERE', 'tag.langs':'SPRACHEN',
+        'tag.graphs':'GRAPHENTHEORIE', 'tag.maths':'MATHEMATIK', 'tag.blockchain':'BLOCKCHAIN',
+        'tag.space':'WELTRAUM', 'tag.games':'VIDEOSPIELE',
 
-        'stat.projects_lbl':'Entwickelte Projekte', 'stat.apps_lbl':'Apps im App Store',
-        'stat.langs_lbl':'Menschliche Sprachen, geschrieben & gesprochen', 'stat.gamer_lbl':'Gamer & Game Dev durch und durch',
+        'stat.projects_lbl':'ENTWICKELTE PROJEKTE', 'stat.apps_lbl':'APPS IM APP STORE',
+        'stat.langs_lbl':'MENSCHLICHE SPRACHEN', 'stat.gamer_lbl':'GAMER & GAME DEV',
 
-        'tech.eyebrow':'Technische Fähigkeiten', 'tech.heading':'Im gesamten Stack zuhause',
-        'tech.desc':'Von nativem iOS bis zur Cloud-Infrastruktur – ein breites Werkzeugset, geformt durch Jahre vielseitiger Projekte.',
-        'tech.lbl.ios':'iOS & Apple-Plattformen', 'tech.lbl.cross':'Mobil & Plattformübergreifend',
-        'tech.lbl.web':'Web & Backend', 'tech.lbl.cloud':'Cloud & DevOps',
-        'tech.lbl.hw':'Konnektivität & Hardware', 'tech.lbl.ai':'KI & Machine Learning',
-        'tech.lbl.game':'Game Dev & 3D', 'tech.lbl.design':'Design & Tools',
+        'tech.eyebrow':'TECHNISCHE F\u00c4HIGKEITEN', 'tech.heading':'Im gesamten <span class="accent">Stack</span> zuhause',
+        'tech.desc':'Von nativem iOS bis zur Cloud-Infrastruktur \u2013 ein breites Werkzeugset, geformt durch Jahre vielseitiger Projekte.',
+        'tech.lbl.ios':'IOS & APPLE-PLATTFORMEN', 'tech.lbl.cross':'MOBIL & PLATTFORM\u00dcBERGREIFEND',
+        'tech.lbl.web':'WEB & BACKEND', 'tech.lbl.cloud':'CLOUD & DEVOPS',
+        'tech.lbl.hw':'KONNEKTIVIT\u00c4T & HARDWARE', 'tech.lbl.ai':'KI & MACHINE LEARNING',
+        'tech.lbl.game':'GAME DEV & 3D', 'tech.lbl.design':'DESIGN & TOOLS',
 
-        'srv.eyebrow':'Beratung & Expertise', 'srv.heading':'Wie ich helfen kann',
+        'srv.eyebrow':'BERATUNG & EXPERTISE', 'srv.heading':'Wie ich <span class="accent">helfen</span> kann',
         'srv.desc':'Jahre vielseitiger Projekte in Startups, Industrie und Indie-Entwicklung haben ein breites Skillset geformt. Hier ist, wo ich echten Mehrwert schaffe.',
         'srv1.title':'Mobile App-Entwicklung',
-        'srv1.desc':'Natives iOS in Swift/SwiftUI oder plattformübergreifend mit React Native und Flutter. Vom ersten Konzept bis zur App Store-Veröffentlichung – inklusive WatchKit, CoreBluetooth und Hardware-Integrationen.',
+        'srv1.desc':'Natives iOS in Swift/SwiftUI oder plattform\u00fcbergreifend mit React Native und Flutter. Vom ersten Konzept bis zur App Store-Ver\u00f6ffentlichung \u2013 inklusive WatchKit, CoreBluetooth und Hardware-Integrationen.',
         'srv2.title':'KI-Integration',
-        'srv2.desc':'KI in dein Produkt einbetten – auf dem Gerät mit CoreML/Vision, in der Cloud mit LLM-APIs oder eigenen Computer-Vision-Modellen. Nachgewiesene Erfahrung beim Fine-Tuning und Deployment von Echtzeit-ML-Pipelines.',
+        'srv2.desc':'KI in dein Produkt einbetten \u2013 auf dem Ger\u00e4t mit CoreML/Vision, in der Cloud mit LLM-APIs oder eigenen Computer-Vision-Modellen. Nachgewiesene Erfahrung beim Fine-Tuning und Deployment von Echtzeit-ML-Pipelines.',
         'srv3.title':'Web & Frontend',
         'srv3.desc':'Moderne, responsive Webanwendungen mit Angular, TypeScript und Node.js. Klare UI/UX auf Basis von Figma, mit Fokus auf Performance und Barrierefreiheit.',
         'srv4.title':'Cloud & DevOps',
-        'srv4.desc':'Containerisierte, skalierbare Infrastruktur auf GCP oder Azure. Kubernetes-Orchestrierung, Docker-Pipelines und GitLab CI/CD – für zuverlässige und wartbare Systeme.',
-        'srv5.title':'Hardware & Konnektivität',
-        'srv5.desc':'NFC- und Bluetooth-LE-Integrationen, IoT-Sensorsysteme und industrielle Hardware-Schnittstellen. Erfahrung in der Verbindung der physischen Welt mit Apps – von Medizingeräten bis zu Fabrikhallen.',
+        'srv4.desc':'Containerisierte, skalierbare Infrastruktur auf GCP oder Azure. Kubernetes-Orchestrierung, Docker-Pipelines und GitLab CI/CD \u2013 f\u00fcr zuverl\u00e4ssige und wartbare Systeme.',
+        'srv5.title':'Hardware & Konnektivit\u00e4t',
+        'srv5.desc':'NFC- und Bluetooth-LE-Integrationen, IoT-Sensorsysteme und industrielle Hardware-Schnittstellen. Erfahrung in der Verbindung der physischen Welt mit Apps \u2013 von Medizinger\u00e4ten bis zu Fabrikhallen.',
         'srv6.title':'Tech-Beratung',
-        'srv6.desc':'Interdisziplinärer Hintergrund in Kognitionswissenschaft, KI und Engineering – ideal für Architektur-Reviews, Stack-Entscheidungen, MVP-Scoping, Code-Qualität und die schnelle Umsetzung komplexer Ideen in funktionierende Prototypen.',
+        'srv6.desc':'Interdisziplin\u00e4rer Hintergrund in Kognitionswissenschaft, KI und Engineering \u2013 ideal f\u00fcr Architektur-Reviews, Stack-Entscheidungen, MVP-Scoping, Code-Qualit\u00e4t und die schnelle Umsetzung komplexer Ideen in funktionierende Prototypen.',
 
-        'contact.title':'Lass uns reden',
-        'contact.sub':'Hast du eine Frage, brauchst Support für eine meiner Apps oder möchtest einfach Hallo sagen? Ich freue mich von dir zu hören.',
-        'contact.btn':'✉️ Schreib mir!',
+        'contact.title':'Lass uns <span class="accent">reden</span>',
+        'contact.sub':'Hast du eine Frage, brauchst Support f\u00fcr eine meiner Apps oder m\u00f6chtest einfach Hallo sagen? Ich freue mich von dir zu h\u00f6ren.',
+        'contact.btn':'SCHREIB MIR',
 
         'privacy.heading':'Datenschutzrichtlinie',
-        'privacy.p1':'Die von Andrei Achziger bereitgestellten Apps sind zur Nutzung bestimmt wie sie sind. Diese Seite informiert Besucher über meine Richtlinien bezüglich der Erhebung, Nutzung und Offenlegung personenbezogener Daten. Wenn du meine Dienste nutzt, werden deine personenbezogenen Daten von mir nicht gespeichert, verteilt oder analysiert.',
-        'privacy.p2':'Andrei Achziger übernimmt keine Verantwortung für Daten, die von Drittanbietern wie Google verarbeitet werden, da ich keinen Zugang zu oder Einblick in deren Datenerfassungs- und Verarbeitungspraktiken habe. Jede Datenerfassung über diese Plattformen dient in erster Linie der Anzeige relevanter Werbung.',
-        'privacy.p3':'Diese Richtlinie kann bei Bedarf aktualisiert werden – bitte überprüfe diese Seite regelmäßig auf Änderungen. Änderungen treten sofort nach der Veröffentlichung in Kraft. — Andrei Achziger',
+        'privacy.p1':'Die von Andrei Achziger bereitgestellten Apps sind zur Nutzung bestimmt wie sie sind. Diese Seite informiert Besucher \u00fcber meine Richtlinien bez\u00fcglich der Erhebung, Nutzung und Offenlegung personenbezogener Daten. Wenn du meine Dienste nutzt, werden deine personenbezogenen Daten von mir nicht gespeichert, verteilt oder analysiert.',
+        'privacy.p2':'Andrei Achziger \u00fcbernimmt keine Verantwortung f\u00fcr Daten, die von Drittanbietern wie Google verarbeitet werden, da ich keinen Zugang zu oder Einblick in deren Datenerfassungs- und Verarbeitungspraktiken habe. Jede Datenerfassung \u00fcber diese Plattformen dient in erster Linie der Anzeige relevanter Werbung.',
+        'privacy.p3':'Diese Richtlinie kann bei Bedarf aktualisiert werden \u2013 bitte \u00fcberpr\u00fcfe diese Seite regelm\u00e4\u00dfig auf \u00c4nderungen. \u00c4nderungen treten sofort nach der Ver\u00f6ffentlichung in Kraft. \u2014 Andrei Achziger',
 
-        'footer.copy':'© 2026 Andrei Achziger · Alle Rechte vorbehalten',
-        'footer.impressum':'Impressum', 'footer.email':'E-Mail',
+        'footer.copy':'\u00a9 2026 Andrei Achziger \u00b7 Alle Rechte vorbehalten',
+        'footer.impressum':'IMPRESSUM', 'footer.email':'E-MAIL',
     }
 };
 
 function applyLang(lang) {
     const t = T[lang] || T.en;
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const v = t[el.dataset.i18n];
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        var v = t[el.dataset.i18n];
         if (v !== undefined) el.textContent = v;
     });
-    document.querySelectorAll('[data-i18n-html]').forEach(el => {
-        const v = t[el.dataset.i18nHtml];
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+        var v = t[el.dataset.i18nHtml];
         if (v !== undefined) el.innerHTML = v;
     });
     document.documentElement.lang = lang;
-    const btn = document.getElementById('lang-btn');
-    if (btn) btn.textContent = lang === 'de' ? '🇺🇸 EN' : '🇩🇪 DE';
-    // Update meta description
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta && t['meta.desc']) meta.content = t['meta.desc'];
+    var btn = document.getElementById('lang-btn');
+    if (btn) btn.textContent = lang === 'de' ? '🇺🇸' : '🇩🇪';
 }
 
 function getLang() {
@@ -1015,35 +1046,36 @@ function getLang() {
 }
 
 function toggleLang() {
-    const next = document.documentElement.lang === 'de' ? 'en' : 'de';
+    var next = document.documentElement.lang === 'de' ? 'en' : 'de';
     localStorage.setItem('aach_lang', next);
     applyLang(next);
 }
 
-// Apply immediately (no flash)
 applyLang(getLang());
 document.getElementById('lang-btn').addEventListener('click', toggleLang);
 
 // ── Sticky header ─────────────────────────────────────────────────
-const hdr = document.getElementById('hdr');
-window.addEventListener('scroll', () => {
+var hdr = document.getElementById('hdr');
+window.addEventListener('scroll', function() {
     hdr.classList.toggle('scrolled', window.scrollY > 48);
 }, { passive: true });
 
-// ── Scroll-reveal (generic) ───────────────────────────────────────
-const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+// ── Scroll-reveal ─────────────────────────────────────────────────
+var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
 }, { threshold: 0.12 });
-document.querySelectorAll('[data-reveal]').forEach(r => io.observe(r));
+document.querySelectorAll('[data-reveal]').forEach(function(r) { io.observe(r); });
 
-// ── App cards: staggered reveal when track scrolls into view ──────
-const trackWrap = document.querySelector('.app-track-wrap');
+// ── App cards: staggered reveal ───────────────────────────────────
+var trackWrap = document.querySelector('.app-track-wrap');
 if (trackWrap) {
-    const ioTrack = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
+    var ioTrack = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
             if (e.isIntersecting) {
-                e.target.querySelectorAll('.app-card').forEach((card, i) => {
-                    setTimeout(() => card.classList.add('visible'), i * 130);
+                e.target.querySelectorAll('.app-card').forEach(function(card, i) {
+                    setTimeout(function() { card.classList.add('visible'); }, i * 130);
                 });
                 ioTrack.unobserve(e.target);
             }
@@ -1052,18 +1084,18 @@ if (trackWrap) {
     ioTrack.observe(trackWrap);
 
     // Drag-to-scroll on desktop
-    let isDown = false, startX, scrollLeft;
-    trackWrap.addEventListener('mousedown', e => {
+    var isDown = false, startX, scrollLeft;
+    trackWrap.addEventListener('mousedown', function(e) {
         isDown = true;
         startX = e.pageX - trackWrap.offsetLeft;
         scrollLeft = trackWrap.scrollLeft;
     });
-    trackWrap.addEventListener('mouseleave', () => { isDown = false; });
-    trackWrap.addEventListener('mouseup',    () => { isDown = false; });
-    trackWrap.addEventListener('mousemove',  e => {
+    trackWrap.addEventListener('mouseleave', function() { isDown = false; });
+    trackWrap.addEventListener('mouseup', function() { isDown = false; });
+    trackWrap.addEventListener('mousemove', function(e) {
         if (!isDown) return;
         e.preventDefault();
-        const x = e.pageX - trackWrap.offsetLeft;
+        var x = e.pageX - trackWrap.offsetLeft;
         trackWrap.scrollLeft = scrollLeft - (x - startX);
     });
 }
