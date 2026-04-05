@@ -51,30 +51,30 @@
 
         /* ─── Light Mode Tokens ─────────────────────────────────── */
         [data-theme="light"] {
-            --black:           #F5F5F5;
-            --surface:         #FFFFFF;
-            --surface-raised:  #F0F0F0;
-            --border:          #E8E8E8;
-            --border-visible:  #CCCCCC;
-            --text-disabled:   #999999;
-            --text-secondary:  #666666;
-            --text-primary:    #1A1A1A;
-            --text-display:    #000000;
+            --black:           #e8dcc6;
+            --surface:         #f0e4d0;
+            --surface-raised:  #ddd0b8;
+            --border:          #cfc0a6;
+            --border-visible:  #bdb094;
+            --text-disabled:   #8e8474;
+            --text-secondary:  #524a3e;
+            --text-primary:    #18160e;
+            --text-display:    #080602;
             --interactive:     #007AFF;
         }
 
         /* ─── System preference auto-detect (only if no manual override) ── */
         @media (prefers-color-scheme: light) {
             :root:not([data-theme="dark"]):not([data-theme="light"]) {
-                --black:           #F5F5F5;
-                --surface:         #FFFFFF;
-                --surface-raised:  #F0F0F0;
-                --border:          #E8E8E8;
-                --border-visible:  #CCCCCC;
-                --text-disabled:   #999999;
-                --text-secondary:  #666666;
-                --text-primary:    #1A1A1A;
-                --text-display:    #000000;
+                --black:           #e8dcc6;
+                --surface:         #f0e4d0;
+                --surface-raised:  #ddd0b8;
+                --border:          #cfc0a6;
+                --border-visible:  #bdb094;
+                --text-disabled:   #8e8474;
+                --text-secondary:  #524a3e;
+                --text-primary:    #18160e;
+                --text-display:    #080602;
                 --interactive:     #007AFF;
             }
         }
@@ -1852,46 +1852,25 @@ window.__initLogoFace = function(img) {
     var ctx = canvas.getContext('2d');
     var PIX = 2, GAP = 1, STEP = PIX + GAP;
     var cols = Math.ceil(64 / STEP), rows = Math.ceil(64 / STEP);
-    var mask = null, time = 0;
 
     var off = document.createElement('canvas');
     off.width = 64; off.height = 64;
     var ox = off.getContext('2d');
     ox.drawImage(img, 0, 0, 64, 64);
     var data = ox.getImageData(0, 0, 64, 64).data;
-    mask = [];
+
+    // Static one-time render — pixelated face, no animation
     for (var r = 0; r < rows; r++) {
-        mask[r] = [];
         for (var c = 0; c < cols; c++) {
             var px = c * STEP + 1, py = r * STEP + 1;
-            if (px >= 64 || py >= 64) { mask[r][c] = null; continue; }
+            if (px >= 64 || py >= 64) continue;
             var idx = (py * 64 + px) * 4;
-            mask[r][c] = data[idx + 3] > 30 ? { r: data[idx], g: data[idx+1], b: data[idx+2], a: data[idx+3]/255 } : null;
-        }
-    }
-
-    function noise(x, y, t) {
-        return (Math.sin(x*0.8+t*0.7)+Math.sin(y*0.6-t*0.5)+Math.sin((x+y)*0.5+t*0.9)+Math.sin(x*0.3-y*0.4+t*1.1)+Math.sin(x*1.2-t*0.3)*Math.cos(y*0.9+t*0.6)) / 6;
-    }
-
-    function draw() {
-        time += 0.025;
-        ctx.clearRect(0, 0, 64, 64);
-        for (var r = 0; r < rows; r++) {
-            for (var c = 0; c < cols; c++) {
-                if (!mask[r] || !mask[r][c]) continue;
-                var n = noise(c/(cols||1)*5, r/(rows||1)*5, time);
-                var p = mask[r][c];
-                var a = Math.min((n+0.5)*0.7, 0.85) * p.a;
-                if (a > 0.01) {
-                    ctx.fillStyle = 'rgba('+p.r+','+p.g+','+p.b+','+a.toFixed(3)+')';
-                    ctx.fillRect(c*STEP, r*STEP, PIX, PIX);
-                }
+            if (data[idx + 3] > 30) {
+                ctx.fillStyle = 'rgba(' + data[idx] + ',' + data[idx+1] + ',' + data[idx+2] + ',' + (data[idx+3]/255).toFixed(2) + ')';
+                ctx.fillRect(c * STEP, r * STEP, PIX, PIX);
             }
         }
-        requestAnimationFrame(draw);
     }
-    draw();
 };
 
 // ── Floating planet — continuous sine wave bound to scroll ────────
