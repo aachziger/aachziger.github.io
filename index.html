@@ -578,8 +578,15 @@
             background: var(--black); border: 1px solid var(--border);
             border-radius: 16px; padding: var(--space-2xl);
             max-width: 720px; width: 100%; max-height: 85vh;
-            overflow-y: auto; position: relative;
+            overflow: hidden; position: relative;
         }
+        .imp-modal-scroll {
+            position: relative; z-index: 1;
+            max-height: calc(85vh - 96px); overflow-y: auto;
+            scrollbar-width: none;
+        }
+        .imp-modal-scroll::-webkit-scrollbar { display: none; }
+        .imp-modal .pixel-fluid { opacity: 1; }
         .imp-close {
             position: absolute; top: var(--space-md); right: var(--space-md);
             background: none; border: 1px solid var(--border-visible);
@@ -608,7 +615,6 @@
             transition: border-color 200ms var(--ease);
         }
         .imp-card:hover { border-color: var(--border-visible); }
-        .imp-card:hover .pixel-fluid { opacity: 1; }
         .imp-card h2 {
             position: relative; z-index: 1;
             font-family: var(--font-mono); font-size: 11px; font-weight: 700;
@@ -685,7 +691,6 @@
             pointer-events: none;
             width: 180px; height: 180px;
             top: 0; left: 0;
-            transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
             will-change: transform;
         }
         .floating-planet img {
@@ -1098,24 +1103,26 @@
 
 <!-- ═══════════ IMPRESSUM MODAL ═══════════════════════════════════ -->
 <div class="imp-overlay" id="imp-overlay">
-    <div class="imp-modal">
+    <div class="imp-modal" id="imp-modal">
         <button class="imp-close" id="imp-close" aria-label="Close">&times;</button>
-        <div class="page-eyebrow" data-i18n="imp.eyebrow">LEGAL</div>
-        <div class="page-title" data-i18n="imp.title">Impressum</div>
+        <div class="imp-modal-scroll">
+            <div class="page-eyebrow" data-i18n="imp.eyebrow">LEGAL</div>
+            <div class="page-title" data-i18n="imp.title">Impressum</div>
 
-        <div class="imp-card">
-            <h2 data-i18n="imp.contact.heading">Contact Information</h2>
-            <p data-i18n-html="imp.contact.body">
-                Name: Andrei Achziger<br>
-                Address: Gleiwitzer Stra&szlig;e 6, 49163 Bohmte, Germany<br>
-                Email: <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website">andrei.zerodeathgames@gmail.com</a>
-            </p>
-        </div>
+            <div class="imp-card">
+                <h2 data-i18n="imp.contact.heading">Contact Information</h2>
+                <p data-i18n-html="imp.contact.body">
+                    Name: Andrei Achziger<br>
+                    Address: Gleiwitzer Stra&szlig;e 6, 49163 Bohmte, Germany<br>
+                    Email: <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website">andrei.zerodeathgames@gmail.com</a>
+                </p>
+            </div>
 
-        <div class="imp-card">
-            <h2 data-i18n="imp.legal.heading">Legal Notice</h2>
-            <p data-i18n="imp.legal.p1">This Impressum is provided in accordance with applicable legal requirements.</p>
-            <p data-i18n="imp.legal.p2">The content on this website and associated applications are provided for general information purposes. Andrei Achziger makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Any reliance you place on such information is therefore strictly at your own risk.</p>
+            <div class="imp-card">
+                <h2 data-i18n="imp.legal.heading">Legal Notice</h2>
+                <p data-i18n="imp.legal.p1">This Impressum is provided in accordance with applicable legal requirements.</p>
+                <p data-i18n="imp.legal.p2">The content on this website and associated applications are provided for general information purposes. Andrei Achziger makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Any reliance you place on such information is therefore strictly at your own risk.</p>
+            </div>
         </div>
     </div>
 </div>
@@ -1482,7 +1489,7 @@ if (trackWrap) {
     }
 
     // Attach to all card faces
-    document.querySelectorAll('.app-card-front, .app-card-back, .tech-card, .srv, .contact-box, .imp-card').forEach(initFluid);
+    document.querySelectorAll('.app-card-front, .app-card-back, .tech-card, .srv, .contact-box, .imp-modal').forEach(initFluid);
 })();
 
 // ── Impressum modal ──────────────────────────────────────────────
@@ -1626,6 +1633,14 @@ if (trackWrap) {
         return (a + b + c) / 6;
     }
 
+    // Second noise with different frequencies for the emoji layer
+    function noise2(x, y, t) {
+        var a = Math.sin(x * 1.1 + t * 0.9) + Math.sin(y * 0.8 - t * 0.6);
+        var b = Math.sin((x - y) * 0.7 + t * 1.2) + Math.sin(x * 0.5 + y * 0.3 + t * 0.8);
+        var c = Math.cos(x * 0.9 + t * 0.4) * Math.sin(y * 1.1 - t * 0.7);
+        return (a + b + c) / 6;
+    }
+
     function draw() {
         time += 0.03;
 
@@ -1638,53 +1653,41 @@ if (trackWrap) {
         ctx.clearRect(0, 0, w, h);
         var mb = maskBlend;
 
+        // Layer 1: always-on orange fluid
         for (var r = 0; r < rows; r++) {
             for (var c = 0; c < cols; c++) {
                 var nx = c / (cols || 1);
                 var ny = r / (rows || 1);
                 var n = noise(nx * 5, ny * 5, time);
 
-                var pixel = (mask && mask[r]) ? mask[r][c] : null;
-
-                // Free-flow: orange fluid across entire card
-                var freeShow = (n > 0.0) ? 1 : 0;
-                var freeAlpha = freeShow ? Math.min(n * 0.8, 0.22) : 0;
-
-                // Emoji: pixels inside mask show with emoji color, outside hidden
-                var emojiAlpha = 0;
-                var eR = OR, eG = OG, eB = OB;
-                if (pixel) {
-                    emojiAlpha = Math.min((n + 0.5) * 0.7, 0.75) * pixel.a;
-                    eR = pixel.r; eG = pixel.g; eB = pixel.b;
+                if (n > 0.0) {
+                    var fa = Math.min(n * 0.8, 0.22);
+                    ctx.fillStyle = 'rgba(' + OR + ',' + OG + ',' + OB + ',' + fa.toFixed(3) + ')';
+                    ctx.fillRect(c * STEP, r * STEP, PIX, PIX);
                 }
-
-                // Blend color and alpha
-                var alpha, pR, pG, pB;
-                if (mb < 0.01) {
-                    // Pure free flow
-                    if (freeAlpha < 0.01) continue;
-                    alpha = freeAlpha; pR = OR; pG = OG; pB = OB;
-                } else if (mb > 0.99) {
-                    // Pure emoji
-                    if (emojiAlpha < 0.01) continue;
-                    alpha = emojiAlpha; pR = eR; pG = eG; pB = eB;
-                } else {
-                    // Transition: blend between free and emoji
-                    var invMb = 1 - mb;
-                    var fA = freeAlpha * invMb;
-                    var eA = emojiAlpha * mb;
-                    alpha = fA + eA;
-                    if (alpha < 0.01) continue;
-                    // Weighted color blend
-                    pR = Math.round((OR * fA + eR * eA) / alpha);
-                    pG = Math.round((OG * fA + eG * eA) / alpha);
-                    pB = Math.round((OB * fA + eB * eA) / alpha);
-                }
-
-                ctx.fillStyle = 'rgba(' + pR + ',' + pG + ',' + pB + ',' + alpha.toFixed(3) + ')';
-                ctx.fillRect(c * STEP, r * STEP, PIX, PIX);
             }
         }
+
+        // Layer 2: emoji overlay (own noise, fades in/out with maskBlend)
+        if (mb > 0.01 && mask) {
+            for (var r2 = 0; r2 < rows; r2++) {
+                for (var c2 = 0; c2 < cols; c2++) {
+                    var pixel = mask[r2] ? mask[r2][c2] : null;
+                    if (!pixel) continue;
+
+                    var nx2 = c2 / (cols || 1);
+                    var ny2 = r2 / (rows || 1);
+                    var n2 = noise2(nx2 * 5, ny2 * 5, time);
+
+                    var ea = Math.min((n2 + 0.5) * 0.7, 0.80) * pixel.a * mb;
+                    if (ea < 0.01) continue;
+
+                    ctx.fillStyle = 'rgba(' + pixel.r + ',' + pixel.g + ',' + pixel.b + ',' + ea.toFixed(3) + ')';
+                    ctx.fillRect(c2 * STEP, r2 * STEP, PIX, PIX);
+                }
+            }
+        }
+
         raf = requestAnimationFrame(draw);
     }
 
@@ -1886,46 +1889,59 @@ window.__initLogoFace = function(img) {
     draw();
 };
 
-// ── Floating planet — scroll-bound, alternates corners ───────────
+// ── Floating planet — continuous sine wave bound to scroll ────────
 (function() {
     var planet = document.getElementById('floating-planet');
     if (!planet) return;
 
-    var sections = document.querySelectorAll('section');
-    var sectionTops = [];
+    var cx = 0, cy = 0; // current smoothed values
+    var tx = 0, ty = 0; // targets
+    var ticking = false;
 
-    function cacheSections() {
-        sectionTops = [];
-        sections.forEach(function(s) {
-            sectionTops.push(s.offsetTop);
-        });
-    }
-    cacheSections();
-    window.addEventListener('resize', cacheSections);
-
-    function update() {
+    function computeTarget() {
         var scrollY = window.scrollY;
-        var vh = window.innerHeight;
+        var maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         var vw = window.innerWidth;
 
-        // Find which section we're in
-        var idx = 0;
-        for (var i = sectionTops.length - 1; i >= 0; i--) {
-            if (scrollY + vh / 3 >= sectionTops[i]) { idx = i; break; }
-        }
+        // Scroll progress 0..1
+        var progress = maxScroll > 0 ? scrollY / maxScroll : 0;
 
-        // Alternate left/right per section
-        var onRight = idx % 2 === 0;
-        var targetX = onRight ? (vw - 220) : 40;
+        // Sine wave: ~2.5 full oscillations across the page
+        var wave = Math.sin(progress * Math.PI * 5);
 
-        // Smooth vertical parallax — planet drifts up slowly relative to scroll
-        var ty = 80 + scrollY * 0.08;
+        // Map wave (-1..1) to X range (40..vw-220)
+        var minX = 40;
+        var maxX = vw - 220;
+        tx = minX + (wave + 1) / 2 * (maxX - minX);
 
-        planet.style.transform = 'translateX(' + targetX + 'px) translateY(' + ty + 'px)';
+        // Vertical: gentle parallax drift
+        ty = 80 + scrollY * 0.06;
     }
 
-    window.addEventListener('scroll', update, { passive: true });
-    update();
+    function animate() {
+        // Smooth lerp towards target
+        cx += (tx - cx) * 0.08;
+        cy += (ty - cy) * 0.08;
+
+        planet.style.transform = 'translate(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px)';
+
+        if (Math.abs(tx - cx) > 0.5 || Math.abs(ty - cy) > 0.5) {
+            requestAnimationFrame(animate);
+        } else {
+            ticking = false;
+        }
+    }
+
+    function onScroll() {
+        computeTarget();
+        if (!ticking) { ticking = true; requestAnimationFrame(animate); }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    computeTarget();
+    cx = tx; cy = ty; // snap to initial position
+    planet.style.transform = 'translate(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px)';
 })();
 
 // ── Space background — 3D parallax stars & comets ────────────────
