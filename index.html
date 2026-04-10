@@ -689,20 +689,6 @@
             }
         }
 
-        /* ─── Floating planet ────────────────────────────────────── */
-        .floating-planet {
-            position: fixed;
-            z-index: 0;
-            pointer-events: none;
-            width: 180px; height: 180px;
-            top: 0; left: 0;
-            will-change: transform;
-        }
-        .floating-planet img {
-            width: 100%; height: 100%;
-            opacity: 0.25;
-        }
-        [data-theme="light"] .floating-planet img { opacity: 0.15; }
 
         /* Tone it down in light mode */
         [data-theme="light"] .space-bg { opacity: 0.35; }
@@ -739,9 +725,6 @@
 
 <!-- ═══════════ SPACE BACKGROUND ═════════════════════════════════ -->
 <div class="space-bg" id="space-bg" aria-hidden="true"></div>
-<div class="floating-planet" id="floating-planet" aria-hidden="true">
-    <img src="dist/images/blueYellow.gif" alt="">
-</div>
 
 <!-- ═══════════ HEADER ════════════════════════════════════════════ -->
 <header class="site-header" id="hdr">
@@ -1873,60 +1856,6 @@ window.__initLogoFace = function(img) {
     }
 };
 
-// ── Floating planet — continuous sine wave bound to scroll ────────
-(function() {
-    var planet = document.getElementById('floating-planet');
-    if (!planet) return;
-
-    var cx = 0, cy = 0; // current smoothed values
-    var tx = 0, ty = 0; // targets
-    var ticking = false;
-
-    function computeTarget() {
-        var scrollY = window.scrollY;
-        var maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        var vw = window.innerWidth;
-
-        // Scroll progress 0..1
-        var progress = maxScroll > 0 ? scrollY / maxScroll : 0;
-
-        // Sine wave: ~2.5 full oscillations across the page
-        var wave = Math.sin(progress * Math.PI * 5);
-
-        // Map wave (-1..1) to X range (40..vw-220)
-        var minX = 40;
-        var maxX = vw - 220;
-        tx = minX + (wave + 1) / 2 * (maxX - minX);
-
-        // Vertical: gentle parallax drift
-        ty = 80 + scrollY * 0.06;
-    }
-
-    function animate() {
-        // Smooth lerp towards target
-        cx += (tx - cx) * 0.08;
-        cy += (ty - cy) * 0.08;
-
-        planet.style.transform = 'translate(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px)';
-
-        if (Math.abs(tx - cx) > 0.5 || Math.abs(ty - cy) > 0.5) {
-            requestAnimationFrame(animate);
-        } else {
-            ticking = false;
-        }
-    }
-
-    function onScroll() {
-        computeTarget();
-        if (!ticking) { ticking = true; requestAnimationFrame(animate); }
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    computeTarget();
-    cx = tx; cy = ty; // snap to initial position
-    planet.style.transform = 'translate(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px)';
-})();
 
 // ── Space background — 3D parallax stars & comets ────────────────
 (function() {
