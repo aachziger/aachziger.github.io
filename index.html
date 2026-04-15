@@ -851,6 +851,38 @@
                     </div>
                 </div>
 
+                <!-- Random Drop -->
+                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
+                    <div class="app-card-inner">
+                        <div class="app-card-front">
+                            <div class="app-card-visual">
+                                <img src="dist/images/Random Drop.png" alt="Random Drop randomizer app" class="app-img">
+                            </div>
+                            <span class="app-label" data-i18n="rd.label">Utility · Randomizer</span>
+                            <h3 class="app-title">Random Drop</h3>
+                            <a href="https://apps.apple.com/us/app/random-drop/id1513193929" class="badge-link" onclick="event.stopPropagation()">
+                                <img src="src/images/DownloadAppStore.svg" alt="Download Random Drop on the App Store">
+                            </a>
+                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
+                        </div>
+                        <div class="app-card-back">
+                            <div class="app-back-visual">
+                                <img src="dist/images/Random Drop.png" alt="Random Drop randomizer app" class="app-back-img">
+                            </div>
+                            <h3 class="app-back-title">Random Drop</h3>
+                            <p class="app-desc" data-i18n="rd.desc">Let chance decide. Random Drop turns tough choices into a single tap — names, picks, surprises, challenges. Fast, fair, endlessly replayable.</p>
+                            <div class="app-perks">
+                                <span class="app-perk" data-i18n="rd.perk1">One-tap random picks</span>
+                                <span class="app-perk" data-i18n="rd.perk2">Custom lists & drops</span>
+                                <span class="app-perk" data-i18n="rd.perk3">Settles any debate instantly</span>
+                            </div>
+                            <a href="https://apps.apple.com/us/app/random-drop/id1513193929" class="badge-link" onclick="event.stopPropagation()">
+                                <img src="src/images/DownloadAppStore.svg" alt="Download Random Drop on the App Store">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Weltraum -->
                 <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
                     <div class="app-card-inner">
@@ -1182,6 +1214,10 @@ const T = {
         'fw.desc':'A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.',
         'fw.perk1':'Dozens of fish to catch & collect', 'fw.perk2':'Feed and interact with your catch', 'fw.perk3':'Designed natively for Apple Watch',
 
+        'rd.label':'UTILITY · RANDOMIZER',
+        'rd.desc':'Let chance decide. Random Drop turns tough choices into a single tap — names, picks, surprises, challenges. Fast, fair, endlessly replayable.',
+        'rd.perk1':'One-tap random picks', 'rd.perk2':'Custom lists & drops', 'rd.perk3':'Settles any debate instantly',
+
         'wt.label':'MULTIPLAYER · STRATEGY',
         'wt.desc':'Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center.',
         'wt.perk1':'Real-time multiplayer via Bluetooth', 'wt.perk2':'Game Center integration', 'wt.perk3':'Unique orbit-based mechanics',
@@ -1257,6 +1293,10 @@ const T = {
         'fw.label':'APPLE WATCH \u00b7 SPIEL',
         'fw.desc':'Ein Angelspiel f\u00fcr dein Handgelenk. Fange Fische, f\u00fcttere sie und spiele mit ihnen \u2013 direkt von deiner Apple Watch. Viele Arten zu entdecken; der Ozean ist nur einen Tipp entfernt.',
         'fw.perk1':'Dutzende Fische zum Fangen & Sammeln', 'fw.perk2':'F\u00fcttere und interagiere mit deinem Fang', 'fw.perk3':'Nativ f\u00fcr Apple Watch entwickelt',
+
+        'rd.label':'UTILITY \u00b7 ZUFALLSGENERATOR',
+        'rd.desc':'Lass den Zufall entscheiden. Random Drop verwandelt schwierige Entscheidungen in einen einzigen Tipp \u2013 Namen, Auswahl, \u00dcberraschungen, Herausforderungen. Schnell, fair und endlos wiederspielbar.',
+        'rd.perk1':'Zufallsauswahl mit einem Tipp', 'rd.perk2':'Eigene Listen & Drops', 'rd.perk3':'Beendet jede Diskussion sofort',
 
         'wt.label':'MULTIPLAYER \u00b7 STRATEGIE',
         'wt.desc':'Erstelle Umlaufbahnen, halte sie und fordere andere quer durch den Kosmos heraus. Sammle alle Sterne \u2013 am besten mit 2 Spielern per Bluetooth oder Game Center.',
@@ -1358,14 +1398,33 @@ var io = new IntersectionObserver(function(entries) {
 }, { threshold: 0.12 });
 document.querySelectorAll('[data-reveal]').forEach(function(r) { io.observe(r); });
 
-// ── App cards: staggered reveal ───────────────────────────────────
+// ── App cards: staggered reveal + infinite carousel ───────────────
 var trackWrap = document.querySelector('.app-track-wrap');
-if (trackWrap) {
+var track = document.querySelector('.app-track');
+if (trackWrap && track) {
+
+    // Clone all cards once so the carousel can wrap seamlessly
+    var originalCards = Array.from(track.children);
+    originalCards.forEach(function(node) {
+        var clone = node.cloneNode(true);
+        clone.setAttribute('data-clone', 'true');
+        // Re-bind flip handler (cloneNode copies inline onclick, but be safe)
+        clone.onclick = function() { clone.classList.toggle('flipped'); };
+        track.appendChild(clone);
+    });
+
+    // Staggered reveal for originals; clones fade in with the last original
     var ioTrack = new IntersectionObserver(function(entries) {
         entries.forEach(function(e) {
             if (e.isIntersecting) {
-                e.target.querySelectorAll('.app-card-wrapper').forEach(function(card, i) {
+                var origs = e.target.querySelectorAll('.app-card-wrapper:not([data-clone])');
+                origs.forEach(function(card, i) {
                     setTimeout(function() { card.classList.add('visible'); }, i * 130);
+                });
+                // Reveal clones once originals have finished staggering in
+                var cloneDelay = origs.length * 130;
+                e.target.querySelectorAll('.app-card-wrapper[data-clone]').forEach(function(card) {
+                    setTimeout(function() { card.classList.add('visible'); }, cloneDelay);
                 });
                 ioTrack.unobserve(e.target);
             }
@@ -1373,7 +1432,36 @@ if (trackWrap) {
     }, { threshold: 0.15 });
     ioTrack.observe(trackWrap);
 
-    // Drag-to-scroll on desktop
+    // Infinite-scroll wrap: when the user passes the midpoint, jump back
+    // one set's width; when they scroll before the start, jump forward.
+    var halfWidth = 0;
+    function measureHalf() {
+        halfWidth = Math.floor(track.scrollWidth / 2);
+    }
+    measureHalf();
+    window.addEventListener('resize', measureHalf);
+    window.addEventListener('load', measureHalf);
+    setTimeout(measureHalf, 600); // after fonts/images settle
+
+    var normalizing = false;
+    function normalizeScroll() {
+        if (normalizing || !halfWidth) return;
+        var sl = trackWrap.scrollLeft;
+        if (sl >= halfWidth) {
+            normalizing = true;
+            trackWrap.scrollLeft = sl - halfWidth;
+            normalizing = false;
+        } else if (sl < 1) {
+            normalizing = true;
+            trackWrap.scrollLeft = sl + halfWidth;
+            normalizing = false;
+        }
+    }
+    trackWrap.addEventListener('scroll', normalizeScroll, { passive: true });
+    // Start slightly offset so a leftward drag also wraps correctly
+    trackWrap.scrollLeft = 1;
+
+    // Drag-to-scroll on desktop (with wrap-aware re-sync)
     var isDown = false, startX, scrollLeft, hasDragged = false;
     trackWrap.addEventListener('mousedown', function(e) {
         isDown = true; hasDragged = false;
@@ -1387,7 +1475,13 @@ if (trackWrap) {
         e.preventDefault();
         hasDragged = true;
         var x = e.pageX - trackWrap.offsetLeft;
-        trackWrap.scrollLeft = scrollLeft - (x - startX);
+        var target = scrollLeft - (x - startX);
+        trackWrap.scrollLeft = target;
+        // If normalize wrapped us, re-anchor the drag origin
+        if (halfWidth && Math.abs(trackWrap.scrollLeft - target) > 2) {
+            startX = x;
+            scrollLeft = trackWrap.scrollLeft;
+        }
     });
     // Prevent flip when drag-scrolling
     trackWrap.addEventListener('click', function(e) {
