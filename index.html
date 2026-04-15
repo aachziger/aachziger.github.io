@@ -263,7 +263,6 @@
 
         .app-track-wrap {
             overflow-x: auto; overflow-y: visible;
-            scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
             margin: 0 calc(-1 * var(--space-lg)); padding: var(--space-sm) var(--space-lg) var(--space-xl);
@@ -1403,15 +1402,20 @@ var trackWrap = document.querySelector('.app-track-wrap');
 var track = document.querySelector('.app-track');
 if (trackWrap && track) {
 
-    // Clone all cards once so the carousel can wrap seamlessly
+    // Clone all cards FOUR times so we have 5 sets total. The user is parked
+    // inside the 3rd (middle) set, giving one full set of cards as a buffer
+    // on each side before the scroll position needs to wrap — this works
+    // even on wide viewports where a single set is narrower than the viewport.
     var originalCards = Array.from(track.children);
-    originalCards.forEach(function(node) {
-        var clone = node.cloneNode(true);
-        clone.setAttribute('data-clone', 'true');
-        // Re-bind flip handler (cloneNode copies inline onclick, but be safe)
-        clone.onclick = function() { clone.classList.toggle('flipped'); };
-        track.appendChild(clone);
-    });
+    for (var _k = 0; _k < 4; _k++) {
+        originalCards.forEach(function(node) {
+            var clone = node.cloneNode(true);
+            clone.setAttribute('data-clone', 'true');
+            // Re-bind flip handler (cloneNode copies inline onclick, but be safe)
+            clone.onclick = function() { clone.classList.toggle('flipped'); };
+            track.appendChild(clone);
+        });
+    }
 
     // Staggered reveal for originals; clones fade in with the last original
     var ioTrack = new IntersectionObserver(function(entries) {
@@ -1432,34 +1436,42 @@ if (trackWrap && track) {
     }, { threshold: 0.15 });
     ioTrack.observe(trackWrap);
 
-    // Infinite-scroll wrap: when the user passes the midpoint, jump back
-    // one set's width; when they scroll before the start, jump forward.
-    var halfWidth = 0;
-    function measureHalf() {
-        halfWidth = Math.floor(track.scrollWidth / 2);
+    // Infinite-scroll wrap using three copies: user stays in the middle
+    // copy (range [setWidth, 2*setWidth)). Crossing either boundary silently
+    // jumps by one set-width to the equivalent position in the middle copy.
+    var setWidth = 0;
+    var parked = false;
+    function measureSet() {
+        // Width of one set = offsetLeft of the first clone card
+        var firstClone = track.querySelector('.app-card-wrapper[data-clone]');
+        setWidth = firstClone ? firstClone.offsetLeft : Math.floor(track.scrollWidth / 5);
+        // Park the viewport at the start of the 3rd (middle) copy ONCE on
+        // init. With 5 copies total, the user has a full set of cards as
+        // buffer on each side. Don't re-park on later measurements or we'd
+        // yank them back.
+        if (setWidth > 0 && !parked) {
+            trackWrap.scrollLeft = setWidth * 2;
+            parked = true;
+        }
     }
-    measureHalf();
-    window.addEventListener('resize', measureHalf);
-    window.addEventListener('load', measureHalf);
-    setTimeout(measureHalf, 600); // after fonts/images settle
 
-    var normalizing = false;
     function normalizeScroll() {
-        if (normalizing || !halfWidth) return;
+        if (!setWidth) return;
         var sl = trackWrap.scrollLeft;
-        if (sl >= halfWidth) {
-            normalizing = true;
-            trackWrap.scrollLeft = sl - halfWidth;
-            normalizing = false;
-        } else if (sl < 1) {
-            normalizing = true;
-            trackWrap.scrollLeft = sl + halfWidth;
-            normalizing = false;
+        // Safe range is [setWidth, 3*setWidth). Outside that, wrap by one set.
+        if (sl >= setWidth * 3) {
+            trackWrap.scrollLeft = sl - setWidth;
+        } else if (sl < setWidth) {
+            trackWrap.scrollLeft = sl + setWidth;
         }
     }
     trackWrap.addEventListener('scroll', normalizeScroll, { passive: true });
-    // Start slightly offset so a leftward drag also wraps correctly
-    trackWrap.scrollLeft = 1;
+
+    // Initial measurement + park. Re-measure after fonts/images settle.
+    measureSet();
+    window.addEventListener('resize', measureSet);
+    window.addEventListener('load', measureSet);
+    setTimeout(measureSet, 600);
 
     // Drag-to-scroll on desktop (with wrap-aware re-sync)
     var isDown = false, startX, scrollLeft, hasDragged = false;
@@ -1478,7 +1490,7 @@ if (trackWrap && track) {
         var target = scrollLeft - (x - startX);
         trackWrap.scrollLeft = target;
         // If normalize wrapped us, re-anchor the drag origin
-        if (halfWidth && Math.abs(trackWrap.scrollLeft - target) > 2) {
+        if (setWidth && Math.abs(trackWrap.scrollLeft - target) > 2) {
             startX = x;
             scrollLeft = trackWrap.scrollLeft;
         }
