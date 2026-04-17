@@ -1499,6 +1499,54 @@ if (trackWrap && track) {
     trackWrap.addEventListener('click', function(e) {
         if (hasDragged) { e.stopPropagation(); hasDragged = false; }
     }, true);
+
+    // ── Auto-scroll (gentle, continuous) ─────────────────────────
+    // Honour prefers-reduced-motion — if set, don't auto-scroll at all.
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion) {
+        var canHover = window.matchMedia('(hover: hover)').matches;
+        var isHovering = false;
+        var lastUserInput = 0;
+        var USER_COOLDOWN = 2500;           // ms to wait after any wheel/touch/drag
+        var SPEED = 0.35;                    // px per frame (~21 px/s at 60fps)
+        var autoAccum = 0;                   // fractional px accumulator
+        var pageVisible = !document.hidden;
+
+        // Pause on desktop hover
+        if (canHover) {
+            trackWrap.addEventListener('mouseenter', function() { isHovering = true; });
+            trackWrap.addEventListener('mouseleave', function() { isHovering = false; });
+        }
+
+        // Pause for a short cooldown after any user-driven scroll / touch / drag
+        var markInput = function() { lastUserInput = Date.now(); };
+        trackWrap.addEventListener('wheel', markInput, { passive: true });
+        trackWrap.addEventListener('touchstart', markInput, { passive: true });
+        trackWrap.addEventListener('touchmove', markInput, { passive: true });
+        trackWrap.addEventListener('mousedown', markInput);
+
+        // Don't waste frames when tab is in the background
+        document.addEventListener('visibilitychange', function() {
+            pageVisible = !document.hidden;
+        });
+
+        function autoTick() {
+            requestAnimationFrame(autoTick);
+            if (!setWidth || !pageVisible) return;
+            if (isHovering) return;
+            if (Date.now() - lastUserInput < USER_COOLDOWN) return;
+            // Freeze while any card is flipped so the user can read
+            if (track.querySelector('.app-card-wrapper.flipped')) return;
+
+            autoAccum += SPEED;
+            if (autoAccum >= 1) {
+                var whole = Math.floor(autoAccum);
+                trackWrap.scrollLeft += whole;
+                autoAccum -= whole;
+            }
+        }
+        requestAnimationFrame(autoTick);
+    }
 }
 
 
