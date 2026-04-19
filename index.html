@@ -692,6 +692,28 @@
         /* Tone it down in light mode */
         [data-theme="light"] .space-bg { opacity: 0.35; }
 
+        /* ─── Globe background (centred, behind everything) ─── */
+        /* Canvas is intentionally larger than the globe itself so the arcs,
+           which bow outward from the sphere's surface, have room to render
+           without being clipped at the canvas edge. The globe radius is
+           driven by the JS (R = min(W,H) * 0.335), giving ~5vmin of arc
+           breathing room on every side. position:fixed means the globe
+           stays put while the rest of the page scrolls past. */
+        .globe-bg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120vmin;
+            height: 120vmin;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.75;
+        }
+        @media (max-width: 800px) {
+            .globe-bg { width: 99vmin; height: 99vmin; }
+        }
+
         /* ─── Scroll reveal ────────────────────────────────────── */
         [data-reveal] { opacity: 0; transition: opacity 300ms var(--ease); }
         [data-reveal].visible { opacity: 1; }
@@ -724,6 +746,7 @@
 
 <!-- ═══════════ SPACE BACKGROUND ═════════════════════════════════ -->
 <div class="space-bg" id="space-bg" aria-hidden="true"></div>
+<canvas class="globe-bg" id="globe-bg" aria-hidden="true"></canvas>
 
 <!-- ═══════════ HEADER ════════════════════════════════════════════ -->
 <header class="site-header" id="hdr">
@@ -2108,6 +2131,350 @@ window.__initLogoFace = function(img) {
             ticking = false;
         }
     }
+})();
+
+// ── Globe background — rotating wireframe with signal arcs ───────
+(function() {
+    var canvas = document.getElementById('globe-bg');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0, R = 0, cx = 0, cy = 0;
+
+    function resize() {
+        var rect = canvas.getBoundingClientRect();
+        W = rect.width; H = rect.height;
+        if (W <= 0 || H <= 0) return;
+        canvas.width  = Math.max(1, Math.floor(W * dpr));
+        canvas.height = Math.max(1, Math.floor(H * dpr));
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        // 0.335 keeps the globe the same visual size it had at 0.42 on a
+        // 64vmin canvas, now that the canvas has been expanded to 80vmin to
+        // give the lifted route arcs room to render without clipping.
+        R = Math.min(W, H) * 0.335;
+        cx = W / 2; cy = H / 2;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Major world cities [lat, lon, name]
+    var CITIES = [
+        [40.7,-74.0,'New York'],[34.05,-118.24,'Los Angeles'],[41.88,-87.63,'Chicago'],
+        [47.61,-122.33,'Seattle'],[37.77,-122.42,'San Francisco'],[25.76,-80.19,'Miami'],
+        [19.43,-99.13,'Mexico City'],[45.50,-73.57,'Montreal'],
+        [-23.55,-46.63,'São Paulo'],[-34.60,-58.38,'Buenos Aires'],
+        [-33.44,-70.67,'Santiago'],[4.71,-74.07,'Bogotá'],[-12.04,-77.03,'Lima'],
+        [51.51,-0.13,'London'],[48.85,2.35,'Paris'],[52.52,13.40,'Berlin'],
+        [41.90,12.50,'Rome'],[40.42,-3.70,'Madrid'],[55.75,37.62,'Moscow'],
+        [59.33,18.07,'Stockholm'],[60.17,24.94,'Helsinki'],[41.01,28.98,'Istanbul'],
+        [30.04,31.24,'Cairo'],[-1.29,36.82,'Nairobi'],[-33.92,18.42,'Cape Town'],
+        [-26.20,28.04,'Johannesburg'],[25.20,55.27,'Dubai'],[24.71,46.68,'Riyadh'],
+        [19.07,72.87,'Mumbai'],[28.61,77.23,'Delhi'],[27.70,85.32,'Kathmandu'],
+        [13.75,100.50,'Bangkok'],[3.14,101.69,'Kuala Lumpur'],[1.35,103.82,'Singapore'],
+        [-6.21,106.84,'Jakarta'],[14.60,120.98,'Manila'],[22.32,114.17,'Hong Kong'],
+        [25.03,121.57,'Taipei'],[31.23,121.47,'Shanghai'],[39.90,116.40,'Beijing'],
+        [37.56,126.98,'Seoul'],[35.68,139.76,'Tokyo'],[43.06,141.35,'Sapporo'],
+        [47.92,106.92,'Ulaanbaatar'],[-33.87,151.21,'Sydney'],[-37.81,144.96,'Melbourne'],
+        [-36.85,174.76,'Auckland'],[21.31,-157.86,'Honolulu']
+    ];
+
+    // lat/lon → 3D unit-sphere coord (y-down screen space)
+    function ll3(lat, lon) {
+        var la = lat * Math.PI / 180, lo = lon * Math.PI / 180;
+        return [Math.cos(la) * Math.sin(lo), -Math.sin(la), Math.cos(la) * Math.cos(lo)];
+    }
+    var cityP = CITIES.map(function(c) { return ll3(c[0], c[1]); });
+
+    // Rotation around Y (vertical axis → globe spins east-to-west)
+    function rotY(p, c, s) {
+        return [p[0]*c - p[2]*s, p[1], p[0]*s + p[2]*c];
+    }
+
+    // ── Continent outlines (simplified [lat, lon] polygons) ──────
+    // Coarse silhouettes — enough to recognise each landmass as dots.
+    var CONTINENTS = [
+        // North America (incl. Central America, Alaska)
+        [[71,-156],[70,-140],[60,-140],[49,-125],[38,-122],[32,-117],[24,-110],
+         [18,-105],[15,-95],[19,-90],[22,-87],[17,-88],[13,-83],[8,-78],[9,-80],
+         [19,-96],[25,-97],[28,-94],[30,-90],[30,-85],[25,-80],[32,-80],[38,-75],
+         [41,-74],[45,-66],[48,-58],[55,-56],[58,-63],[63,-77],[68,-79],[73,-80],
+         [74,-92],[73,-100],[70,-108],[71,-130],[71,-145],[71,-156]],
+        // Greenland
+        [[83,-28],[80,-20],[74,-20],[68,-28],[62,-45],[68,-50],[77,-60],[82,-55],[83,-28]],
+        // South America
+        [[12,-72],[11,-65],[6,-55],[0,-50],[-5,-36],[-12,-37],[-22,-40],[-30,-50],
+         [-40,-62],[-52,-68],[-55,-68],[-53,-74],[-45,-75],[-35,-73],[-25,-71],
+         [-17,-74],[-10,-78],[-2,-81],[5,-78],[9,-75],[12,-72]],
+        // Africa
+        [[35,-5],[37,10],[33,15],[32,25],[30,32],[22,37],[12,43],[11,51],[-2,41],
+         [-15,40],[-25,35],[-30,33],[-35,20],[-34,18],[-25,15],[-18,12],[-5,13],
+         [0,10],[4,6],[8,-2],[12,-12],[17,-16],[22,-17],[28,-12],[32,-8],[35,-5]],
+        // Eurasia (Europe + Asia + SE Asia, one polygon so no antimeridian issues)
+        [[68,-5],[70,10],[69,25],[67,30],[68,40],[72,55],[77,70],[80,100],[75,130],
+         [70,155],[68,175],[63,180],[55,165],[46,142],[40,140],[35,130],[32,122],
+         [26,122],[22,112],[15,107],[9,102],[5,100],[2,103],[-5,105],[-8,114],
+         [-9,126],[-10,140],[0,138],[6,120],[15,104],[22,92],[22,80],[15,80],
+         [10,78],[7,79],[15,70],[22,68],[25,58],[25,50],[17,44],[13,44],[12,50],
+         [20,57],[29,48],[35,45],[38,35],[34,35],[30,31],[37,25],[36,15],[40,10],
+         [44,-2],[43,-9],[50,-5],[58,-8],[68,-5]],
+        // Australia
+        [[-11,131],[-12,140],[-18,146],[-25,153],[-33,152],[-38,148],[-38,143],
+         [-32,126],[-27,114],[-22,114],[-17,123],[-13,130],[-11,131]]
+        // (Antarctica is handled specially below — a polygon around the pole
+        // can't be expressed cleanly in flat lat/lon space.)
+    ];
+
+    // Flat 2D point-in-polygon (lat/lon treated as x/y). Fine for continents
+    // that don't wrap the antimeridian; ours are all written to avoid that.
+    function pip(lat, lon, poly) {
+        var inside = false;
+        for (var i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+            var yi = poly[i][0], xi = poly[i][1];
+            var yj = poly[j][0], xj = poly[j][1];
+            var hit = ((yi > lat) !== (yj > lat)) &&
+                      (lon < (xj - xi) * (lat - yi) / (yj - yi) + xi);
+            if (hit) inside = !inside;
+        }
+        return inside;
+    }
+
+    // Precompute land dots on a lat/lon grid (once, at startup)
+    var LAND = [];
+    (function buildLand() {
+        var STEP = 3; // degrees — ~7000 samples
+        for (var lat = -85; lat <= 80; lat += STEP) {
+            for (var lon = -180; lon < 180; lon += STEP) {
+                // Antarctica: whole cap below -63°
+                if (lat < -63) { LAND.push(ll3(lat, lon)); continue; }
+                for (var k = 0; k < CONTINENTS.length; k++) {
+                    if (pip(lat, lon, CONTINENTS[k])) {
+                        LAND.push(ll3(lat, lon));
+                        break;
+                    }
+                }
+            }
+        }
+    })();
+
+    // Slerp on unit sphere
+    function slerp(a, b, t) {
+        var d = a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
+        d = Math.max(-1, Math.min(1, d));
+        var om = Math.acos(d);
+        if (om < 1e-6) return a.slice();
+        var so = Math.sin(om);
+        var s1 = Math.sin((1-t)*om)/so, s2 = Math.sin(t*om)/so;
+        return [s1*a[0]+s2*b[0], s1*a[1]+s2*b[1], s1*a[2]+s2*b[2]];
+    }
+
+    // Theme-aware colour palettes. BASE = main strokes/dots, BRIGHT = city
+    // dots, labels, pulse cores. Updated once per frame via refreshPalette().
+    var PALETTE = {
+        dark:  { base: 'rgba(76, 230, 230, ',  bright: 'rgba(170, 250, 250, ' }, // teal
+        light: { base: 'rgba(60, 50, 160, ',   bright: 'rgba(95, 75, 195, ' }    // deep indigo / purple
+    };
+    var BASE = PALETTE.dark.base;
+    var BRIGHT = PALETTE.dark.bright;
+    function refreshPalette() {
+        var theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+        BASE   = PALETTE[theme].base;
+        BRIGHT = PALETTE[theme].bright;
+    }
+
+    function drawGrid(c, s) {
+        ctx.lineWidth = 0.6;
+        ctx.strokeStyle = BASE + '0.14)';
+        // Parallels
+        for (var lat = -60; lat <= 60; lat += 30) {
+            ctx.beginPath();
+            var started = false;
+            for (var lon = -180; lon <= 180; lon += 5) {
+                var p = rotY(ll3(lat, lon), c, s);
+                if (p[2] <= 0) { started = false; continue; }
+                var x = cx + p[0]*R, y = cy + p[1]*R;
+                if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+        // Meridians
+        for (var lonM = 0; lonM < 360; lonM += 30) {
+            ctx.beginPath();
+            var started2 = false;
+            for (var la = -90; la <= 90; la += 5) {
+                var p = rotY(ll3(la, lonM), c, s);
+                if (p[2] <= 0) { started2 = false; continue; }
+                var x = cx + p[0]*R, y = cy + p[1]*R;
+                if (!started2) { ctx.moveTo(x, y); started2 = true; } else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+        // Silhouette
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, 0, Math.PI * 2);
+        ctx.strokeStyle = BASE + '0.30)';
+        ctx.lineWidth = 1.0;
+        ctx.stroke();
+    }
+
+    function drawLand(c, s) {
+        // Batch all dots into a single fill for performance. Use tiny rects —
+        // faster than arcs and indistinguishable at 1 px.
+        ctx.fillStyle = BASE + '0.55)';
+        for (var i = 0; i < LAND.length; i++) {
+            var p = rotY(LAND[i], c, s);
+            if (p[2] <= 0.03) continue; // cull back side + near-rim
+            ctx.fillRect(cx + p[0]*R - 0.6, cy + p[1]*R - 0.6, 1.2, 1.2);
+        }
+    }
+
+    function drawCities(c, s) {
+        for (var i = 0; i < cityP.length; i++) {
+            var p = rotY(cityP[i], c, s);
+            if (p[2] <= 0.02) continue; // cull slightly past the rim
+            var a = Math.min(1, p[2] * 1.4);
+            ctx.fillStyle = BRIGHT + (0.45 + 0.45*a) + ')';
+            ctx.beginPath();
+            ctx.arc(cx + p[0]*R, cy + p[1]*R, 1.6, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    function drawCityLabels(c, s) {
+        ctx.font = '9px -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif';
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'left';
+        for (var i = 0; i < CITIES.length; i++) {
+            var p = rotY(cityP[i], c, s);
+            // Keep labels off the rim — they'd look cramped & warped there
+            if (p[2] <= 0.18) continue;
+            var a = Math.min(1, (p[2] - 0.18) * 2.2);
+            ctx.fillStyle = BRIGHT + (0.55 * a) + ')';
+            ctx.fillText(CITIES[i][2], cx + p[0]*R + 5, cy + p[1]*R - 0.5);
+        }
+    }
+
+    // ── Routes (permanent trails) + pulses (dots that shoot along them) ─
+    var routes = [];   // { a: unit-vec, b: unit-vec }
+    var pulses = [];   // { a, b, start, duration }
+    var MAX_ROUTES = 38;
+
+    var ROUTE_SEG = 32;
+    function newRoute() {
+        var ai = (Math.random() * cityP.length) | 0;
+        var bi = ai;
+        while (bi === ai) bi = (Math.random() * cityP.length) | 0;
+        // Precompute arc vertices (pre-rotation) so drawRoutes only needs to
+        // rotate-and-project each frame, not re-slerp.
+        var a = cityP[ai], b = cityP[bi];
+        var pts = new Array(ROUTE_SEG + 1);
+        for (var i = 0; i <= ROUTE_SEG; i++) {
+            var t = i / ROUTE_SEG;
+            var sp = slerp(a, b, t);
+            var lift = 1 + 0.28 * Math.sin(t * Math.PI);
+            pts[i] = [sp[0]*lift, sp[1]*lift, sp[2]*lift];
+        }
+        var r = { a: a, b: b, pts: pts };
+        routes.push(r);
+        return r;
+    }
+
+    function newPulse(route, now) {
+        pulses.push({
+            a: route.a, b: route.b,
+            start: now,
+            duration: 1800 + Math.random() * 1400
+        });
+    }
+
+    function drawRoutes(c, s) {
+        ctx.strokeStyle = BASE + '0.22)';
+        ctx.lineWidth = 0.8;
+        for (var r = 0; r < routes.length; r++) {
+            var pts = routes[r].pts;
+            ctx.beginPath();
+            var open = false, prev = null;
+            for (var i = 0; i <= ROUTE_SEG; i++) {
+                var cur = rotY(pts[i], c, s);
+                if (prev) {
+                    if (prev[2] <= 0 && cur[2] <= 0) {
+                        open = false;
+                    } else {
+                        if (!open) { ctx.moveTo(cx + prev[0]*R, cy + prev[1]*R); open = true; }
+                        ctx.lineTo(cx + cur[0]*R, cy + cur[1]*R);
+                    }
+                }
+                prev = cur;
+            }
+            ctx.stroke();
+        }
+    }
+
+    function drawPulses(now, c, s) {
+        pulses = pulses.filter(function(p) {
+            var t = (now - p.start) / p.duration;
+            if (t >= 1) return false;
+            var sp = slerp(p.a, p.b, t);
+            var lift = 1 + 0.28 * Math.sin(t * Math.PI);
+            sp = rotY([sp[0]*lift, sp[1]*lift, sp[2]*lift], c, s);
+            if (sp[2] > 0) {
+                var x = cx + sp[0]*R, y = cy + sp[1]*R;
+                // Soft glow
+                ctx.fillStyle = BASE + '0.35)';
+                ctx.beginPath();
+                ctx.arc(x, y, 4.5, 0, Math.PI * 2);
+                ctx.fill();
+                // Bright core
+                ctx.fillStyle = BRIGHT + '0.98)';
+                ctx.beginPath();
+                ctx.arc(x, y, 2.1, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            return true;
+        });
+    }
+
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var pageVisible = !document.hidden;
+    document.addEventListener('visibilitychange', function() { pageVisible = !document.hidden; });
+
+    var lastRouteSpawn = 0;
+    var lastPulseSpawn = 0;
+
+    function frame(now) {
+        requestAnimationFrame(frame);
+        if (!pageVisible || W <= 0 || H <= 0) return;
+        refreshPalette();
+        ctx.clearRect(0, 0, W, H);
+
+        var angle = reduceMotion ? 0.6 : now * 0.00008;
+        var c = Math.cos(angle), s = Math.sin(angle);
+
+        drawLand(c, s);
+        drawGrid(c, s);
+        drawRoutes(c, s);
+        drawCities(c, s);
+
+        if (!reduceMotion) {
+            // Spawn new routes quickly at first, then slow down as network fills in.
+            // Each newly-minted route also fires its "origin" pulse right away,
+            // so you see the dot travelling the freshly-drawn trail.
+            var routeInterval = 350 + routes.length * 120;
+            if (now - lastRouteSpawn > routeInterval && routes.length < MAX_ROUTES) {
+                var r = newRoute();
+                newPulse(r, now);
+                lastRouteSpawn = now;
+            }
+            // Periodic pulses along existing routes — the "sometimes shoot out" dots
+            if (routes.length > 0 && now - lastPulseSpawn > 480) {
+                newPulse(routes[(Math.random() * routes.length) | 0], now);
+                lastPulseSpawn = now;
+            }
+            drawPulses(now, c, s);
+        }
+
+        drawCityLabels(c, s);
+    }
+    requestAnimationFrame(frame);
 })();
 </script>
 
