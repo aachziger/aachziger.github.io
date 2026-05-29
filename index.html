@@ -262,15 +262,15 @@
         .apps-head .sb { margin: 0 auto; }
 
         .app-track-wrap {
-            overflow-x: auto; overflow-y: visible;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
+            overflow: hidden;
+            touch-action: pan-y;             /* let vertical page-scroll through; we own horizontal */
+            user-select: none; -webkit-user-select: none;
             margin: 0 calc(-1 * var(--space-lg)); padding: var(--space-sm) var(--space-lg) var(--space-xl);
             cursor: grab;
         }
         .app-track-wrap:active { cursor: grabbing; }
-        .app-track-wrap::-webkit-scrollbar { display: none; }
-        .app-track { display: flex; gap: var(--space-md); padding-right: var(--space-lg); }
+        .app-track { display: flex; gap: var(--space-md); padding-right: var(--space-lg); will-change: transform; }
+        .app-track img { -webkit-user-drag: none; user-drag: none; }
 
         /* ─── Pixel fluid overlay (canvas) ─────────────────────── */
         .pixel-fluid {
@@ -1446,10 +1446,10 @@ var trackWrap = document.querySelector('.app-track-wrap');
 var track = document.querySelector('.app-track');
 if (trackWrap && track) {
 
-    // Clone all cards FOUR times so we have 5 sets total. The user is parked
-    // inside the 3rd (middle) set, giving one full set of cards as a buffer
-    // on each side before the scroll position needs to wrap — this works
-    // even on wide viewports where a single set is narrower than the viewport.
+    // Clone all cards FOUR times so we have 5 sets total. The track is only
+    // ever translated within [0, setWidth), so the extra sets exist purely to
+    // fill the viewport to the right of the current offset — 5 sets covers any
+    // viewport even when a single set is narrower than the screen.
     var originalCards = Array.from(track.children);
     for (var _k = 0; _k < 4; _k++) {
         originalCards.forEach(function(node) {
@@ -1480,117 +1480,130 @@ if (trackWrap && track) {
     }, { threshold: 0.15 });
     ioTrack.observe(trackWrap);
 
-    // Infinite-scroll wrap using three copies: user stays in the middle
-    // copy (range [setWidth, 2*setWidth)). Crossing either boundary silently
-    // jumps by one set-width to the equivalent position in the middle copy.
-    var setWidth = 0;
-    var parked = false;
+    // ── Transform-driven infinite loop ───────────────────────────
+    // We DON'T use native scroll. The track is translated by a single
+    // JS-owned `offset` and wrapped with a pure modulo, so there is no
+    // native momentum to fight — the loop seam is always invisible.
+    var setWidth = 0;            // width of one full set of cards (px)
+    var offset = 0;              // current translate (px); kept in [0, setWidth)
+    var SPEED = 0.35;            // auto-scroll px per frame (~21 px/s at 60fps)
+    var FRICTION = 0.95;         // inertia decay per ~16.7ms after a fling
+    var MIN_VEL = 0.003;         // px/ms below which inertia stops
+    var DRAG_THRESHOLD = 6;      // px of movement before a press counts as a drag
+
+    function render() {
+        track.style.transform = 'translate3d(' + (-offset) + 'px,0,0)';
+    }
+    function wrap() {
+        if (setWidth > 0) offset = ((offset % setWidth) + setWidth) % setWidth;
+    }
     function measureSet() {
-        // Width of one set = offsetLeft of the first clone card
+        // Width of one set = offsetLeft of the first clone (layout value,
+        // unaffected by the transform we apply to the track).
         var firstClone = track.querySelector('.app-card-wrapper[data-clone]');
         setWidth = firstClone ? firstClone.offsetLeft : Math.floor(track.scrollWidth / 5);
-        // Park the viewport at the start of the 3rd (middle) copy ONCE on
-        // init. With 5 copies total, the user has a full set of cards as
-        // buffer on each side. Don't re-park on later measurements or we'd
-        // yank them back.
-        if (setWidth > 0 && !parked) {
-            trackWrap.scrollLeft = setWidth * 2;
-            parked = true;
-        }
+        wrap();
+        render();
     }
-
-    function normalizeScroll() {
-        if (!setWidth) return;
-        var sl = trackWrap.scrollLeft;
-        // Safe range is [setWidth, 3*setWidth). Outside that, wrap by one set.
-        if (sl >= setWidth * 3) {
-            trackWrap.scrollLeft = sl - setWidth;
-        } else if (sl < setWidth) {
-            trackWrap.scrollLeft = sl + setWidth;
-        }
-    }
-    trackWrap.addEventListener('scroll', normalizeScroll, { passive: true });
-
-    // Initial measurement + park. Re-measure after fonts/images settle.
     measureSet();
     window.addEventListener('resize', measureSet);
     window.addEventListener('load', measureSet);
     setTimeout(measureSet, 600);
 
-    // Drag-to-scroll on desktop (with wrap-aware re-sync)
-    var isDown = false, startX, scrollLeft, hasDragged = false;
-    trackWrap.addEventListener('mousedown', function(e) {
-        isDown = true; hasDragged = false;
-        startX = e.pageX - trackWrap.offsetLeft;
-        scrollLeft = trackWrap.scrollLeft;
+    // ── Shared input / motion state ──────────────────────────────
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var canHover = window.matchMedia('(hover: hover)').matches;
+    var isHovering = false;
+    var pageVisible = !document.hidden;
+    var lastUserInput = 0;
+    var USER_COOLDOWN = 2500;    // ms of idle before auto-scroll resumes
+    var velocity = 0;            // offset velocity (px/ms); drives inertia
+    var dragging = false, moved = false;
+    var startX = 0, startOffset = 0, lastX = 0, lastT = 0;
+
+    function markInput() { lastUserInput = Date.now(); velocity = 0; }
+
+    if (canHover) {
+        trackWrap.addEventListener('mouseenter', function() { isHovering = true; });
+        trackWrap.addEventListener('mouseleave', function() { isHovering = false; });
+    }
+    document.addEventListener('visibilitychange', function() { pageVisible = !document.hidden; });
+    trackWrap.addEventListener('dragstart', function(e) { e.preventDefault(); });
+
+    // ── Pointer drag (mouse + touch, unified) ────────────────────
+    // touch-action:pan-y (CSS) lets vertical page-scroll through while
+    // horizontal gestures arrive here as pointermove events.
+    trackWrap.addEventListener('pointerdown', function(e) {
+        dragging = true; moved = false;
+        startX = lastX = e.clientX;
+        startOffset = offset;
+        lastT = e.timeStamp || Date.now();
+        markInput();
+        try { trackWrap.setPointerCapture(e.pointerId); } catch (_) {}
     });
-    trackWrap.addEventListener('mouseleave', function() { isDown = false; });
-    trackWrap.addEventListener('mouseup', function() { isDown = false; });
-    trackWrap.addEventListener('mousemove', function(e) {
-        if (!isDown) return;
-        e.preventDefault();
-        hasDragged = true;
-        var x = e.pageX - trackWrap.offsetLeft;
-        var target = scrollLeft - (x - startX);
-        trackWrap.scrollLeft = target;
-        // If normalize wrapped us, re-anchor the drag origin
-        if (setWidth && Math.abs(trackWrap.scrollLeft - target) > 2) {
-            startX = x;
-            scrollLeft = trackWrap.scrollLeft;
-        }
+    trackWrap.addEventListener('pointermove', function(e) {
+        if (!dragging) return;
+        var dx = e.clientX - startX;
+        if (Math.abs(dx) > DRAG_THRESHOLD) moved = true;
+        offset = startOffset - dx;
+        wrap(); render();
+        var now = e.timeStamp || Date.now();
+        var dt = now - lastT;
+        if (dt > 0) velocity = -(e.clientX - lastX) / dt;   // offset vel = -finger vel
+        lastX = e.clientX; lastT = now;
+        lastUserInput = Date.now();
     });
-    // Prevent flip when drag-scrolling
+    function endDrag(e) {
+        if (!dragging) return;
+        dragging = false;
+        try { trackWrap.releasePointerCapture(e.pointerId); } catch (_) {}
+        lastUserInput = Date.now();   // inertia plays out; cooldown counts from release
+    }
+    trackWrap.addEventListener('pointerup', endDrag);
+    trackWrap.addEventListener('pointercancel', endDrag);
+
+    // Swallow the flip-click that fires at the end of a drag
     trackWrap.addEventListener('click', function(e) {
-        if (hasDragged) { e.stopPropagation(); hasDragged = false; }
+        if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; }
     }, true);
 
-    // ── Auto-scroll (gentle, continuous) ─────────────────────────
-    // Honour prefers-reduced-motion — if set, don't auto-scroll at all.
-    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reduceMotion) {
-        var canHover = window.matchMedia('(hover: hover)').matches;
-        var isHovering = false;
-        var lastUserInput = 0;
-        var USER_COOLDOWN = 2500;           // ms to wait after any wheel/touch/drag
-        var SPEED = 0.35;                    // px per frame (~21 px/s at 60fps)
-        var autoAccum = 0;                   // fractional px accumulator
-        var pageVisible = !document.hidden;
+    // ── Wheel / trackpad: horizontal intent only, never hijack page ──
+    trackWrap.addEventListener('wheel', function(e) {
+        var dx = (Math.abs(e.deltaX) > Math.abs(e.deltaY)) ? e.deltaX
+               : (e.shiftKey ? e.deltaY : 0);
+        if (!dx) return;
+        e.preventDefault();
+        offset += dx;
+        wrap(); render();
+        markInput();
+    }, { passive: false });
 
-        // Pause on desktop hover
-        if (canHover) {
-            trackWrap.addEventListener('mouseenter', function() { isHovering = true; });
-            trackWrap.addEventListener('mouseleave', function() { isHovering = false; });
+    // ── Unified RAF loop: inertia first, else gentle auto-scroll ──
+    var lastFrame = 0;
+    function frame(now) {
+        requestAnimationFrame(frame);
+        if (!setWidth || !pageVisible) { lastFrame = now; return; }
+        var dt = lastFrame ? (now - lastFrame) : 16.7;
+        lastFrame = now;
+
+        // Fling inertia (decoupled from native momentum entirely)
+        if (!dragging && Math.abs(velocity) > MIN_VEL) {
+            offset += velocity * dt;
+            velocity *= Math.pow(FRICTION, dt / 16.7);
+            if (Math.abs(velocity) <= MIN_VEL) velocity = 0;
+            wrap(); render();
+            return;
         }
 
-        // Pause for a short cooldown after any user-driven scroll / touch / drag
-        var markInput = function() { lastUserInput = Date.now(); };
-        trackWrap.addEventListener('wheel', markInput, { passive: true });
-        trackWrap.addEventListener('touchstart', markInput, { passive: true });
-        trackWrap.addEventListener('touchmove', markInput, { passive: true });
-        trackWrap.addEventListener('mousedown', markInput);
+        // Gentle auto-scroll when idle
+        if (reduceMotion || dragging || isHovering) return;
+        if (Date.now() - lastUserInput < USER_COOLDOWN) return;
+        if (track.querySelector('.app-card-wrapper.flipped')) return;  // freeze to read
 
-        // Don't waste frames when tab is in the background
-        document.addEventListener('visibilitychange', function() {
-            pageVisible = !document.hidden;
-        });
-
-        function autoTick() {
-            requestAnimationFrame(autoTick);
-            if (!setWidth || !pageVisible) return;
-            if (isHovering) return;
-            if (Date.now() - lastUserInput < USER_COOLDOWN) return;
-            // Freeze while any card is flipped so the user can read
-            if (track.querySelector('.app-card-wrapper.flipped')) return;
-
-            autoAccum += SPEED;
-            if (autoAccum >= 1) {
-                var whole = Math.floor(autoAccum);
-                trackWrap.scrollLeft += whole;
-                autoAccum -= whole;
-            }
-        }
-        requestAnimationFrame(autoTick);
+        offset += SPEED * (dt / 16.7);
+        wrap(); render();
     }
+    requestAnimationFrame(frame);
 }
 
 
