@@ -640,6 +640,40 @@
             perspective: 800px;
             perspective-origin: 50% 50%;
         }
+        /* Faint milky-way band behind the stars */
+        .space-bg::before {
+            content: ''; position: absolute; inset: -10%;
+            background: linear-gradient(115deg,
+                transparent 36%,
+                rgba(140, 170, 255, 0.045) 44%,
+                rgba(232, 232, 232, 0.07) 50%,
+                rgba(255, 140, 60, 0.035) 56%,
+                transparent 64%);
+        }
+        /* Constellation easter egg — faint gamepad, connects near the cursor */
+        .constellation {
+            position: absolute; left: 66%; top: 9%;
+            width: clamp(180px, 22vw, 300px); height: auto;
+            overflow: visible;
+        }
+        .constellation .c-star {
+            fill: var(--text-display); opacity: 0.32;
+            transition: opacity 600ms var(--ease);
+        }
+        .constellation .c-line {
+            stroke: var(--text-display); stroke-width: 0.45; fill: none;
+            opacity: 0;
+            stroke-dasharray: 400; stroke-dashoffset: 400;
+            transition: opacity 500ms var(--ease), stroke-dashoffset 1600ms var(--ease) 100ms;
+        }
+        .constellation .c-label {
+            font-family: var(--font-mono); font-size: 4.2px;
+            letter-spacing: 0.18em; fill: var(--orange);
+            opacity: 0; transition: opacity 600ms var(--ease) 900ms;
+        }
+        .constellation.found .c-line  { opacity: 0.5; stroke-dashoffset: 0; }
+        .constellation.found .c-star  { opacity: 0.95; }
+        .constellation.found .c-label { opacity: 0.85; }
         .star-layer {
             position: absolute; inset: -60px; /* oversized so 3D tilt doesn't reveal edges */
             transform-style: preserve-3d;
@@ -759,9 +793,122 @@
             from { background-position-x: 0; }
             to   { background-position-x: 14px; }
         }
+
+        /* ─── Story chrome: progress bar + chapter rail ──────────── */
+        .story-progress {
+            position: fixed; top: 0; left: 0; right: 0; height: 2px;
+            z-index: 200; pointer-events: none;
+            background: linear-gradient(90deg, var(--orange), var(--accent));
+            transform: scaleX(0); transform-origin: 0 50%;
+        }
+        .chapter-rail {
+            position: fixed; left: 20px; top: 50%;
+            transform: translateY(-50%); z-index: 90;
+            display: flex; flex-direction: column; gap: 20px;
+        }
+        .chapter-rail a {
+            display: flex; align-items: center; gap: 8px;
+            text-decoration: none;
+        }
+        .rail-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: var(--border-visible);
+            transition: background 250ms var(--ease), transform 250ms var(--ease);
+        }
+        .rail-label {
+            font-family: var(--font-mono); font-size: 9px;
+            letter-spacing: 0.12em;
+            color: var(--text-disabled); opacity: 0.6;
+            transition: color 250ms var(--ease), opacity 250ms var(--ease);
+        }
+        .chapter-rail a.active .rail-dot  { background: var(--orange); transform: scale(1.35); }
+        .chapter-rail a.active .rail-label { color: var(--orange); opacity: 1; }
+        .chapter-rail a:hover .rail-label  { opacity: 1; }
+        @media (max-width: 1279px) { .chapter-rail { display: none; } }
+
+        /* ─── Hero: prologue typewriter + scroll cue ─────────────── */
+        .hero-type {
+            font-family: var(--font-mono); font-size: 14px;
+            letter-spacing: 0.04em; color: var(--orange);
+            min-height: 21px;
+            margin: calc(-1 * var(--space-lg)) 0 var(--space-xl);
+        }
+        #type-text::after {
+            content: ''; display: inline-block;
+            width: 8px; height: 1em; margin-left: 3px;
+            background: var(--orange);
+            vertical-align: text-bottom;
+        }
+        @media (prefers-reduced-motion: no-preference) {
+            #type-text::after { animation: caret-blink 1s steps(1) infinite; }
+        }
+        @keyframes caret-blink { 50% { opacity: 0; } }
+        .scroll-cue {
+            position: absolute; bottom: 24px; left: 50%;
+            transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            font-family: var(--font-mono); font-size: 10px;
+            letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--text-disabled);
+        }
+        .scroll-cue::after {
+            content: ''; width: 1px; height: 32px;
+            background: linear-gradient(var(--orange), transparent);
+        }
+        @media (prefers-reduced-motion: no-preference) {
+            .scroll-cue::after { animation: cue-pulse 1.8s var(--ease) infinite; }
+        }
+        @keyframes cue-pulse {
+            0%   { transform: scaleY(0); transform-origin: top; }
+            45%  { transform: scaleY(1); transform-origin: top; }
+            55%  { transform: scaleY(1); transform-origin: bottom; }
+            100% { transform: scaleY(0); transform-origin: bottom; }
+        }
+
+        /* ─── Interludes: big narrative lines between chapters ───── */
+        .interlude {
+            position: relative; z-index: 1;
+            padding: var(--space-3xl) 0;
+            text-align: center;
+        }
+        .interlude-line {
+            font-family: var(--font-display);
+            font-size: clamp(22px, 3.4vw, 34px);
+            line-height: 1.35; letter-spacing: -0.01em;
+            color: var(--text-secondary);
+            opacity: 0; transform: translateY(14px);
+            transition: opacity 600ms var(--ease), transform 600ms var(--ease);
+        }
+        .interlude-line-strong {
+            margin-top: var(--space-sm);
+            color: var(--text-display);
+            transition-delay: 280ms;
+        }
+        .interlude.visible .interlude-line { opacity: 1; transform: none; }
+
+        /* ─── App act chips (story numbering on cards) ───────────── */
+        .app-act {
+            position: absolute; top: 12px; right: 12px; z-index: 2;
+            font-family: var(--font-mono); font-size: 10px;
+            letter-spacing: 0.1em; color: var(--orange);
+            border: 1px solid var(--border-visible); border-radius: 999px;
+            padding: 3px 8px;
+            background: var(--surface);
+        }
     </style>
 </head>
 <body>
+
+<!-- ═══════════ STORY CHROME ═════════════════════════════════════ -->
+<div class="story-progress" id="story-progress" aria-hidden="true"></div>
+<nav class="chapter-rail" id="chapter-rail" aria-label="Chapters">
+    <a href="#prologue" class="active" aria-label="Prologue"><span class="rail-dot"></span><span class="rail-label">P</span></a>
+    <a href="#about"    aria-label="Chapter 1"><span class="rail-dot"></span><span class="rail-label">01</span></a>
+    <a href="#tech"     aria-label="Chapter 2"><span class="rail-dot"></span><span class="rail-label">02</span></a>
+    <a href="#apps"     aria-label="Chapter 3"><span class="rail-dot"></span><span class="rail-label">03</span></a>
+    <a href="#services" aria-label="Chapter 4"><span class="rail-dot"></span><span class="rail-label">04</span></a>
+    <a href="#contact"  aria-label="Epilogue"><span class="rail-dot"></span><span class="rail-label">E</span></a>
+</nav>
 
 <!-- ═══════════ SPACE BACKGROUND ═════════════════════════════════ -->
 <div class="space-bg" id="space-bg" aria-hidden="true"></div>
@@ -777,9 +924,9 @@
             </a>
             <nav>
                 <ul>
-                    <li><a href="#apps"     data-i18n="nav.apps">Apps</a></li>
                     <li><a href="#about"    data-i18n="nav.about">About</a></li>
                     <li><a href="#tech"     data-i18n="nav.skills">Skills</a></li>
+                    <li><a href="#apps"     data-i18n="nav.apps">Apps</a></li>
                     <li><a href="#services" data-i18n="nav.services">Services</a></li>
                     <li><a href="#contact"  data-i18n="nav.contact" class="nav-contact">Contact</a></li>
                 </ul>
@@ -793,18 +940,20 @@
 </header>
 
 <!-- ═══════════ HERO ══════════════════════════════════════════════ -->
-<section class="hero">
+<section class="hero" id="prologue">
     <div class="wrap">
         <div class="hero-inner">
             <div class="hero-text">
+                <div class="eyebrow" data-i18n="hero.eyebrow">Prologue</div>
                 <h1 class="hero-title">
                     <span data-i18n="hero.greeting">Hello, I'm</span><br>Andrei
                 </h1>
                 <p class="hero-sub" data-i18n="hero.sub">
-                    Bridging cognition and technology. I build mobile apps, cross-platform tools, and games — things that are useful, playful, and a little unexpected. B.Sc. Cognitive Science, lifelong curious mind.
+                    This is the story of a curious mind that learned to code — and started shipping. Mobile apps, games, and tools that are useful, playful, and a little unexpected.
                 </p>
+                <p class="hero-type" aria-hidden="true"><span id="type-text"></span></p>
                 <div class="hero-actions">
-                    <a href="#apps"    class="btn btn-primary" data-i18n="hero.cta_apps">See My Apps</a>
+                    <a href="#about"   class="btn btn-primary" data-i18n="hero.cta_apps">Start the Story</a>
                     <a href="#contact" class="btn btn-secondary" data-i18n="hero.cta_contact">Get in Touch</a>
                 </div>
             </div>
@@ -813,153 +962,7 @@
             </div>
         </div>
     </div>
-</section>
-
-<!-- ═══════════ APPS ══════════════════════════════════════════════ -->
-<section class="section" id="apps">
-    <div class="wrap">
-
-        <div class="apps-head section-head">
-            <div class="eyebrow" data-i18n="apps.eyebrow">My Applications</div>
-            <h2 class="sh" data-i18n-html="apps.heading">Apps I've <span class="accent">shipped</span></h2>
-            <p class="sb"       data-i18n="apps.desc">From smart keyboards to Apple Watch games — here's what I've shipped to the App Store.</p>
-        </div>
-
-        <div class="app-track-wrap">
-            <div class="app-track">
-
-                <!-- MergeKey -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <div class="app-card-visual">
-                                <img src="dist/images/mergeKey.gif" alt="MergeKey keyboard app preview" class="app-img" decoding="async">
-                            </div>
-                            <span class="app-label" data-i18n="mk.label">Keyboard · Productivity</span>
-                            <h3 class="app-title">MergeKey</h3>
-                            <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
-                        </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <img src="dist/images/mergeKey.gif" alt="MergeKey keyboard app preview" class="app-back-img" decoding="async">
-                            </div>
-                            <h3 class="app-back-title">MergeKey</h3>
-                            <p class="app-desc" data-i18n="mk.desc">The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="mk.perk1">Dynamic, adaptive word learning</span>
-                                <span class="app-perk" data-i18n="mk.perk2">Reduces typos in real time</span>
-                                <span class="app-perk" data-i18n="mk.perk3">Fully customizable personal dictionary</span>
-                            </div>
-                            <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Fishy Watch -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <div class="app-card-visual">
-                                <img src="dist/images/fishy_watch.png" alt="Fishy Watch Apple Watch game" class="app-img" decoding="async">
-                            </div>
-                            <span class="app-label" data-i18n="fw.label">Apple Watch · Game</span>
-                            <h3 class="app-title">Fishy Watch</h3>
-                            <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Fishy Watch on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
-                        </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <img src="dist/images/fishy_watch.png" alt="Fishy Watch Apple Watch game" class="app-back-img" decoding="async">
-                            </div>
-                            <h3 class="app-back-title">Fishy Watch</h3>
-                            <p class="app-desc" data-i18n="fw.desc">A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="fw.perk1">Dozens of fish to catch & collect</span>
-                                <span class="app-perk" data-i18n="fw.perk2">Feed and interact with your catch</span>
-                                <span class="app-perk" data-i18n="fw.perk3">Designed natively for Apple Watch</span>
-                            </div>
-                            <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Fishy Watch on the App Store">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Random Drop -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <div class="app-card-visual">
-                                <img src="dist/images/Random%20Drop.png" alt="Random Drop randomizer app" class="app-img" decoding="async">
-                            </div>
-                            <span class="app-label" data-i18n="rd.label">Arcade · Game</span>
-                            <h3 class="app-title">Random Drop</h3>
-                            <a href="https://apps.apple.com/us/app/random-drop/id1513193929" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Random Drop on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
-                        </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <img src="dist/images/Random%20Drop.png" alt="Random Drop arcade game" class="app-back-img" decoding="async">
-                            </div>
-                            <h3 class="app-back-title">Random Drop</h3>
-                            <p class="app-desc" data-i18n="rd.desc">A fast-paced arcade game where balls drop in out of nowhere. Pure reflex, pure fun — pick it up anytime, anywhere, and see how long you last.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="rd.perk1">Instant pick-up-and-play action</span>
-                                <span class="app-perk" data-i18n="rd.perk2">Unpredictable ball drops</span>
-                                <span class="app-perk" data-i18n="rd.perk3">Short rounds, endless replay</span>
-                            </div>
-                            <a href="https://apps.apple.com/us/app/random-drop/id1513193929" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Random Drop on the App Store">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Weltraum -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <div class="app-card-visual">
-                                <img src="dist/images/iphone-feature-02.png" alt="Weltraum space game" class="app-img" decoding="async">
-                            </div>
-                            <span class="app-label" data-i18n="wt.label">Multiplayer · Strategy</span>
-                            <h3 class="app-title">Weltraum</h3>
-                            <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Weltraum on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
-                        </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <img src="dist/images/iphone-feature-02.png" alt="Weltraum space game" class="app-back-img" decoding="async">
-                            </div>
-                            <h3 class="app-back-title">Weltraum</h3>
-                            <p class="app-desc" data-i18n="wt.desc">Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="wt.perk1">Real-time multiplayer via Bluetooth</span>
-                                <span class="app-perk" data-i18n="wt.perk2">Game Center integration</span>
-                                <span class="app-perk" data-i18n="wt.perk3">Unique orbit-based mechanics</span>
-                            </div>
-                            <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Weltraum on the App Store">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
+    <div class="scroll-cue" data-i18n="hero.scroll">Scroll to begin</div>
 </section>
 
 <div class="divider"></div>
@@ -971,9 +974,9 @@
     <div class="wrap">
         <div class="about-grid">
             <div>
-                <div class="eyebrow" data-i18n="about.eyebrow">About Me</div>
-                <h2 class="sh" data-i18n-html="about.heading">What <span class="accent">drives</span> me</h2>
-                <p class="sb" data-i18n="about.desc">I studied Cognitive Science — an intersection of CS, AI, psychology, philosophy, and neuroscience. Interests range across:</p>
+                <div class="eyebrow" data-i18n="about.eyebrow">Chapter 01 · The Question</div>
+                <h2 class="sh" data-i18n-html="about.heading">It began with a <span class="accent">question</span></h2>
+                <p class="sb" data-i18n="about.desc">"How does a mind work?" I chased that question into Cognitive Science — computer science, AI, psychology, philosophy, neuroscience. I came back with fewer answers and much better obsessions:</p>
                 <div class="tags">
                     <span class="tag" data-emoji="📖" data-i18n="tag.philosophy">Philosophy</span>
                     <span class="tag" data-emoji="🧠" data-i18n="tag.neuro">Neuroscience</span>
@@ -1002,15 +1005,22 @@
 
 <div class="divider"></div>
 
+<section class="interlude">
+    <div class="wrap">
+        <p class="interlude-line" data-i18n="int1.l1">Questions are cheap.</p>
+        <p class="interlude-line interlude-line-strong" data-i18n="int1.l2">Building answers is the fun part.</p>
+    </div>
+</section>
+
 <!-- ═══════════ TECH STACK ════════════════════════════════════════ -->
 <div class="dot-divider" aria-hidden="true"></div>
 
 <section class="section" id="tech">
     <div class="wrap">
         <div class="tech-head section-head">
-            <div class="eyebrow" data-i18n="tech.eyebrow">Technical Skills</div>
-            <h2 class="sh" data-i18n-html="tech.heading">Built across the <span class="accent">full stack</span></h2>
-            <p class="sb"        data-i18n="tech.desc">From native iOS to cloud infrastructure — a broad toolkit shaped by years of diverse professional projects.</p>
+            <div class="eyebrow" data-i18n="tech.eyebrow">Chapter 02 · The Craft</div>
+            <h2 class="sh" data-i18n-html="tech.heading">Tools, collected <span class="accent">one problem at a time</span></h2>
+            <p class="sb"        data-i18n="tech.desc">Startups, industry floors, long indie nights. Every project left a tool behind — from native iOS to cloud infrastructure.</p>
         </div>
         <div class="tech-grid">
             <div class="tech-card">
@@ -1090,15 +1100,185 @@
 
 <div class="divider"></div>
 
+<section class="interlude">
+    <div class="wrap">
+        <p class="interlude-line" data-i18n="int2.l1">At some point, learning isn&rsquo;t enough.</p>
+        <p class="interlude-line interlude-line-strong" data-i18n="int2.l2">You have to ship.</p>
+    </div>
+</section>
+
+<div class="dot-divider" aria-hidden="true"></div>
+
+<!-- ═══════════ APPS ══════════════════════════════════════════════ -->
+<section class="section" id="apps">
+    <div class="wrap">
+
+        <div class="apps-head section-head">
+            <div class="eyebrow" data-i18n="apps.eyebrow">Chapter 03 · The Artifacts</div>
+            <h2 class="sh" data-i18n-html="apps.heading">What <span class="accent">escaped</span> the lab</h2>
+            <p class="sb"       data-i18n="apps.desc">Each app began as one of those questions — about play, reflexes, attention, typing. In order of appearance:</p>
+        </div>
+
+        <div class="app-track-wrap">
+            <div class="app-track">
+
+<!-- Weltraum -->
+                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
+                    <div class="app-card-inner">
+                        <div class="app-card-front">
+                            <span class="app-act" aria-hidden="true">I</span>
+                            <div class="app-card-visual">
+                                <img src="dist/images/iphone-feature-02.png" alt="Weltraum space game" class="app-img" decoding="async">
+                            </div>
+                            <span class="app-label" data-i18n="wt.label">Multiplayer · Strategy</span>
+                            <h3 class="app-title">Weltraum</h3>
+                            <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link" onclick="event.stopPropagation()">
+                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Weltraum on the App Store">
+                            </a>
+                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
+                        </div>
+                        <div class="app-card-back">
+                            <div class="app-back-visual">
+                                <img src="dist/images/iphone-feature-02.png" alt="Weltraum space game" class="app-back-img" decoding="async">
+                            </div>
+                            <h3 class="app-back-title">Weltraum</h3>
+                            <p class="app-desc" data-i18n="wt.desc">Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center.</p>
+                            <div class="app-perks">
+                                <span class="app-perk" data-i18n="wt.perk1">Real-time multiplayer via Bluetooth</span>
+                                <span class="app-perk" data-i18n="wt.perk2">Game Center integration</span>
+                                <span class="app-perk" data-i18n="wt.perk3">Unique orbit-based mechanics</span>
+                            </div>
+                            <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link" onclick="event.stopPropagation()">
+                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Weltraum on the App Store">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+<!-- Random Drop -->
+                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
+                    <div class="app-card-inner">
+                        <div class="app-card-front">
+                            <span class="app-act" aria-hidden="true">II</span>
+                            <div class="app-card-visual">
+                                <img src="dist/images/Random%20Drop.png" alt="Random Drop randomizer app" class="app-img" decoding="async">
+                            </div>
+                            <span class="app-label" data-i18n="rd.label">Arcade · Game</span>
+                            <h3 class="app-title">Random Drop</h3>
+                            <a href="https://apps.apple.com/us/app/random-drop/id1513193929" class="badge-link" onclick="event.stopPropagation()">
+                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Random Drop on the App Store">
+                            </a>
+                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
+                        </div>
+                        <div class="app-card-back">
+                            <div class="app-back-visual">
+                                <img src="dist/images/Random%20Drop.png" alt="Random Drop arcade game" class="app-back-img" decoding="async">
+                            </div>
+                            <h3 class="app-back-title">Random Drop</h3>
+                            <p class="app-desc" data-i18n="rd.desc">A fast-paced arcade game where balls drop in out of nowhere. Pure reflex, pure fun — pick it up anytime, anywhere, and see how long you last.</p>
+                            <div class="app-perks">
+                                <span class="app-perk" data-i18n="rd.perk1">Instant pick-up-and-play action</span>
+                                <span class="app-perk" data-i18n="rd.perk2">Unpredictable ball drops</span>
+                                <span class="app-perk" data-i18n="rd.perk3">Short rounds, endless replay</span>
+                            </div>
+                            <a href="https://apps.apple.com/us/app/random-drop/id1513193929" class="badge-link" onclick="event.stopPropagation()">
+                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Random Drop on the App Store">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fishy Watch -->
+                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
+                    <div class="app-card-inner">
+                        <div class="app-card-front">
+                            <span class="app-act" aria-hidden="true">III</span>
+                            <div class="app-card-visual">
+                                <img src="dist/images/fishy_watch.png" alt="Fishy Watch Apple Watch game" class="app-img" decoding="async">
+                            </div>
+                            <span class="app-label" data-i18n="fw.label">Apple Watch · Game</span>
+                            <h3 class="app-title">Fishy Watch</h3>
+                            <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link" onclick="event.stopPropagation()">
+                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Fishy Watch on the App Store">
+                            </a>
+                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
+                        </div>
+                        <div class="app-card-back">
+                            <div class="app-back-visual">
+                                <img src="dist/images/fishy_watch.png" alt="Fishy Watch Apple Watch game" class="app-back-img" decoding="async">
+                            </div>
+                            <h3 class="app-back-title">Fishy Watch</h3>
+                            <p class="app-desc" data-i18n="fw.desc">A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.</p>
+                            <div class="app-perks">
+                                <span class="app-perk" data-i18n="fw.perk1">Dozens of fish to catch & collect</span>
+                                <span class="app-perk" data-i18n="fw.perk2">Feed and interact with your catch</span>
+                                <span class="app-perk" data-i18n="fw.perk3">Designed natively for Apple Watch</span>
+                            </div>
+                            <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link" onclick="event.stopPropagation()">
+                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Fishy Watch on the App Store">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MergeKey -->
+                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
+                    <div class="app-card-inner">
+                        <div class="app-card-front">
+                            <span class="app-act" aria-hidden="true">IV</span>
+                            <div class="app-card-visual">
+                                <img src="dist/images/mergeKey.gif" alt="MergeKey keyboard app preview" class="app-img" decoding="async">
+                            </div>
+                            <span class="app-label" data-i18n="mk.label">Keyboard · Productivity</span>
+                            <h3 class="app-title">MergeKey</h3>
+                            <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link" onclick="event.stopPropagation()">
+                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store">
+                            </a>
+                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
+                        </div>
+                        <div class="app-card-back">
+                            <div class="app-back-visual">
+                                <img src="dist/images/mergeKey.gif" alt="MergeKey keyboard app preview" class="app-back-img" decoding="async">
+                            </div>
+                            <h3 class="app-back-title">MergeKey</h3>
+                            <p class="app-desc" data-i18n="mk.desc">The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.</p>
+                            <div class="app-perks">
+                                <span class="app-perk" data-i18n="mk.perk1">Dynamic, adaptive word learning</span>
+                                <span class="app-perk" data-i18n="mk.perk2">Reduces typos in real time</span>
+                                <span class="app-perk" data-i18n="mk.perk3">Fully customizable personal dictionary</span>
+                            </div>
+                            <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link" onclick="event.stopPropagation()">
+                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="interlude">
+    <div class="wrap">
+        <p class="interlude-line" data-i18n="int3.l1">Shipping my own apps taught me the whole journey.</p>
+        <p class="interlude-line interlude-line-strong" data-i18n="int3.l2">Now I walk it with others.</p>
+    </div>
+</section>
+
 <!-- ═══════════ SERVICES ══════════════════════════════════════════ -->
 <div class="dot-divider" aria-hidden="true"></div>
 
 <section class="section" id="services">
     <div class="wrap">
         <div class="services-head section-head">
-            <div class="eyebrow" data-i18n="srv.eyebrow">Consulting & Expertise</div>
-            <h2 class="sh" data-i18n-html="srv.heading">How I can <span class="accent">help</span></h2>
-            <p class="sb"        data-i18n="srv.desc">Years of diverse projects across startups, industry, and indie dev have shaped a broad skill set. Here's where I add real value.</p>
+            <div class="eyebrow" data-i18n="srv.eyebrow">Chapter 04 · Your Story</div>
+            <h2 class="sh" data-i18n-html="srv.heading">What I can <span class="accent">build</span> with you</h2>
+            <p class="sb"        data-i18n="srv.desc">Years across startups, industry, and indie development — here's where I add real value to your story.</p>
         </div>
         <div class="services-grid">
             <div class="srv">
@@ -1143,8 +1323,9 @@
 <section class="section" id="contact">
     <div class="wrap">
         <div class="contact-box">
-            <h2 class="contact-title" data-i18n-html="contact.title">Let's <span class="accent">talk</span></h2>
-            <p  class="contact-sub"   data-i18n="contact.sub">Have a question, need support for one of my apps, or just want to say hi? I'm happy to hear from you.</p>
+            <div class="eyebrow" data-i18n="contact.eyebrow">Epilogue</div>
+            <h2 class="contact-title" data-i18n-html="contact.title">Every ending is a <span class="accent">beginning</span></h2>
+            <p  class="contact-sub"   data-i18n="contact.sub">Have an idea for the next chapter — or just want to say hi? I'm happy to hear from you.</p>
             <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website" class="email-btn" data-i18n="contact.btn">
                 Mail me
             </a>
@@ -1241,13 +1422,25 @@ const T = {
         'nav.apps':'APPS', 'nav.about':'ABOUT', 'nav.skills':'SKILLS',
         'nav.services':'SERVICES', 'nav.contact':'CONTACT',
 
+        'hero.eyebrow':'PROLOGUE',
         'hero.greeting':"Hello, I'm",
-        'hero.sub':'Bridging cognition and technology. I build mobile apps, cross-platform tools, and games — things that are useful, playful, and a little unexpected. B.Sc. Cognitive Science, lifelong curious mind.',
-        'hero.cta_apps':'SEE MY APPS', 'hero.cta_contact':'GET IN TOUCH',
+        'hero.sub':'This is the story of a curious mind that learned to code — and started shipping. Mobile apps, games, and tools that are useful, playful, and a little unexpected.',
+        'hero.type1':'I studied how minds work.',
+        'hero.type2':'Now I build things people touch.',
+        'hero.type3':'This is how it happened.',
+        'hero.scroll':'SCROLL TO BEGIN',
+        'hero.cta_apps':'START THE STORY', 'hero.cta_contact':'GET IN TOUCH',
         'app.tap_hint':'Tap to learn more',
 
-        'apps.eyebrow':'MY APPLICATIONS', 'apps.heading':'Apps I\'ve <span class="accent">shipped</span>',
-        'apps.desc':"From smart keyboards to Apple Watch games — here's what I've shipped to the App Store.",
+        'int1.l1':'Questions are cheap.',
+        'int1.l2':'Building answers is the fun part.',
+        'int2.l1':'At some point, learning isn’t enough.',
+        'int2.l2':'You have to ship.',
+        'int3.l1':'Shipping my own apps taught me the whole journey.',
+        'int3.l2':'Now I walk it with others.',
+
+        'apps.eyebrow':'CHAPTER 03 · THE ARTIFACTS', 'apps.heading':'What <span class="accent">escaped</span> the lab',
+        'apps.desc':'Each app began as one of those questions — about play, reflexes, attention, typing. In order of appearance:',
 
         'mk.label':'KEYBOARD · PRODUCTIVITY',
         'mk.desc':'The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.',
@@ -1265,8 +1458,8 @@ const T = {
         'wt.desc':'Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center.',
         'wt.perk1':'Real-time multiplayer via Bluetooth', 'wt.perk2':'Game Center integration', 'wt.perk3':'Unique orbit-based mechanics',
 
-        'about.eyebrow':'ABOUT ME', 'about.heading':'What <span class="accent">drives</span> me',
-        'about.desc':'I studied Cognitive Science \u2014 an intersection of CS, AI, psychology, philosophy, and neuroscience. Interests range across:',
+        'about.eyebrow':'CHAPTER 01 \u00b7 THE QUESTION', 'about.heading':'It began with a <span class="accent">question</span>',
+        'about.desc':'\u201cHow does a mind work?\u201d I chased that question into Cognitive Science \u2014 computer science, AI, psychology, philosophy, neuroscience. I came back with fewer answers and much better obsessions:',
 
         'tag.philosophy':'PHILOSOPHY', 'tag.neuro':'NEUROSCIENCE', 'tag.psych':'PSYCHOLOGY', 'tag.dataviz':'DATA VIZ',
         'tag.chess':'CHESS', 'tag.skate':'SKATEBOARDING', 'tag.ai':'AI', 'tag.running':'RUNNING',
@@ -1274,15 +1467,15 @@ const T = {
         'tag.graphs':'GRAPH THEORY', 'tag.maths':'MATHEMATICS',        'tag.space':'SPACE', 'tag.games':'VIDEO GAMES',
 
 
-        'tech.eyebrow':'TECHNICAL SKILLS', 'tech.heading':'Built across the <span class="accent">full stack</span>',
-        'tech.desc':'From native iOS to cloud infrastructure — a broad toolkit shaped by years of diverse professional projects.',
+        'tech.eyebrow':'CHAPTER 02 · THE CRAFT', 'tech.heading':'Tools, collected <span class="accent">one problem at a time</span>',
+        'tech.desc':'Startups, industry floors, long indie nights. Every project left a tool behind — from native iOS to cloud infrastructure.',
         'tech.lbl.ios':'IOS & APPLE PLATFORMS', 'tech.lbl.cross':'MOBILE & CROSS-PLATFORM',
         'tech.lbl.web':'WEB & BACKEND', 'tech.lbl.cloud':'CLOUD & DEVOPS',
         'tech.lbl.hw':'CONNECTIVITY & HARDWARE', 'tech.lbl.ai':'AI & MACHINE LEARNING',
         'tech.lbl.game':'GAME DEV & 3D', 'tech.lbl.design':'DESIGN & TOOLS',
 
-        'srv.eyebrow':'CONSULTING & EXPERTISE', 'srv.heading':'How I can <span class="accent">help</span>',
-        'srv.desc':"Years of diverse projects across startups, industry, and indie dev have shaped a broad skill set. Here's where I add real value.",
+        'srv.eyebrow':'CHAPTER 04 · YOUR STORY', 'srv.heading':'What I can <span class="accent">build</span> with you',
+        'srv.desc':"Years across startups, industry, and indie development — here's where I add real value to your story.",
         'srv1.title':'Mobile App Development',
         'srv1.desc':'Native iOS in Swift/SwiftUI or cross-platform with React Native and Flutter. From initial concept through App Store submission — including WatchKit, CoreBluetooth, and hardware integrations.',
         'srv2.title':'AI Integration',
@@ -1296,8 +1489,9 @@ const T = {
         'srv6.title':'Tech Consulting',
         'srv6.desc':'Interdisciplinary background in Cognitive Science, AI, and engineering — great for architecture reviews, stack decisions, MVP scoping, code quality, and turning complex ideas into working prototypes fast.',
 
-        'contact.title':'Let\'s <span class="accent">talk</span>',
-        'contact.sub':"Have a question, need support for one of my apps, or just want to say hi? I'm happy to hear from you.",
+        'contact.eyebrow':'EPILOGUE',
+        'contact.title':'Every ending is a <span class="accent">beginning</span>',
+        'contact.sub':"Have an idea for the next chapter — or just want to say hi? I'm happy to hear from you.",
         'contact.btn':'MAIL ME',
 
         'privacy.heading':'Privacy Policy',
@@ -1321,13 +1515,25 @@ const T = {
         'nav.apps':'APPS', 'nav.about':'\u00dcBER MICH', 'nav.skills':'F\u00c4HIGKEITEN',
         'nav.services':'LEISTUNGEN', 'nav.contact':'KONTAKT',
 
+        'hero.eyebrow':'PROLOG',
         'hero.greeting':'Hallo, ich bin',
-        'hero.sub':'Zwischen Kognition und Technologie. Ich baue mobile Apps, plattform\u00fcbergreifende Tools und Spiele \u2013 Dinge, die n\u00fctzlich, verspielt und manchmal \u00fcberraschend sind. B.Sc. Kognitionswissenschaft, lebenslang neugierig.',
-        'hero.cta_apps':'MEINE APPS', 'hero.cta_contact':'KONTAKT AUFNEHMEN',
+        'hero.sub':'Das ist die Geschichte eines neugierigen Kopfes, der programmieren lernte \u2013 und anfing zu ver\u00f6ffentlichen. Mobile Apps, Spiele und Tools: n\u00fctzlich, verspielt und manchmal \u00fcberraschend.',
+        'hero.type1':'Ich habe studiert, wie Denken funktioniert.',
+        'hero.type2':'Jetzt baue ich Dinge zum Anfassen.',
+        'hero.type3':'So ist es dazu gekommen.',
+        'hero.scroll':'SCROLLEN, UM ZU BEGINNEN',
+        'hero.cta_apps':'GESCHICHTE STARTEN', 'hero.cta_contact':'KONTAKT AUFNEHMEN',
         'app.tap_hint':'Tippen f\u00fcr mehr',
 
-        'apps.eyebrow':'MEINE ANWENDUNGEN', 'apps.heading':'Apps, die ich <span class="accent">ver\u00f6ffentlicht</span> habe',
-        'apps.desc':'Von smarten Tastaturen bis zu Apple Watch-Spielen \u2013 hier ist, was ich im App Store ver\u00f6ffentlicht habe.',
+        'int1.l1':'Fragen sind billig.',
+        'int1.l2':'Antworten bauen \u2013 das ist der spa\u00dfige Teil.',
+        'int2.l1':'Irgendwann reicht Lernen nicht mehr.',
+        'int2.l2':'Man muss shippen.',
+        'int3.l1':'Eigene Apps haben mich die ganze Reise gelehrt.',
+        'int3.l2':'Jetzt gehe ich sie mit anderen.',
+
+        'apps.eyebrow':'KAPITEL 03 \u00b7 DIE ARTEFAKTE', 'apps.heading':'Was dem Labor <span class="accent">entkommen</span> ist',
+        'apps.desc':'Jede App begann als eine dieser Fragen \u2013 \u00fcber Spiel, Reflexe, Aufmerksamkeit, Tippen. In der Reihenfolge ihres Erscheinens:',
 
         'mk.label':'TASTATUR \u00b7 PRODUKTIVIT\u00c4T',
         'mk.desc':'Die erste dynamische Tastatur, die dir hilft, sauberer und mit weniger Fehlern zu tippen. Bring MergeKey neue W\u00f6rter bei, und sie lernt dazu \u2013 jeder Tastendruck wird dadurch smarter.',
@@ -1345,8 +1551,8 @@ const T = {
         'wt.desc':'Erstelle Umlaufbahnen, halte sie und fordere andere quer durch den Kosmos heraus. Sammle alle Sterne \u2013 am besten mit 2 Spielern per Bluetooth oder Game Center.',
         'wt.perk1':'Echtzeit-Multiplayer per Bluetooth', 'wt.perk2':'Game Center-Integration', 'wt.perk3':'Einzigartige umlaufbahnbasierte Spielmechanik',
 
-        'about.eyebrow':'\u00dcBER MICH', 'about.heading':'Was mich <span class="accent">antreibt</span>',
-        'about.desc':'Ich habe Kognitionswissenschaft studiert \u2013 eine Schnittstelle aus Informatik, KI, Psychologie, Philosophie und Neurowissenschaften. Was ich in meiner Freizeit mache:',
+        'about.eyebrow':'KAPITEL 01 \u00b7 DIE FRAGE', 'about.heading':'Alles begann mit einer <span class="accent">Frage</span>',
+        'about.desc':'\u201eWie funktioniert ein Kopf?\u201c Diese Frage f\u00fchrte mich zur Kognitionswissenschaft \u2013 Informatik, KI, Psychologie, Philosophie, Neurowissenschaften. Zur\u00fcck kam ich mit weniger Antworten und deutlich besseren Obsessionen:',
 
         'tag.philosophy':'PHILOSOPHIE', 'tag.neuro':'NEUROWISSENSCHAFTEN', 'tag.psych':'PSYCHOLOGIE', 'tag.dataviz':'DATENVISUALISIERUNG',
         'tag.chess':'SCHACH', 'tag.skate':'SKATEBOARDING', 'tag.ai':'KI', 'tag.running':'LAUFEN',
@@ -1354,15 +1560,15 @@ const T = {
         'tag.graphs':'GRAPHENTHEORIE', 'tag.maths':'MATHEMATIK',        'tag.space':'WELTRAUM', 'tag.games':'VIDEOSPIELE',
 
 
-        'tech.eyebrow':'TECHNISCHE F\u00c4HIGKEITEN', 'tech.heading':'Im gesamten <span class="accent">Stack</span> zuhause',
-        'tech.desc':'Von nativem iOS bis zur Cloud-Infrastruktur \u2013 ein breites Werkzeugset, geformt durch Jahre vielseitiger Projekte.',
+        'tech.eyebrow':'KAPITEL 02 \u00b7 DAS HANDWERK', 'tech.heading':'Werkzeuge, gesammelt <span class="accent">Problem f\u00fcr Problem</span>',
+        'tech.desc':'Startups, Industriehallen, lange Indie-N\u00e4chte. Jedes Projekt hat ein Werkzeug dagelassen \u2013 von nativem iOS bis zur Cloud-Infrastruktur.',
         'tech.lbl.ios':'IOS & APPLE-PLATTFORMEN', 'tech.lbl.cross':'MOBIL & PLATTFORM\u00dcBERGREIFEND',
         'tech.lbl.web':'WEB & BACKEND', 'tech.lbl.cloud':'CLOUD & DEVOPS',
         'tech.lbl.hw':'KONNEKTIVIT\u00c4T & HARDWARE', 'tech.lbl.ai':'KI & MACHINE LEARNING',
         'tech.lbl.game':'GAME DEV & 3D', 'tech.lbl.design':'DESIGN & TOOLS',
 
-        'srv.eyebrow':'BERATUNG & EXPERTISE', 'srv.heading':'Wie ich <span class="accent">helfen</span> kann',
-        'srv.desc':'Jahre vielseitiger Projekte in Startups, Industrie und Indie-Entwicklung haben ein breites Skillset geformt. Hier ist, wo ich echten Mehrwert schaffe.',
+        'srv.eyebrow':'KAPITEL 04 · DEINE GESCHICHTE', 'srv.heading':'Was ich mit dir <span class="accent">bauen</span> kann',
+        'srv.desc':'Jahre in Startups, Industrie und Indie-Entwicklung – hier bringe ich echten Mehrwert in deine Geschichte.',
         'srv1.title':'Mobile App-Entwicklung',
         'srv1.desc':'Natives iOS in Swift/SwiftUI oder plattform\u00fcbergreifend mit React Native und Flutter. Vom ersten Konzept bis zur App Store-Ver\u00f6ffentlichung \u2013 inklusive WatchKit, CoreBluetooth und Hardware-Integrationen.',
         'srv2.title':'KI-Integration',
@@ -1376,8 +1582,9 @@ const T = {
         'srv6.title':'Tech-Beratung',
         'srv6.desc':'Interdisziplin\u00e4rer Hintergrund in Kognitionswissenschaft, KI und Engineering \u2013 ideal f\u00fcr Architektur-Reviews, Stack-Entscheidungen, MVP-Scoping, Code-Qualit\u00e4t und die schnelle Umsetzung komplexer Ideen in funktionierende Prototypen.',
 
-        'contact.title':'Lass uns <span class="accent">reden</span>',
-        'contact.sub':'Hast du eine Frage, brauchst Support f\u00fcr eine meiner Apps oder m\u00f6chtest einfach Hallo sagen? Ich freue mich von dir zu h\u00f6ren.',
+        'contact.eyebrow':'EPILOG',
+        'contact.title':'Jedes Ende ist ein <span class="accent">Anfang</span>',
+        'contact.sub':'Du hast eine Idee f\u00fcr das n\u00e4chste Kapitel \u2013 oder willst einfach Hallo sagen? Ich freue mich von dir zu h\u00f6ren.',
         'contact.btn':'SCHREIB MIR',
 
         'privacy.heading':'Datenschutzrichtlinie',
@@ -1440,6 +1647,85 @@ var io = new IntersectionObserver(function(entries) {
     });
 }, { threshold: 0.12 });
 document.querySelectorAll('[data-reveal]').forEach(function(r) { io.observe(r); });
+
+// ── Story progress bar ────────────────────────────────────────────
+(function() {
+    var bar = document.getElementById('story-progress');
+    if (!bar) return;
+    var ticking = false;
+    function update() {
+        var d = document.documentElement;
+        var max = d.scrollHeight - window.innerHeight;
+        bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, window.scrollY / max) : 0) + ')';
+        ticking = false;
+    }
+    window.addEventListener('scroll', function() {
+        if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+})();
+
+// ── Chapter rail: highlight the chapter in view ───────────────────
+(function() {
+    var rail = document.getElementById('chapter-rail');
+    if (!rail) return;
+    var links = Array.from(rail.querySelectorAll('a'));
+    var byId = {};
+    links.forEach(function(l) { byId[l.getAttribute('href').slice(1)] = l; });
+    var ioRail = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+            if (!e.isIntersecting) return;
+            links.forEach(function(l) { l.classList.remove('active'); });
+            var link = byId[e.target.id];
+            if (link) link.classList.add('active');
+        });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    Object.keys(byId).forEach(function(id) {
+        var sec = document.getElementById(id);
+        if (sec) ioRail.observe(sec);
+    });
+})();
+
+// ── Interlude reveal ──────────────────────────────────────────────
+(function() {
+    var ioInt = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+            if (e.isIntersecting) { e.target.classList.add('visible'); ioInt.unobserve(e.target); }
+        });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.interlude').forEach(function(s) { ioInt.observe(s); });
+})();
+
+// ── Hero typewriter — cycles narrative lines, language-aware ──────
+(function() {
+    var el = document.getElementById('type-text');
+    if (!el) return;
+    function phrases() {
+        var t = T[document.documentElement.lang] || T.en;
+        return [t['hero.type1'], t['hero.type2'], t['hero.type3']].filter(Boolean);
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        el.textContent = phrases()[0] || '';
+        return;
+    }
+    var pi = 0, ci = 0, deleting = false;
+    function step() {
+        var ph = phrases();
+        var cur = ph[pi % ph.length] || '';
+        if (!deleting) {
+            ci++;
+            el.textContent = cur.slice(0, ci);
+            if (ci >= cur.length) { deleting = true; return setTimeout(step, 2000); }
+            setTimeout(step, 48);
+        } else {
+            ci--;
+            el.textContent = cur.slice(0, ci);
+            if (ci <= 0) { deleting = false; pi++; return setTimeout(step, 400); }
+            setTimeout(step, 24);
+        }
+    }
+    setTimeout(step, 600);
+})();
 
 // ── App cards: staggered reveal + infinite carousel ───────────────
 var trackWrap = document.querySelector('.app-track-wrap');
@@ -2187,6 +2473,28 @@ window.__initLogoFace = function(img) {
         midLayer.appendChild(comet);
     }
 
+    // Constellation easter egg — a faint gamepad among the stars that
+    // connects itself when the cursor drifts close. Zero deaths.
+    var constSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    constSvg.setAttribute('class', 'constellation');
+    constSvg.setAttribute('viewBox', '0 0 100 56');
+    constSvg.setAttribute('aria-hidden', 'true');
+    (function() {
+        // Gamepad silhouette vertices + a few loose "button" stars
+        var PTS = [[8,30],[20,10],[40,13],[60,13],[80,10],[92,30],[76,48],[60,36],[40,36],[24,48]];
+        var EXTRA = [[72,22],[80,26],[26,22]];
+        var svg = '<polyline class="c-line" points="' +
+            PTS.concat([PTS[0]]).map(function(p) { return p.join(','); }).join(' ') + '"/>';
+        PTS.concat(EXTRA).forEach(function(p, i) {
+            svg += '<circle class="c-star" cx="' + p[0] + '" cy="' + p[1] + '" r="' + (i < PTS.length ? 0.9 : 0.6) + '"/>';
+        });
+        svg += '<text class="c-label" x="50" y="55" text-anchor="middle">ZERO DEATHS</text>';
+        constSvg.innerHTML = svg;
+        container.appendChild(constSvg);
+    })();
+    var constRect = null;
+    window.addEventListener('resize', function() { constRect = null; });
+
     // 3D mouse parallax — tilt + per-layer depth shift
     var mx = 0.5, my = 0.5;
     var cx = 0.5, cy = 0.5;
@@ -2196,6 +2504,13 @@ window.__initLogoFace = function(img) {
         mx = e.clientX / window.innerWidth;
         my = e.clientY / window.innerHeight;
         if (!ticking) { ticking = true; requestAnimationFrame(tick); }
+
+        // Constellation proximity check
+        if (!constRect) constRect = constSvg.getBoundingClientRect();
+        var ccx = constRect.left + constRect.width / 2;
+        var ccy = constRect.top + constRect.height / 2;
+        var dist = Math.hypot(e.clientX - ccx, e.clientY - ccy);
+        constSvg.classList.toggle('found', dist < Math.max(160, constRect.width * 0.7));
     });
 
     function tick() {
@@ -2280,6 +2595,10 @@ window.__initLogoFace = function(img) {
         return [Math.cos(la) * Math.sin(lo), -Math.sin(la), Math.cos(la) * Math.cos(lo)];
     }
     var cityP = CITIES.map(function(c) { return ll3(c[0], c[1]); });
+
+    // Home — Bohmte, Germany. Where the story is written.
+    var HOME = ll3(52.36, 8.31);
+    var HOME_ORANGE = 'rgba(255,107,0,';
 
     // Rotation around Y (vertical axis → globe spins east-to-west)
     function rotY(p, c, s) {
@@ -2487,6 +2806,36 @@ window.__initLogoFace = function(img) {
         }
     }
 
+    function drawHome(now, c, s) {
+        var p = rotY(HOME, c, s);
+        if (p[2] <= 0.02) return;
+        var x = cx + p[0]*R, y = cy + p[1]*R;
+        var a = Math.min(1, p[2] * 1.4);
+        // Core dot
+        ctx.fillStyle = HOME_ORANGE + (0.6 + 0.4 * a).toFixed(3) + ')';
+        ctx.beginPath();
+        ctx.arc(x, y, 2.2, 0, Math.PI * 2);
+        ctx.fill();
+        // Pulsing ring (held static mid-pulse when reduced motion is on)
+        var t = reduceMotion ? 0.45 : (now % 2400) / 2400;
+        ctx.strokeStyle = HOME_ORANGE + (0.55 * (1 - t) * a).toFixed(3) + ')';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(x, y, 3 + t * 11, 0, Math.PI * 2);
+        ctx.stroke();
+        // Label — bilingual, centred above the dot. Up there is the North Sea;
+        // below and beside sit the London/Paris/Berlin labels.
+        if (p[2] > 0.18) {
+            ctx.font = '9px -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif';
+            ctx.textBaseline = 'bottom';
+            ctx.textAlign = 'center';
+            ctx.fillStyle = HOME_ORANGE + (0.9 * a).toFixed(3) + ')';
+            ctx.fillText(document.documentElement.lang === 'de' ? 'ZUHAUSE' : 'HOME', x, y - 7);
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+        }
+    }
+
     // ── Routes (permanent trails) + pulses (dots that shoot along them) ─
     var routes = [];   // { a: unit-vec, b: unit-vec }
     var pulses = [];   // { a, b, start, duration }
@@ -2494,12 +2843,19 @@ window.__initLogoFace = function(img) {
 
     var ROUTE_SEG = 32;
     function newRoute() {
-        var ai = (Math.random() * cityP.length) | 0;
-        var bi = ai;
-        while (bi === ai) bi = (Math.random() * cityP.length) | 0;
+        // Nearly half of all routes radiate out from home
+        var a, b;
+        if (Math.random() < 0.45) {
+            a = HOME;
+            b = cityP[(Math.random() * cityP.length) | 0];
+        } else {
+            var ai = (Math.random() * cityP.length) | 0;
+            var bi = ai;
+            while (bi === ai) bi = (Math.random() * cityP.length) | 0;
+            a = cityP[ai]; b = cityP[bi];
+        }
         // Precompute arc vertices (pre-rotation) so drawRoutes only needs to
         // rotate-and-project each frame, not re-slerp.
-        var a = cityP[ai], b = cityP[bi];
         var pts = new Array(ROUTE_SEG + 1);
         for (var i = 0; i <= ROUTE_SEG; i++) {
             var t = i / ROUTE_SEG;
@@ -2625,6 +2981,7 @@ window.__initLogoFace = function(img) {
         }
 
         drawCityLabels(c, s);
+        drawHome(now, c, s);
     }
     requestAnimationFrame(frame);
 })();
