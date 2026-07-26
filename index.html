@@ -576,6 +576,10 @@
             backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px);
             pointer-events: none;
         }
+        /* Teardown resets background/blur/opacity at once. Without this the
+           backdrop animates back in as .closing is dropped — a dark flash
+           across the whole page on every close. */
+        .card-overlay.no-transition { transition: none !important; }
         .card-panel {
             position: fixed; transform-style: preserve-3d;
             transition: top 560ms var(--ease), left 560ms var(--ease),
@@ -1986,8 +1990,10 @@ document.querySelectorAll('[data-reveal]').forEach(function(r) { io.observe(r); 
             requestAnimationFrame(function() {
                 applyRect(targetRect());
                 panel.classList.add('flipped');
-                // Size the fluid to the panel once it has reached full size.
-                window.setTimeout(function() { if (current) fluid('start'); }, MORPH_MS);
+                // Runs at card size to begin with, which is what the front face
+                // shows early in the morph; the transitionend below re-sizes the
+                // bitmap once the panel has actually settled.
+                fluid('start');
             });
         }
         closeBtn.focus({ preventScroll: true });
@@ -2008,7 +2014,11 @@ document.querySelectorAll('[data-reveal]').forEach(function(r) { io.observe(r); 
 
         closeTimer = window.setTimeout(function() {
             closeTimer = null;
+            // Reset backdrop, blur and opacity in one un-animated step.
+            overlay.classList.add('no-transition');
             overlay.classList.remove('open', 'closing');
+            void overlay.offsetWidth;
+            overlay.classList.remove('no-transition');
             card.classList.remove('is-open');
             overlay.setAttribute('aria-hidden', 'true');
             card.setAttribute('aria-expanded', 'false');
@@ -2037,6 +2047,14 @@ document.querySelectorAll('[data-reveal]').forEach(function(r) { io.observe(r); 
                 open(card);
             }
         });
+    });
+
+    // A canvas bitmap sized mid-morph gets stretched by CSS to the settled box,
+    // which is what makes the pixel grid look smeared. Re-size once it lands.
+    panel.addEventListener('transitionend', function(e) {
+        if (e.target !== panel) return;
+        if (e.propertyName !== 'width' && e.propertyName !== 'height') return;
+        if (current) fluid('resize');
     });
 
     closeBtn.addEventListener('click', close);
