@@ -229,6 +229,9 @@
         }
         .hero-face:hover .hero-face-front,
         .hero-face:hover .hero-face-back { border-color: var(--border-visible); }
+        /* Same coplanar hit-testing caveat as the expanded card faces: once
+           flipped, the front must stop swallowing clicks on the bio text. */
+        .hero-face.flipped .hero-face-front { pointer-events: none; }
         .hero-face-back {
             transform: rotateY(180deg);
             padding: var(--space-lg);
@@ -588,6 +591,10 @@
             background: var(--surface); border: 1px solid var(--border-visible);
             border-radius: 12px; padding: var(--space-lg);
         }
+        /* Decorative mirror of the card during the morph. backface-visibility
+           hides it once flipped but does NOT stop it hit-testing — it stays
+           coplanar with the back face and would swallow every click. */
+        .card-face-front { pointer-events: none; }
         .card-face-back {
             transform: rotateY(180deg);
             padding: var(--space-2xl);
