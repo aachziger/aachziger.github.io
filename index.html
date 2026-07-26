@@ -373,50 +373,23 @@
         .stat:hover .pixel-fluid,
         .contact-box:hover .pixel-fluid { opacity: 1; }
 
-        /* ─── App card flip container ───────────────────────────── */
+        /* ─── App cards ─────────────────────────────────────────── */
+        /* Same shape as a tech card — one surface plus a hidden .card-detail —
+           so the expandable panel treats both kinds identically. */
         .app-card-wrapper {
             flex: 0 0 340px; scroll-snap-align: start;
-            perspective: 900px;
+            position: relative; overflow: hidden;
             opacity: 0;
-            cursor: pointer;
-        }
-        .app-card-wrapper.visible { opacity: 1; transition: opacity 300ms var(--ease); }
-
-        .app-card-inner {
-            position: relative; width: 100%; height: 100%;
-            transition: transform 0.6s var(--ease);
-            transform-style: preserve-3d;
-            -webkit-transform-style: preserve-3d;
-        }
-        .app-card-wrapper.flipped .app-card-inner { transform: rotateY(180deg); }
-
-        .app-card-front,
-        .app-card-back {
-            position: relative;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
             background: var(--surface); border: 1px solid var(--border);
             border-radius: 16px; padding: var(--space-lg) var(--space-lg) var(--space-xl);
             display: flex; flex-direction: column;
             transition: border-color 200ms var(--ease);
         }
-
-        /* (pixel fluid canvas replaces old shimmer ::before) */
-        .app-card-front {
-            transform: rotateY(0deg) translateZ(1px);
-            -webkit-transform: rotateY(0deg) translateZ(1px);
+        .app-card-wrapper.visible {
+            opacity: 1;
+            transition: opacity 300ms var(--ease), border-color 200ms var(--ease);
         }
-        .app-card-front:hover { border-color: var(--border-visible); }
-
-        .app-card-back {
-            position: absolute; inset: 0;
-            transform: rotateY(180deg) translateZ(1px);
-            -webkit-transform: rotateY(180deg) translateZ(1px);
-            overflow-y: auto;
-            scrollbar-width: none;
-        }
-        .app-card-back::-webkit-scrollbar { display: none; }
-        .app-card-back:hover { border-color: var(--border-visible); }
+        .app-card-wrapper:hover { border-color: var(--border-visible); }
 
         /* ─── Front face ────────────────────────────────────────── */
         .app-card-visual {
@@ -459,17 +432,6 @@
         }
         .app-back-img {
             max-height: 90px; max-width: 100%; width: auto; border-radius: 10px;
-        }
-        .app-back-title {
-            font-family: var(--font-display); font-size: 20px; font-weight: 400;
-            letter-spacing: -0.01em; line-height: 1.2;
-            color: var(--text-display); margin-bottom: var(--space-sm);
-            position: relative; z-index: 1;
-        }
-        .app-desc {
-            font-size: 14px; color: var(--text-secondary); line-height: 1.5;
-            margin-bottom: var(--space-md); flex: 1;
-            position: relative; z-index: 1;
         }
         .app-perks { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--space-lg); position: relative; z-index: 1; }
         .app-perk {
@@ -542,10 +504,10 @@
         @media (max-width: 480px)  { .tech-grid { grid-template-columns: 1fr; } }
 
         /* ─── Expandable cards ──────────────────────────────────── */
-        .tech-card { cursor: pointer; }
-        .tech-card:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
-        .tech-card.is-open { visibility: hidden; }
-        .tech-detail { display: none; }
+        [data-expandable] { cursor: pointer; }
+        [data-expandable]:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+        [data-expandable].is-open { visibility: hidden; }
+        .card-detail { display: none; }
         .tech-more {
             position: relative; z-index: 1;
             display: block; margin-top: var(--space-md);
@@ -618,6 +580,17 @@
             font-family: var(--font-body); font-size: 15px; line-height: 1.7;
             color: var(--text-secondary); margin-bottom: var(--space-lg);
             max-width: 62ch;
+        }
+        /* An app card's detail carries a screenshot and perks, so it gets more
+           room than a tech card's heading-plus-paragraph. */
+        .card-panel.is-app .app-back-visual { height: 240px; margin-bottom: var(--space-lg); }
+        .card-panel.is-app .app-back-img { max-height: 230px; border-radius: 12px; }
+        .card-panel.is-app .app-perks { margin-bottom: var(--space-lg); }
+        .card-panel.is-app .app-perk { font-size: 13px; }
+        .card-panel.is-app .card-detail-body { margin-bottom: var(--space-lg); }
+        @media (max-width: 560px) {
+            .card-panel.is-app .app-back-visual { height: 150px; margin-bottom: var(--space-md); }
+            .card-panel.is-app .app-back-img { max-height: 140px; }
         }
         .card-close {
             position: absolute; top: var(--space-md); right: var(--space-md); z-index: 3;
@@ -948,8 +921,6 @@
             .app-card-wrapper { flex: 0 0 280px; }
             .app-back-visual { height: 70px; margin-bottom: var(--space-sm); }
             .app-back-img { max-height: 60px; }
-            .app-card-back { padding: var(--space-md) var(--space-md) var(--space-lg); }
-            .app-desc { font-size: 13px; margin-bottom: var(--space-sm); }
             .app-perks { gap: 4px; margin-bottom: var(--space-md); }
             .app-perk { font-size: 11px; }
         }
@@ -1221,7 +1192,7 @@
                     <span class="tech-pill">StoreKit</span><span class="tech-pill">Objective-C</span>
                 </div>
                 <span class="tech-more" data-i18n="tech.more">Tap for more</span>
-                <div class="tech-detail">
+                <div class="card-detail">
                     <h3 class="card-detail-title" data-i18n="det.ios.h">Native apps that feel like the platform</h3>
                     <p class="card-detail-body" data-i18n="det.ios.p">Swift and SwiftUI for iPhone, iPad, and Apple Watch. I've shipped four apps to the App Store myself, so I know the whole path — the frameworks, the review process, and the small details that make an app feel native rather than ported.</p>
                 </div>
@@ -1235,7 +1206,7 @@
                     <span class="tech-pill">C#</span><span class="tech-pill">XAML</span>
                 </div>
                 <span class="tech-more" data-i18n="tech.more">Tap for more</span>
-                <div class="tech-detail">
+                <div class="card-detail">
                     <h3 class="card-detail-title" data-i18n="det.cross.h">One codebase, several platforms</h3>
                     <p class="card-detail-body" data-i18n="det.cross.p">Flutter, .NET MAUI, Xamarin, Ionic. Useful when you need Android and iOS without maintaining two teams. I'll also tell you when cross-platform is the wrong call — some apps really do want to be native, and it's cheaper to hear that early.</p>
                 </div>
@@ -1249,7 +1220,7 @@
                     <span class="tech-pill">Firebase</span>
                 </div>
                 <span class="tech-more" data-i18n="tech.more">Tap for more</span>
-                <div class="tech-detail">
+                <div class="card-detail">
                     <h3 class="card-detail-title" data-i18n="det.web.h">Web apps and the services behind them</h3>
                     <p class="card-detail-body" data-i18n="det.web.p">Angular, TypeScript, and Node.js. I've built client web apps and internal tools — including a graph-visualisation system that guides factory workers through their tasks. Figma for design, and I care about things loading fast.</p>
                 </div>
@@ -1263,7 +1234,7 @@
                     <span class="tech-pill">Unix Shell</span>
                 </div>
                 <span class="tech-more" data-i18n="tech.more">Tap for more</span>
-                <div class="tech-detail">
+                <div class="card-detail">
                     <h3 class="card-detail-title" data-i18n="det.cloud.h">Deploys that don't wake you up</h3>
                     <p class="card-detail-body" data-i18n="det.cloud.p">Docker, GitLab CI, and deployments on GCP or Azure. Nothing exotic — build pipelines that don't break, and infrastructure the next person can still understand.</p>
                 </div>
@@ -1276,7 +1247,7 @@
                     <span class="tech-pill">Game Center</span><span class="tech-pill">CoreMotion</span>
                 </div>
                 <span class="tech-more" data-i18n="tech.more">Tap for more</span>
-                <div class="tech-detail">
+                <div class="card-detail">
                     <h3 class="card-detail-title" data-i18n="det.hw.h">Getting the physical world onto a screen</h3>
                     <p class="card-detail-body" data-i18n="det.hw.p">Bluetooth LE, IoT sensors, and industrial hardware. I've connected industrial machines to phones over Bluetooth, built digital twins with Tinkerforge sensors, and done device-to-device links that push data between two phones fast — which is less about the radio and more about designing the right data structures.</p>
                 </div>
@@ -1290,7 +1261,7 @@
                     <span class="tech-pill">Firebase ML</span>
                 </div>
                 <span class="tech-more" data-i18n="tech.more">Tap for more</span>
-                <div class="tech-detail">
+                <div class="card-detail">
                     <h3 class="card-detail-title" data-i18n="det.ai.h">AI that actually ships</h3>
                     <p class="card-detail-body" data-i18n="det.ai.p">On-device with CoreML and Vision, or in the cloud with LLM APIs. I've integrated AI models into several kinds of systems — real-time image recognition on mobile, and services that lean on models in the background — including the messy parts: latency, edge cases, and what to do when the model gets it wrong.</p>
                 </div>
@@ -1304,7 +1275,7 @@
                     <span class="tech-pill">Aseprite</span>
                 </div>
                 <span class="tech-more" data-i18n="tech.more">Tap for more</span>
-                <div class="tech-detail">
+                <div class="card-detail">
                     <h3 class="card-detail-title" data-i18n="det.game.h">Games, and things that behave like games</h3>
                     <p class="card-detail-body" data-i18n="det.game.p">Unity, SpriteKit, SceneKit, and Blender. I've built and shipped games myself — multiplayer over Bluetooth, and a fishing game for the Apple Watch. The same instincts work outside games: anything that has to feel responsive, physical, and worth touching a second time.</p>
                 </div>
@@ -1316,7 +1287,7 @@
                     <span class="tech-pill">Sketch</span><span class="tech-pill">AutoCAD</span>
                 </div>
                 <span class="tech-more" data-i18n="tech.more">Tap for more</span>
-                <div class="tech-detail">
+                <div class="card-detail">
                     <h3 class="card-detail-title" data-i18n="det.design.h">Design that survives contact with code</h3>
                     <p class="card-detail-body" data-i18n="det.design.p">Figma, the Adobe tools, Aseprite, AutoCAD. I design what I build, which means interfaces that are actually buildable and don't fall apart at the edge cases. Handy if you'd rather go from rough sketch to shipped screen without a handoff in the middle.</p>
                 </div>
@@ -1350,133 +1321,115 @@
             <div class="app-track">
 
 <!-- Weltraum -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <span class="app-act" aria-hidden="true">I</span>
-                            <div class="app-card-visual">
-                                <img src="dist/images/iphone-feature-02.png" alt="Weltraum space game" class="app-img" decoding="async">
-                            </div>
-                            <span class="app-label" data-i18n="wt.label">Multiplayer · Strategy</span>
-                            <h3 class="app-title">Weltraum</h3>
-                            <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Weltraum on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
+                <div class="app-card-wrapper" data-expandable role="button" tabindex="0" aria-expanded="false">
+                    <span class="app-act" aria-hidden="true">I</span>
+                    <div class="app-card-visual">
+                        <img src="dist/images/iphone-feature-02.png" alt="Weltraum space game" class="app-img" decoding="async">
+                    </div>
+                    <span class="app-label" data-i18n="wt.label">Multiplayer · Strategy</span>
+                    <h3 class="app-title">Weltraum</h3>
+                    <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link" onclick="event.stopPropagation()">
+                        <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Weltraum on the App Store">
+                    </a>
+                    <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
+                    <div class="card-detail">
+                        <div class="app-back-visual">
+                            <img src="dist/images/iphone-feature-02.png" alt="Weltraum space game" class="app-back-img" decoding="async">
                         </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <img src="dist/images/iphone-feature-02.png" alt="Weltraum space game" class="app-back-img" decoding="async">
-                            </div>
-                            <h3 class="app-back-title">Weltraum</h3>
-                            <p class="app-desc" data-i18n="wt.desc">Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="wt.perk1">Real-time multiplayer via Bluetooth</span>
-                                <span class="app-perk" data-i18n="wt.perk2">Game Center integration</span>
-                                <span class="app-perk" data-i18n="wt.perk3">Unique orbit-based mechanics</span>
-                            </div>
-                            <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Weltraum on the App Store">
-                            </a>
+                        <h3 class="card-detail-title">Weltraum</h3>
+                        <p class="card-detail-body" data-i18n="wt.desc">Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center.</p>
+                        <div class="app-perks">
+                            <span class="app-perk" data-i18n="wt.perk1">Real-time multiplayer via Bluetooth</span>
+                            <span class="app-perk" data-i18n="wt.perk2">Game Center integration</span>
+                            <span class="app-perk" data-i18n="wt.perk3">Unique orbit-based mechanics</span>
                         </div>
+                        <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link">
+                            <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Weltraum on the App Store">
+                        </a>
                     </div>
                 </div>
 <!-- Random Drop -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <span class="app-act" aria-hidden="true">II</span>
-                            <div class="app-card-visual">
-                                <img src="dist/images/Random%20Drop.png" alt="Random Drop randomizer app" class="app-img" decoding="async">
-                            </div>
-                            <span class="app-label" data-i18n="rd.label">Arcade · Game</span>
-                            <h3 class="app-title">Random Drop</h3>
-                            <a href="https://apps.apple.com/us/app/random-drop/id1513193929" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Random Drop on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
+                <div class="app-card-wrapper" data-expandable role="button" tabindex="0" aria-expanded="false">
+                    <span class="app-act" aria-hidden="true">II</span>
+                    <div class="app-card-visual">
+                        <img src="dist/images/Random%20Drop.png" alt="Random Drop arcade game" class="app-img" decoding="async">
+                    </div>
+                    <span class="app-label" data-i18n="rd.label">Arcade · Game</span>
+                    <h3 class="app-title">Random Drop</h3>
+                    <a href="https://apps.apple.com/us/app/random-drop/id1513193929" class="badge-link" onclick="event.stopPropagation()">
+                        <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Random Drop on the App Store">
+                    </a>
+                    <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
+                    <div class="card-detail">
+                        <div class="app-back-visual">
+                            <img src="dist/images/Random%20Drop.png" alt="Random Drop arcade game" class="app-back-img" decoding="async">
                         </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <img src="dist/images/Random%20Drop.png" alt="Random Drop arcade game" class="app-back-img" decoding="async">
-                            </div>
-                            <h3 class="app-back-title">Random Drop</h3>
-                            <p class="app-desc" data-i18n="rd.desc">A fast-paced arcade game where balls drop in out of nowhere. Pure reflex, pure fun — pick it up anytime, anywhere, and see how long you last.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="rd.perk1">Instant pick-up-and-play action</span>
-                                <span class="app-perk" data-i18n="rd.perk2">Unpredictable ball drops</span>
-                                <span class="app-perk" data-i18n="rd.perk3">Short rounds, endless replay</span>
-                            </div>
-                            <a href="https://apps.apple.com/us/app/random-drop/id1513193929" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Random Drop on the App Store">
-                            </a>
+                        <h3 class="card-detail-title">Random Drop</h3>
+                        <p class="card-detail-body" data-i18n="rd.desc">A fast-paced arcade game where balls drop in out of nowhere. Pure reflex, pure fun — pick it up anytime, anywhere, and see how long you last.</p>
+                        <div class="app-perks">
+                            <span class="app-perk" data-i18n="rd.perk1">Instant pick-up-and-play action</span>
+                            <span class="app-perk" data-i18n="rd.perk2">Unpredictable ball drops</span>
+                            <span class="app-perk" data-i18n="rd.perk3">Short rounds, endless replay</span>
                         </div>
+                        <a href="https://apps.apple.com/us/app/random-drop/id1513193929" class="badge-link">
+                            <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Random Drop on the App Store">
+                        </a>
                     </div>
                 </div>
-
-                <!-- Fishy Watch -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <span class="app-act" aria-hidden="true">III</span>
-                            <div class="app-card-visual">
-                                <img src="dist/images/fishy_watch.png" alt="Fishy Watch Apple Watch game" class="app-img" decoding="async">
-                            </div>
-                            <span class="app-label" data-i18n="fw.label">Apple Watch · Game</span>
-                            <h3 class="app-title">Fishy Watch</h3>
-                            <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Fishy Watch on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
+<!-- Fishy Watch -->
+                <div class="app-card-wrapper" data-expandable role="button" tabindex="0" aria-expanded="false">
+                    <span class="app-act" aria-hidden="true">III</span>
+                    <div class="app-card-visual">
+                        <img src="dist/images/fishy_watch.png" alt="Fishy Watch Apple Watch game" class="app-img" decoding="async">
+                    </div>
+                    <span class="app-label" data-i18n="fw.label">Apple Watch · Game</span>
+                    <h3 class="app-title">Fishy Watch</h3>
+                    <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link" onclick="event.stopPropagation()">
+                        <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Fishy Watch on the App Store">
+                    </a>
+                    <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
+                    <div class="card-detail">
+                        <div class="app-back-visual">
+                            <img src="dist/images/fishy_watch.png" alt="Fishy Watch Apple Watch game" class="app-back-img" decoding="async">
                         </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <img src="dist/images/fishy_watch.png" alt="Fishy Watch Apple Watch game" class="app-back-img" decoding="async">
-                            </div>
-                            <h3 class="app-back-title">Fishy Watch</h3>
-                            <p class="app-desc" data-i18n="fw.desc">A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="fw.perk1">Dozens of fish to catch & collect</span>
-                                <span class="app-perk" data-i18n="fw.perk2">Feed and interact with your catch</span>
-                                <span class="app-perk" data-i18n="fw.perk3">Designed natively for Apple Watch</span>
-                            </div>
-                            <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Fishy Watch on the App Store">
-                            </a>
+                        <h3 class="card-detail-title">Fishy Watch</h3>
+                        <p class="card-detail-body" data-i18n="fw.desc">A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.</p>
+                        <div class="app-perks">
+                            <span class="app-perk" data-i18n="fw.perk1">Dozens of fish to catch &amp; collect</span>
+                            <span class="app-perk" data-i18n="fw.perk2">Feed and interact with your catch</span>
+                            <span class="app-perk" data-i18n="fw.perk3">Designed natively for Apple Watch</span>
                         </div>
+                        <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link">
+                            <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Fishy Watch on the App Store">
+                        </a>
                     </div>
                 </div>
-
-                <!-- MergeKey -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <span class="app-act" aria-hidden="true">IV</span>
-                            <div class="app-card-visual">
-                                <img src="dist/images/mergeKey.gif" alt="MergeKey keyboard app preview" class="app-img" decoding="async">
-                            </div>
-                            <span class="app-label" data-i18n="mk.label">Keyboard · Productivity</span>
-                            <h3 class="app-title">MergeKey</h3>
-                            <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
+<!-- MergeKey -->
+                <div class="app-card-wrapper" data-expandable role="button" tabindex="0" aria-expanded="false">
+                    <span class="app-act" aria-hidden="true">IV</span>
+                    <div class="app-card-visual">
+                        <img src="dist/images/mergeKey.gif" alt="MergeKey keyboard app preview" class="app-img" decoding="async">
+                    </div>
+                    <span class="app-label" data-i18n="mk.label">Keyboard · Productivity</span>
+                    <h3 class="app-title">MergeKey</h3>
+                    <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link" onclick="event.stopPropagation()">
+                        <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store">
+                    </a>
+                    <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
+                    <div class="card-detail">
+                        <div class="app-back-visual">
+                            <img src="dist/images/mergeKey.gif" alt="MergeKey keyboard app preview" class="app-back-img" decoding="async">
                         </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <img src="dist/images/mergeKey.gif" alt="MergeKey keyboard app preview" class="app-back-img" decoding="async">
-                            </div>
-                            <h3 class="app-back-title">MergeKey</h3>
-                            <p class="app-desc" data-i18n="mk.desc">A keyboard that learns your words. Teach MergeKey the ones you actually use, and it helps you type cleaner with fewer corrections along the way.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="mk.perk1">Dynamic, adaptive word learning</span>
-                                <span class="app-perk" data-i18n="mk.perk2">Reduces typos in real time</span>
-                                <span class="app-perk" data-i18n="mk.perk3">Fully customizable personal dictionary</span>
-                            </div>
-                            <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store">
-                            </a>
+                        <h3 class="card-detail-title">MergeKey</h3>
+                        <p class="card-detail-body" data-i18n="mk.desc">A keyboard that learns your words. Teach MergeKey the ones you actually use, and it helps you type cleaner with fewer corrections along the way.</p>
+                        <div class="app-perks">
+                            <span class="app-perk" data-i18n="mk.perk1">Dynamic, adaptive word learning</span>
+                            <span class="app-perk" data-i18n="mk.perk2">Reduces typos in real time</span>
+                            <span class="app-perk" data-i18n="mk.perk3">Fully customizable personal dictionary</span>
                         </div>
+                        <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link">
+                            <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store">
+                        </a>
                     </div>
                 </div>
 
@@ -1907,8 +1860,7 @@ document.querySelectorAll('[data-reveal]').forEach(function(r) { io.observe(r); 
     var closeBtn  = document.getElementById('card-close');
     if (!overlay || !panel || !front || !back) return;
 
-    var cards = Array.prototype.slice.call(document.querySelectorAll('[data-expandable]'));
-    if (!cards.length) return;
+    if (!document.querySelector('[data-expandable]')) return;
 
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     var MORPH_MS = 560;
@@ -1942,20 +1894,27 @@ document.querySelectorAll('[data-reveal]').forEach(function(r) { io.observe(r); 
         if (closeTimer) { window.clearTimeout(closeTimer); closeTimer = null; }
         current = card;
 
-        // Front face mirrors the card so the morph starts from something identical.
-        var label = card.querySelector('.tech-card-label');
-        var pills = card.querySelector('.tech-pills');
+        // Front face mirrors the card so the morph starts from something
+        // identical — clone everything but the injected fluid canvas and the
+        // hidden detail, which keeps this shape-agnostic across card types.
         front.innerHTML = '';
-        if (label) front.appendChild(label.cloneNode(true));
-        if (pills) front.appendChild(pills.cloneNode(true));
+        Array.prototype.forEach.call(card.children, function(child) {
+            if (child.classList.contains('pixel-fluid')) return;
+            if (child.classList.contains('card-detail')) return;
+            front.appendChild(child.cloneNode(true));
+        });
 
         // Detail content is already translated in place by the i18n pass,
         // so copying it here always yields the current language.
-        var detail = card.querySelector('.tech-detail');
+        var detail = card.querySelector('.card-detail');
         back.innerHTML = detail ? detail.innerHTML : '';
+        var pills = card.querySelector('.tech-pills');
         if (pills) back.appendChild(pills.cloneNode(true));
         var title = back.querySelector('.card-detail-title');
         if (title) title.id = 'card-panel-title';
+
+        // Let CSS distinguish an app card's richer detail from a tech card's.
+        panel.classList.toggle('is-app', card.classList.contains('app-card-wrapper'));
 
         // Locking the body removes the scrollbar, which would shift the page
         // sideways — pad by exactly the width it used to take up.
@@ -2039,14 +1998,18 @@ document.querySelectorAll('[data-reveal]').forEach(function(r) { io.observe(r); 
         }, reduce.matches ? 0 : MORPH_MS);
     }
 
-    cards.forEach(function(card) {
-        card.addEventListener('click', function() { open(card); });
-        card.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
-                e.preventDefault();
-                open(card);
-            }
-        });
+    // Delegated, not per-card: the app carousel clones its cards after this
+    // runs, and a captured NodeList would leave every clone dead.
+    document.addEventListener('click', function(e) {
+        var card = e.target.closest && e.target.closest('[data-expandable]');
+        if (card) open(card);
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+        var card = e.target.closest && e.target.closest('[data-expandable]');
+        if (!card) return;
+        e.preventDefault();
+        open(card);
     });
 
     // A canvas bitmap sized mid-morph gets stretched by CSS to the settled box,
@@ -2140,8 +2103,7 @@ if (trackWrap && track) {
         originalCards.forEach(function(node) {
             var clone = node.cloneNode(true);
             clone.setAttribute('data-clone', 'true');
-            // Re-bind flip handler (cloneNode copies inline onclick, but be safe)
-            clone.onclick = function() { clone.classList.toggle('flipped'); };
+            // No handler to re-bind: expanding is delegated off [data-expandable].
             track.appendChild(clone);
         });
     }
@@ -2382,7 +2344,7 @@ if (trackWrap && track) {
     }
 
     // Attach to all card faces
-    document.querySelectorAll('.app-card-front, .app-card-back, .tech-card, .srv, .contact-box, .imp-modal, .card-face-front, .card-face-back').forEach(initFluid);
+    document.querySelectorAll('.app-card-wrapper, .tech-card, .srv, .contact-box, .imp-modal, .card-face-front, .card-face-back').forEach(initFluid);
 })();
 
 // ── Impressum modal ──────────────────────────────────────────────
