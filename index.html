@@ -207,14 +207,54 @@
         }
         .hero-face {
             flex: 0 0 280px; height: 340px;
-            position: relative; overflow: hidden;
+            position: relative;
+            perspective: 1400px;
+            cursor: pointer;
+            background: none; border: 0; padding: 0;
+            border-radius: 16px;
+        }
+        .hero-face:focus-visible { outline: 2px solid var(--orange); outline-offset: 4px; }
+        .hero-face-inner {
+            position: relative; width: 100%; height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 700ms var(--ease);
+        }
+        .hero-face.flipped .hero-face-inner { transform: rotateY(180deg); }
+        .hero-face-front, .hero-face-back {
+            position: absolute; inset: 0; overflow: hidden;
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
             background: var(--surface); border: 1px solid var(--border);
             border-radius: 16px;
             transition: border-color 200ms var(--ease);
         }
-        .hero-face:hover { border-color: var(--border-visible); }
-        .hero-face canvas {
-            display: block; width: 100%; height: 100%;
+        .hero-face:hover .hero-face-front,
+        .hero-face:hover .hero-face-back { border-color: var(--border-visible); }
+        .hero-face-back {
+            transform: rotateY(180deg);
+            padding: var(--space-lg);
+            display: flex; flex-direction: column; justify-content: center;
+            text-align: left; overflow-y: auto; scrollbar-width: none;
+        }
+        .hero-face-back::-webkit-scrollbar { display: none; }
+        .hero-face canvas { display: block; width: 100%; height: 100%; }
+        .hero-face-back-label {
+            font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--orange); margin-bottom: var(--space-sm);
+        }
+        .hero-face-back p {
+            font-family: var(--font-body); font-size: 13px; line-height: 1.6;
+            color: var(--text-secondary); margin-bottom: var(--space-sm);
+        }
+        .hero-face-back p:last-child { margin-bottom: 0; }
+        .hero-face-hint {
+            position: absolute; bottom: 10px; right: 14px; z-index: 2;
+            font-family: var(--font-mono); font-size: 9px;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--text-disabled); pointer-events: none;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-face-inner { transition: none; }
         }
 
         .hero-chip {
@@ -497,6 +537,95 @@
         }
         @media (max-width: 1000px) { .tech-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 480px)  { .tech-grid { grid-template-columns: 1fr; } }
+
+        /* ─── Expandable cards ──────────────────────────────────── */
+        .tech-card { cursor: pointer; }
+        .tech-card:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+        .tech-card.is-open { visibility: hidden; }
+        .tech-detail { display: none; }
+        .tech-more {
+            position: relative; z-index: 1;
+            display: block; margin-top: var(--space-md);
+            font-family: var(--font-mono); font-size: 10px;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--text-disabled);
+            transition: color 200ms var(--ease);
+        }
+        .tech-card:hover .tech-more { color: var(--orange); }
+
+        /* Perspective lives on the fixed overlay, never on the resizing panel —
+           keeps the vanishing point still so the flip doesn't warp as it grows. */
+        .card-overlay {
+            position: fixed; inset: 0; z-index: 300;
+            background: rgba(0,0,0,0.72);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            opacity: 0; pointer-events: none;
+            transition: opacity 320ms var(--ease),
+                        background-color 520ms var(--ease),
+                        backdrop-filter 520ms var(--ease);
+            perspective: 2000px;
+        }
+        .card-overlay.open { opacity: 1; pointer-events: auto; }
+        /* While closing, the overlay stays at full opacity so the panel is still
+           visible as it flips and shrinks back — only the backdrop fades. */
+        .card-overlay.closing {
+            background-color: rgba(0,0,0,0);
+            backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px);
+            pointer-events: none;
+        }
+        .card-panel {
+            position: fixed; transform-style: preserve-3d;
+            transition: top 560ms var(--ease), left 560ms var(--ease),
+                        width 560ms var(--ease), height 560ms var(--ease),
+                        transform 560ms var(--ease);
+        }
+        .card-panel.flipped { transform: rotateY(180deg); }
+        /* Used for one frame to plant the panel on the card without animating there. */
+        .card-panel.no-transition { transition: none !important; }
+        .card-face {
+            position: absolute; inset: 0; overflow: hidden;
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            background: var(--surface); border: 1px solid var(--border-visible);
+            border-radius: 12px; padding: var(--space-lg);
+        }
+        .card-face-back {
+            transform: rotateY(180deg);
+            padding: var(--space-2xl);
+            overflow-y: auto; scrollbar-width: none;
+        }
+        .card-face-back::-webkit-scrollbar { display: none; }
+        /* Keep the orange pixel-fluid running behind the expanded card. */
+        .card-face .pixel-fluid { opacity: 1; }
+        .card-face-content { position: relative; z-index: 1; }
+        .card-face .tech-card-label { margin-bottom: var(--space-md); }
+        .card-detail-title {
+            font-family: var(--font-display); font-size: 30px; font-weight: 400;
+            letter-spacing: -0.02em; line-height: 1.15;
+            color: var(--text-display); margin-bottom: var(--space-md);
+        }
+        .card-detail-body {
+            font-family: var(--font-body); font-size: 15px; line-height: 1.7;
+            color: var(--text-secondary); margin-bottom: var(--space-lg);
+            max-width: 62ch;
+        }
+        .card-close {
+            position: absolute; top: var(--space-md); right: var(--space-md); z-index: 3;
+            background: none; border: 1px solid var(--border-visible);
+            border-radius: 999px; width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-mono); font-size: 16px;
+            color: var(--text-secondary); cursor: pointer;
+            transition: color 200ms var(--ease), border-color 200ms var(--ease);
+        }
+        .card-close:hover { color: var(--text-display); border-color: var(--text-display); }
+        @media (max-width: 560px) {
+            .card-face-back { padding: var(--space-lg); }
+            .card-detail-title { font-size: 24px; }
+        }
+        /* Without motion the flip and the morph are pointless — just cross-fade. */
+        @media (prefers-reduced-motion: reduce) {
+            .card-panel { transition: opacity 200ms var(--ease); }
+        }
 
         /* ─── Services ──────────────────────────────────────────── */
         .services-head { text-align: center; margin-bottom: var(--space-2xl); }
@@ -793,7 +922,9 @@
         @media (max-width: 800px) {
             nav ul { display: none; }
             .hero-inner { flex-direction: column; }
-            .hero-face { flex: none; width: 100%; height: 260px; }
+            .hero-face { flex: none; width: 100%; height: 300px; }
+            .hero-face-back { padding: var(--space-md); }
+            .hero-face-back p { font-size: 12px; line-height: 1.55; }
             .app-card-wrapper { flex: 0 0 300px; }
             .about-grid { grid-template-columns: 1fr; }
             .contact-box { padding: var(--space-xl) var(--space-lg); }
@@ -943,7 +1074,6 @@
     <a href="#about"    aria-label="Chapter 1"><span class="rail-dot"></span><span class="rail-label">01</span></a>
     <a href="#tech"     aria-label="Chapter 2"><span class="rail-dot"></span><span class="rail-label">02</span></a>
     <a href="#apps"     aria-label="Chapter 3"><span class="rail-dot"></span><span class="rail-label">03</span></a>
-    <a href="#services" aria-label="Chapter 4"><span class="rail-dot"></span><span class="rail-label">04</span></a>
     <a href="#contact"  aria-label="Epilogue"><span class="rail-dot"></span><span class="rail-label">E</span></a>
 </nav>
 
@@ -964,7 +1094,6 @@
                     <li><a href="#about"    data-i18n="nav.about">About</a></li>
                     <li><a href="#tech"     data-i18n="nav.skills">Skills</a></li>
                     <li><a href="#apps"     data-i18n="nav.apps">Apps</a></li>
-                    <li><a href="#services" data-i18n="nav.services">Services</a></li>
                     <li><a href="#contact"  data-i18n="nav.contact" class="nav-contact">Contact</a></li>
                 </ul>
                 <div class="header-controls">
@@ -994,8 +1123,18 @@
                     <a href="#contact" class="btn btn-secondary" data-i18n="hero.cta_contact">Get in Touch</a>
                 </div>
             </div>
-            <div class="hero-face" id="hero-face">
-                <canvas id="hero-face-canvas"></canvas>
+            <div class="hero-face" id="hero-face" role="button" tabindex="0" aria-expanded="false" aria-label="About Andrei">
+                <div class="hero-face-inner">
+                    <div class="hero-face-front">
+                        <canvas id="hero-face-canvas"></canvas>
+                        <span class="hero-face-hint" data-i18n="hero.face_hint">Tap me</span>
+                    </div>
+                    <div class="hero-face-back">
+                        <div class="hero-face-back-label" data-i18n="hero.back_label">In short</div>
+                        <p data-i18n="hero.back_p1">Cognitive Science graduate turned software engineer. I've worked in startups, in industry, and on my own apps — so I've seen what makes projects work and what quietly kills them.</p>
+                        <p data-i18n="hero.back_p2">Sometimes you just need someone to think it through with you: stack decisions, MVP scoping, architecture reviews, or turning a vague idea into a prototype you can hold. My background means I tend to ask about the people who'll use the thing.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1057,10 +1196,10 @@
         <div class="tech-head section-head">
             <div class="eyebrow" data-i18n="tech.eyebrow">Chapter 02 · The Craft</div>
             <h2 class="sh" data-i18n-html="tech.heading">Tools, collected <span class="accent">one problem at a time</span></h2>
-            <p class="sb"        data-i18n="tech.desc">Startups, industry floors, long indie nights. Every project left a tool behind — from native iOS to cloud infrastructure.</p>
+            <p class="sb"        data-i18n="tech.desc">Startups, industry floors, long indie nights. Every project left a tool behind — tap any card to see what I can build with it.</p>
         </div>
         <div class="tech-grid">
-            <div class="tech-card">
+            <div class="tech-card" data-expandable role="button" tabindex="0" aria-expanded="false">
                 <div class="tech-card-label" data-i18n="tech.lbl.ios">iOS & Apple Platforms</div>
                 <div class="tech-pills">
                     <span class="tech-pill">Swift</span><span class="tech-pill">SwiftUI</span>
@@ -1070,8 +1209,13 @@
                     <span class="tech-pill">CoreMotion</span><span class="tech-pill">AVFoundation</span>
                     <span class="tech-pill">StoreKit</span><span class="tech-pill">Objective-C</span>
                 </div>
+                <span class="tech-more" data-i18n="tech.more">Tap for more</span>
+                <div class="tech-detail">
+                    <h3 class="card-detail-title" data-i18n="det.ios.h">Native apps that feel like the platform</h3>
+                    <p class="card-detail-body" data-i18n="det.ios.p">Swift and SwiftUI for iPhone, iPad, and Apple Watch. I've shipped four apps to the App Store myself, so I know the whole path — the frameworks, the review process, and the small details that make an app feel native rather than ported.</p>
+                </div>
             </div>
-            <div class="tech-card">
+            <div class="tech-card" data-expandable role="button" tabindex="0" aria-expanded="false">
                 <div class="tech-card-label" data-i18n="tech.lbl.cross">Mobile & Cross-Platform</div>
                 <div class="tech-pills">
                     <span class="tech-pill">Flutter</span><span class="tech-pill">.NET MAUI</span>
@@ -1079,8 +1223,13 @@
                     <span class="tech-pill">Cordova</span><span class="tech-pill">Dart</span>
                     <span class="tech-pill">C#</span><span class="tech-pill">XAML</span>
                 </div>
+                <span class="tech-more" data-i18n="tech.more">Tap for more</span>
+                <div class="tech-detail">
+                    <h3 class="card-detail-title" data-i18n="det.cross.h">One codebase, several platforms</h3>
+                    <p class="card-detail-body" data-i18n="det.cross.p">Flutter, .NET MAUI, Xamarin, Ionic. Useful when you need Android and iOS without maintaining two teams. I'll also tell you when cross-platform is the wrong call — some apps really do want to be native, and it's cheaper to hear that early.</p>
+                </div>
             </div>
-            <div class="tech-card">
+            <div class="tech-card" data-expandable role="button" tabindex="0" aria-expanded="false">
                 <div class="tech-card-label" data-i18n="tech.lbl.web">Web & Backend</div>
                 <div class="tech-pills">
                     <span class="tech-pill">TypeScript</span><span class="tech-pill">JavaScript</span>
@@ -1088,8 +1237,13 @@
                     <span class="tech-pill">HTML / CSS</span><span class="tech-pill">REST APIs</span>
                     <span class="tech-pill">Firebase</span>
                 </div>
+                <span class="tech-more" data-i18n="tech.more">Tap for more</span>
+                <div class="tech-detail">
+                    <h3 class="card-detail-title" data-i18n="det.web.h">Web apps and the services behind them</h3>
+                    <p class="card-detail-body" data-i18n="det.web.p">Angular, TypeScript, and Node.js. I've built client web apps and internal tools — including a graph-visualisation system that guides factory workers through their tasks. Figma for design, and I care about things loading fast.</p>
+                </div>
             </div>
-            <div class="tech-card">
+            <div class="tech-card" data-expandable role="button" tabindex="0" aria-expanded="false">
                 <div class="tech-card-label" data-i18n="tech.lbl.cloud">Cloud & DevOps</div>
                 <div class="tech-pills">
                     <span class="tech-pill">Docker</span><span class="tech-pill">GCP</span>
@@ -1097,16 +1251,26 @@
                     <span class="tech-pill">GitHub</span><span class="tech-pill">Git</span>
                     <span class="tech-pill">Unix Shell</span>
                 </div>
+                <span class="tech-more" data-i18n="tech.more">Tap for more</span>
+                <div class="tech-detail">
+                    <h3 class="card-detail-title" data-i18n="det.cloud.h">Deploys that don't wake you up</h3>
+                    <p class="card-detail-body" data-i18n="det.cloud.p">Docker, GitLab CI, and deployments on GCP or Azure. Nothing exotic — build pipelines that don't break, and infrastructure the next person can still understand.</p>
+                </div>
             </div>
-            <div class="tech-card">
+            <div class="tech-card" data-expandable role="button" tabindex="0" aria-expanded="false">
                 <div class="tech-card-label" data-i18n="tech.lbl.hw">Connectivity & Hardware</div>
                 <div class="tech-pills">
                     <span class="tech-pill">Bluetooth LE</span><span class="tech-pill">Multipeer Connectivity</span>
                     <span class="tech-pill">IoT</span><span class="tech-pill">Tinkerforge</span>
                     <span class="tech-pill">Game Center</span><span class="tech-pill">CoreMotion</span>
                 </div>
+                <span class="tech-more" data-i18n="tech.more">Tap for more</span>
+                <div class="tech-detail">
+                    <h3 class="card-detail-title" data-i18n="det.hw.h">Getting the physical world onto a screen</h3>
+                    <p class="card-detail-body" data-i18n="det.hw.p">Bluetooth LE, IoT sensors, and industrial hardware. I've connected industrial machines to phones over Bluetooth, built digital twins with Tinkerforge sensors, and done device-to-device links that push data between two phones fast — which is less about the radio and more about designing the right data structures.</p>
+                </div>
             </div>
-            <div class="tech-card">
+            <div class="tech-card" data-expandable role="button" tabindex="0" aria-expanded="false">
                 <div class="tech-card-label" data-i18n="tech.lbl.ai">AI & Machine Learning</div>
                 <div class="tech-pills">
                     <span class="tech-pill">CoreML</span><span class="tech-pill">Vision Framework</span>
@@ -1114,8 +1278,13 @@
                     <span class="tech-pill">Computer Vision</span><span class="tech-pill">Python</span>
                     <span class="tech-pill">Firebase ML</span>
                 </div>
+                <span class="tech-more" data-i18n="tech.more">Tap for more</span>
+                <div class="tech-detail">
+                    <h3 class="card-detail-title" data-i18n="det.ai.h">AI that actually ships</h3>
+                    <p class="card-detail-body" data-i18n="det.ai.p">On-device with CoreML and Vision, or in the cloud with LLM APIs. I've integrated AI models into several kinds of systems — real-time image recognition on mobile, and services that lean on models in the background — including the messy parts: latency, edge cases, and what to do when the model gets it wrong.</p>
+                </div>
             </div>
-            <div class="tech-card">
+            <div class="tech-card" data-expandable role="button" tabindex="0" aria-expanded="false">
                 <div class="tech-card-label" data-i18n="tech.lbl.game">Game Dev & 3D</div>
                 <div class="tech-pills">
                     <span class="tech-pill">Unity</span><span class="tech-pill">Blender</span>
@@ -1123,12 +1292,22 @@
                     <span class="tech-pill">ARKit</span><span class="tech-pill">SceneKit</span>
                     <span class="tech-pill">Aseprite</span>
                 </div>
+                <span class="tech-more" data-i18n="tech.more">Tap for more</span>
+                <div class="tech-detail">
+                    <h3 class="card-detail-title" data-i18n="det.game.h">Games, and things that behave like games</h3>
+                    <p class="card-detail-body" data-i18n="det.game.p">Unity, SpriteKit, SceneKit, and Blender. I've built and shipped games myself — multiplayer over Bluetooth, and a fishing game for the Apple Watch. The same instincts work outside games: anything that has to feel responsive, physical, and worth touching a second time.</p>
+                </div>
             </div>
-            <div class="tech-card">
+            <div class="tech-card" data-expandable role="button" tabindex="0" aria-expanded="false">
                 <div class="tech-card-label" data-i18n="tech.lbl.design">Design & Tools</div>
                 <div class="tech-pills">
                     <span class="tech-pill">Figma</span><span class="tech-pill">Adobe Ps / Ai / Ae</span>
                     <span class="tech-pill">Sketch</span><span class="tech-pill">AutoCAD</span>
+                </div>
+                <span class="tech-more" data-i18n="tech.more">Tap for more</span>
+                <div class="tech-detail">
+                    <h3 class="card-detail-title" data-i18n="det.design.h">Design that survives contact with code</h3>
+                    <p class="card-detail-body" data-i18n="det.design.p">Figma, the Adobe tools, Aseprite, AutoCAD. I design what I build, which means interfaces that are actually buildable and don't fall apart at the edge cases. Handy if you'd rather go from rough sketch to shipped screen without a handoff in the middle.</p>
                 </div>
             </div>
         </div>
@@ -1307,53 +1486,6 @@
     </div>
 </section>
 
-<!-- ═══════════ SERVICES ══════════════════════════════════════════ -->
-<div class="dot-divider" aria-hidden="true"></div>
-
-<section class="section" id="services">
-    <div class="wrap">
-        <div class="services-head section-head">
-            <div class="eyebrow" data-i18n="srv.eyebrow">Chapter 04 · Your Story</div>
-            <h2 class="sh" data-i18n-html="srv.heading">What I can <span class="accent">build</span> with you</h2>
-            <p class="sb"        data-i18n="srv.desc">Startups, industry, indie work. Here's what I'm actually useful for:</p>
-        </div>
-        <div class="services-grid">
-            <div class="srv">
-                <div class="srv-cat">01</div>
-                <h3 class="srv-title" data-i18n="srv1.title">Mobile App Development</h3>
-                <p  class="srv-desc"  data-i18n="srv1.desc">Native iOS in Swift and SwiftUI, or cross-platform with Flutter and .NET MAUI. I've taken apps from first sketch to App Store — including Apple Watch apps, Bluetooth hardware, and the unglamorous parts like review feedback.</p>
-            </div>
-            <div class="srv">
-                <div class="srv-cat">02</div>
-                <h3 class="srv-title" data-i18n="srv2.title">AI Integration</h3>
-                <p  class="srv-desc"  data-i18n="srv2.desc">On-device with CoreML and Vision, or in the cloud with LLM APIs. I've integrated AI models into several kinds of systems — real-time image recognition on mobile, and services that lean on models in the background — including the messy parts: latency, edge cases, and what to do when the model gets it wrong.</p>
-            </div>
-            <div class="srv">
-                <div class="srv-cat">03</div>
-                <h3 class="srv-title" data-i18n="srv3.title">Web & Frontend</h3>
-                <p  class="srv-desc"  data-i18n="srv3.desc">Angular, TypeScript, and Node.js. I've built client web apps and internal tools — including a graph-visualisation system that guides factory workers through their tasks. Figma for design, and I care about things loading fast.</p>
-            </div>
-            <div class="srv">
-                <div class="srv-cat">04</div>
-                <h3 class="srv-title" data-i18n="srv4.title">Cloud & DevOps</h3>
-                <p  class="srv-desc"  data-i18n="srv4.desc">Docker, GitLab CI, and deployments on GCP or Azure. Nothing exotic — build pipelines that don't break, and infrastructure the next person can still understand.</p>
-            </div>
-            <div class="srv">
-                <div class="srv-cat">05</div>
-                <h3 class="srv-title" data-i18n="srv5.title">Hardware & Connectivity</h3>
-                <p  class="srv-desc"  data-i18n="srv5.desc">Bluetooth LE, IoT sensors, and industrial hardware. I've connected industrial machines to phones over Bluetooth, built digital twins with Tinkerforge sensors, and done device-to-device links that push data between two phones fast — which is less about the radio and more about designing the right data structures.</p>
-            </div>
-            <div class="srv">
-                <div class="srv-cat">06</div>
-                <h3 class="srv-title" data-i18n="srv6.title">Tech Consulting</h3>
-                <p  class="srv-desc"  data-i18n="srv6.desc">Sometimes you just need someone to think it through with you. Stack decisions, MVP scoping, architecture reviews, or turning a vague idea into a prototype you can hold. My background is Cognitive Science, so I tend to ask about the people who'll use the thing.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<div class="divider"></div>
-
 <!-- ═══════════ CONTACT ═══════════════════════════════════════════ -->
 <div class="dot-divider" aria-hidden="true"></div>
 
@@ -1383,6 +1515,20 @@
         </div>
     </div>
 </section>
+
+<!-- ═══════════ EXPANDED CARD OVERLAY ═════════════════════════════ -->
+<!-- One panel reused by every [data-expandable] card on the page. -->
+<div class="card-overlay" id="card-overlay" aria-hidden="true">
+    <div class="card-panel" id="card-panel" role="dialog" aria-modal="true" aria-labelledby="card-panel-title">
+        <div class="card-face card-face-front" id="card-face-front" aria-hidden="true">
+            <div class="card-face-content" id="card-front-content"></div>
+        </div>
+        <div class="card-face card-face-back" id="card-face-back">
+            <button class="card-close" id="card-close" type="button" aria-label="Close">✕</button>
+            <div class="card-face-content" id="card-back-content"></div>
+        </div>
+    </div>
+</div>
 
 <!-- ═══════════ IMPRESSUM MODAL ═══════════════════════════════════ -->
 <div class="imp-overlay" id="imp-overlay">
@@ -1459,10 +1605,14 @@ window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', fu
 const T = {
     en: {
         'nav.apps':'APPS', 'nav.about':'ABOUT', 'nav.skills':'SKILLS',
-        'nav.services':'SERVICES', 'nav.contact':'CONTACT',
+        'nav.contact':'CONTACT',
 
         'hero.eyebrow':'PROLOGUE',
         'hero.greeting':"Hello, I'm",
+        'hero.face_hint':'TAP ME',
+        'hero.back_label':'IN SHORT',
+        'hero.back_p1':"Cognitive Science graduate turned software engineer. I've worked in startups, in industry, and on my own apps — so I've seen what makes projects work and what quietly kills them.",
+        'hero.back_p2':"Sometimes you just need someone to think it through with you: stack decisions, MVP scoping, architecture reviews, or turning a vague idea into a prototype you can hold. My background means I tend to ask about the people who'll use the thing.",
         'hero.sub':'Cognitive Science taught me how minds work. Building things is what actually stuck — mobile apps, games, and tools that are useful, playful, and occasionally a bit strange.',
         'hero.type1':'I studied how minds work.',
         'hero.type2':'Now I build things people touch.',
@@ -1507,26 +1657,29 @@ const T = {
 
 
         'tech.eyebrow':'CHAPTER 02 · THE CRAFT', 'tech.heading':'Tools, collected <span class="accent">one problem at a time</span>',
-        'tech.desc':'Startups, industry floors, long indie nights. Every project left a tool behind — from native iOS to cloud infrastructure.',
+        'tech.desc':'Startups, industry floors, long indie nights. Every project left a tool behind — tap any card to see what I can build with it.',
+        'tech.more':'TAP FOR MORE',
         'tech.lbl.ios':'IOS & APPLE PLATFORMS', 'tech.lbl.cross':'MOBILE & CROSS-PLATFORM',
         'tech.lbl.web':'WEB & BACKEND', 'tech.lbl.cloud':'CLOUD & DEVOPS',
         'tech.lbl.hw':'CONNECTIVITY & HARDWARE', 'tech.lbl.ai':'AI & MACHINE LEARNING',
         'tech.lbl.game':'GAME DEV & 3D', 'tech.lbl.design':'DESIGN & TOOLS',
 
-        'srv.eyebrow':'CHAPTER 04 · YOUR STORY', 'srv.heading':'What I can <span class="accent">build</span> with you',
-        'srv.desc':"Startups, industry, indie work. Here's what I'm actually useful for:",
-        'srv1.title':'Mobile App Development',
-        'srv1.desc':"Native iOS in Swift and SwiftUI, or cross-platform with Flutter and .NET MAUI. I've taken apps from first sketch to App Store — including Apple Watch apps, Bluetooth hardware, and the unglamorous parts like review feedback.",
-        'srv2.title':'AI Integration',
-        'srv2.desc':"On-device with CoreML and Vision, or in the cloud with LLM APIs. I've integrated AI models into several kinds of systems — real-time image recognition on mobile, and services that lean on models in the background — including the messy parts: latency, edge cases, and what to do when the model gets it wrong.",
-        'srv3.title':'Web & Frontend',
-        'srv3.desc':"Angular, TypeScript, and Node.js. I've built client web apps and internal tools — including a graph-visualisation system that guides factory workers through their tasks. Figma for design, and I care about things loading fast.",
-        'srv4.title':'Cloud & DevOps',
-        'srv4.desc':"Docker, GitLab CI, and deployments on GCP or Azure. Nothing exotic — build pipelines that don't break, and infrastructure the next person can still understand.",
-        'srv5.title':'Hardware & Connectivity',
-        'srv5.desc':"Bluetooth LE, IoT sensors, and industrial hardware. I've connected industrial machines to phones over Bluetooth, built digital twins with Tinkerforge sensors, and done device-to-device links that push data between two phones fast — which is less about the radio and more about designing the right data structures.",
-        'srv6.title':'Tech Consulting',
-        'srv6.desc':"Sometimes you just need someone to think it through with you. Stack decisions, MVP scoping, architecture reviews, or turning a vague idea into a prototype you can hold. My background is Cognitive Science, so I tend to ask about the people who'll use the thing.",
+        'det.ios.h':'Native apps that feel like the platform',
+        'det.ios.p':"Swift and SwiftUI for iPhone, iPad, and Apple Watch. I've shipped four apps to the App Store myself, so I know the whole path — the frameworks, the review process, and the small details that make an app feel native rather than ported.",
+        'det.cross.h':'One codebase, several platforms',
+        'det.cross.p':"Flutter, .NET MAUI, Xamarin, Ionic. Useful when you need Android and iOS without maintaining two teams. I'll also tell you when cross-platform is the wrong call — some apps really do want to be native, and it's cheaper to hear that early.",
+        'det.web.h':'Web apps and the services behind them',
+        'det.web.p':"Angular, TypeScript, and Node.js. I've built client web apps and internal tools — including a graph-visualisation system that guides factory workers through their tasks. Figma for design, and I care about things loading fast.",
+        'det.cloud.h':"Deploys that don't wake you up",
+        'det.cloud.p':"Docker, GitLab CI, and deployments on GCP or Azure. Nothing exotic — build pipelines that don't break, and infrastructure the next person can still understand.",
+        'det.hw.h':'Getting the physical world onto a screen',
+        'det.hw.p':"Bluetooth LE, IoT sensors, and industrial hardware. I've connected industrial machines to phones over Bluetooth, built digital twins with Tinkerforge sensors, and done device-to-device links that push data between two phones fast — which is less about the radio and more about designing the right data structures.",
+        'det.ai.h':'AI that actually ships',
+        'det.ai.p':"On-device with CoreML and Vision, or in the cloud with LLM APIs. I've integrated AI models into several kinds of systems — real-time image recognition on mobile, and services that lean on models in the background — including the messy parts: latency, edge cases, and what to do when the model gets it wrong.",
+        'det.game.h':'Games, and things that behave like games',
+        'det.game.p':"Unity, SpriteKit, SceneKit, and Blender. I've built and shipped games myself — multiplayer over Bluetooth, and a fishing game for the Apple Watch. The same instincts work outside games: anything that has to feel responsive, physical, and worth touching a second time.",
+        'det.design.h':'Design that survives contact with code',
+        'det.design.p':"Figma, the Adobe tools, Aseprite, AutoCAD. I design what I build, which means interfaces that are actually buildable and don't fall apart at the edge cases. Handy if you'd rather go from rough sketch to shipped screen without a handoff in the middle.",
 
         'contact.eyebrow':'EPILOGUE',
         'contact.title':'Every ending is a <span class="accent">beginning</span>',
@@ -1554,10 +1707,14 @@ const T = {
 
     de: {
         'nav.apps':'APPS', 'nav.about':'\u00dcBER MICH', 'nav.skills':'F\u00c4HIGKEITEN',
-        'nav.services':'LEISTUNGEN', 'nav.contact':'KONTAKT',
+        'nav.contact':'KONTAKT',
 
         'hero.eyebrow':'PROLOG',
         'hero.greeting':'Hallo, ich bin',
+        'hero.face_hint':'TIPP MICH AN',
+        'hero.back_label':'KURZ GESAGT',
+        'hero.back_p1':'Kognitionswissenschaftler, der Softwareentwickler wurde. Ich habe in Startups, in der Industrie und an eigenen Apps gearbeitet \u2013 und dabei gesehen, was Projekte gelingen l\u00e4sst und was sie still scheitern l\u00e4sst.',
+        'hero.back_p2':'Manchmal braucht man einfach jemanden, mit dem man es durchdenkt: Stack-Entscheidungen, MVP-Scoping, Architektur-Reviews oder eine vage Idee in einen greifbaren Prototypen verwandeln. Durch meinen Hintergrund frage ich gern nach den Menschen, die das Ding sp\u00e4ter benutzen.',
         'hero.sub':'Die Kognitionswissenschaft hat mir gezeigt, wie Denken funktioniert. Geblieben ist am Ende das Bauen \u2013 mobile Apps, Spiele und Tools: n\u00fctzlich, verspielt und manchmal etwas seltsam.',
         'hero.type1':'Ich habe studiert, wie Denken funktioniert.',
         'hero.type2':'Jetzt baue ich Dinge zum Anfassen.',
@@ -1602,26 +1759,30 @@ const T = {
 
 
         'tech.eyebrow':'KAPITEL 02 \u00b7 DAS HANDWERK', 'tech.heading':'Werkzeuge, gesammelt <span class="accent">Problem f\u00fcr Problem</span>',
-        'tech.desc':'Startups, Industriehallen, lange Indie-N\u00e4chte. Jedes Projekt hat ein Werkzeug dagelassen \u2013 von nativem iOS bis zur Cloud-Infrastruktur.',
+        'tech.desc':'Startups, Industriehallen, lange Indie-N\u00e4chte. Jedes Projekt hat ein Werkzeug dagelassen \u2013 tippe auf eine Karte, um zu sehen, was ich damit bauen kann.',
+        'tech.more':'ANTIPPEN F\u00dcR MEHR',
         'tech.lbl.ios':'IOS & APPLE-PLATTFORMEN', 'tech.lbl.cross':'MOBIL & PLATTFORM\u00dcBERGREIFEND',
         'tech.lbl.web':'WEB & BACKEND', 'tech.lbl.cloud':'CLOUD & DEVOPS',
         'tech.lbl.hw':'KONNEKTIVIT\u00c4T & HARDWARE', 'tech.lbl.ai':'KI & MACHINE LEARNING',
         'tech.lbl.game':'GAME DEV & 3D', 'tech.lbl.design':'DESIGN & TOOLS',
 
-        'srv.eyebrow':'KAPITEL 04 · DEINE GESCHICHTE', 'srv.heading':'Was ich mit dir <span class="accent">bauen</span> kann',
-        'srv.desc':'Startups, Industrie, Indie-Arbeit. Dabei kann ich wirklich helfen:',
-        'srv1.title':'Mobile App-Entwicklung',
-        'srv1.desc':'Natives iOS in Swift und SwiftUI oder plattform\u00fcbergreifend mit Flutter und .NET MAUI. Ich habe Apps von der ersten Skizze bis in den App Store gebracht \u2013 inklusive Apple-Watch-Apps, Bluetooth-Hardware und den unspektakul\u00e4ren Teilen wie Review-Feedback.',
-        'srv2.title':'KI-Integration',
-        'srv2.desc':'Auf dem Ger\u00e4t mit CoreML und Vision oder in der Cloud mit LLM-APIs. Ich habe KI-Modelle in ganz verschiedene Systeme integriert \u2013 Echtzeit-Bilderkennung auf dem Handy und Dienste, die im Hintergrund auf Modelle zugreifen \u2013 inklusive der unangenehmen Teile: Latenz, Grenzf\u00e4lle und die Frage, was passiert, wenn das Modell falsch liegt.',
-        'srv3.title':'Web & Frontend',
-        'srv3.desc':'Angular, TypeScript und Node.js. Ich habe Web-Apps für Kunden und interne Tools gebaut – darunter ein Graphen-Visualisierungssystem, das Arbeiter in der Fabrik durch ihre Aufgaben führt. Design mit Figma, und schnelle Ladezeiten sind mir wichtig.',
-        'srv4.title':'Cloud & DevOps',
-        'srv4.desc':'Docker, GitLab CI und Deployments auf GCP oder Azure. Nichts Exotisches \u2013 Build-Pipelines, die nicht kaputtgehen, und Infrastruktur, die auch die n\u00e4chste Person noch versteht.',
-        'srv5.title':'Hardware & Konnektivit\u00e4t',
-        'srv5.desc':'Bluetooth LE, IoT-Sensoren und industrielle Hardware. Ich habe Industriemaschinen per Bluetooth mit Smartphones verbunden, digitale Zwillinge mit Tinkerforge-Sensoren gebaut und Ger\u00e4t-zu-Ger\u00e4t-Verbindungen umgesetzt, die Daten schnell zwischen zwei Handys \u00fcbertragen \u2013 wobei es weniger um den Funk geht als um die richtigen Datenstrukturen.',
-        'srv6.title':'Tech-Beratung',
-        'srv6.desc':'Manchmal braucht man einfach jemanden, mit dem man es durchdenkt. Stack-Entscheidungen, MVP-Scoping, Architektur-Reviews oder eine vage Idee in einen greifbaren Prototypen verwandeln. Mein Hintergrund ist Kognitionswissenschaft \u2013 ich frage deshalb gern nach den Menschen, die das Ding sp\u00e4ter benutzen.',
+        'det.ios.h':'Native Apps, die sich nach der Plattform anf\u00fchlen',
+        'det.ios.p':'Swift und SwiftUI f\u00fcr iPhone, iPad und Apple Watch. Ich habe selbst vier Apps in den App Store gebracht und kenne daher den ganzen Weg \u2013 die Frameworks, den Review-Prozess und die kleinen Details, die eine App nativ statt portiert wirken lassen.',
+        'det.cross.h':'Eine Codebasis, mehrere Plattformen',
+        'det.cross.p':'Flutter, .NET MAUI, Xamarin, Ionic. Sinnvoll, wenn du Android und iOS brauchst, ohne zwei Teams zu unterhalten. Ich sage dir aber auch, wenn plattform\u00fcbergreifend die falsche Wahl ist \u2013 manche Apps wollen wirklich nativ sein, und das h\u00f6rt man besser fr\u00fch.',
+        'det.web.h':'Web-Apps und die Dienste dahinter',
+        'det.web.p':'Angular, TypeScript und Node.js. Ich habe Web-Apps f\u00fcr Kunden und interne Tools gebaut \u2013 darunter ein Graphen-Visualisierungssystem, das Arbeiter in der Fabrik durch ihre Aufgaben f\u00fchrt. Design mit Figma, und schnelle Ladezeiten sind mir wichtig.',
+        'det.cloud.h':'Deployments, die dich nicht nachts wecken',
+        'det.cloud.p':'Docker, GitLab CI und Deployments auf GCP oder Azure. Nichts Exotisches \u2013 Build-Pipelines, die nicht kaputtgehen, und Infrastruktur, die auch die n\u00e4chste Person noch versteht.',
+        'det.hw.h':'Die physische Welt auf den Bildschirm holen',
+        'det.hw.p':'Bluetooth LE, IoT-Sensoren und industrielle Hardware. Ich habe Industriemaschinen per Bluetooth mit Smartphones verbunden, digitale Zwillinge mit Tinkerforge-Sensoren gebaut und Ger\u00e4t-zu-Ger\u00e4t-Verbindungen umgesetzt, die Daten schnell zwischen zwei Handys \u00fcbertragen \u2013 wobei es weniger um den Funk geht als um die richtigen Datenstrukturen.',
+        'det.ai.h':'KI, die es auch in Produktion schafft',
+        'det.ai.p':'Auf dem Ger\u00e4t mit CoreML und Vision oder in der Cloud mit LLM-APIs. Ich habe KI-Modelle in ganz verschiedene Systeme integriert \u2013 Echtzeit-Bilderkennung auf dem Handy und Dienste, die im Hintergrund auf Modelle zugreifen \u2013 inklusive der unangenehmen Teile: Latenz, Grenzf\u00e4lle und die Frage, was passiert, wenn das Modell falsch liegt.',
+        'det.game.h':'Spiele \u2013 und Dinge, die sich wie Spiele verhalten',
+        'det.game.p':'Unity, SpriteKit, SceneKit und Blender. Ich habe selbst Spiele gebaut und ver\u00f6ffentlicht \u2013 Multiplayer \u00fcber Bluetooth und ein Angelspiel f\u00fcr die Apple Watch. Dieselben Instinkte helfen auch au\u00dferhalb von Spielen: \u00fcberall dort, wo sich etwas reaktionsschnell und greifbar anf\u00fchlen soll.',
+        'det.design.h':'Design, das den Kontakt mit Code \u00fcbersteht',
+        'det.design.p':'Figma, die Adobe-Tools, Aseprite, AutoCAD. Ich gestalte, was ich baue \u2013 das hei\u00dft Interfaces, die sich tats\u00e4chlich umsetzen lassen und in den Randf\u00e4llen nicht auseinanderfallen. Praktisch, wenn du von der groben Skizze zum fertigen Screen willst, ohne \u00dcbergabe dazwischen.',
+
 
         'contact.eyebrow':'EPILOG',
         'contact.title':'Jedes Ende ist ein <span class="accent">Anfang</span>',
@@ -1706,6 +1867,176 @@ document.querySelectorAll('[data-reveal]').forEach(function(r) { io.observe(r); 
         if (!ticking) { ticking = true; requestAnimationFrame(update); }
     }, { passive: true });
     update();
+})();
+
+// ── Hero face: flip to the short version of me ────────────────────
+(function() {
+    var face = document.getElementById('hero-face');
+    if (!face) return;
+    function toggle() {
+        var open = face.classList.toggle('flipped');
+        face.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    face.addEventListener('click', toggle);
+    face.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); toggle(); }
+    });
+})();
+
+// ── Expandable cards: flip and grow into a full-screen panel ──────
+// Any [data-expandable] element with a .tech-detail child gets this,
+// so the same behaviour is one attribute away on future sections.
+(function() {
+    var overlay   = document.getElementById('card-overlay');
+    var panel     = document.getElementById('card-panel');
+    var frontFace = document.getElementById('card-face-front');
+    var backFace  = document.getElementById('card-face-back');
+    var front     = document.getElementById('card-front-content');
+    var back      = document.getElementById('card-back-content');
+    var closeBtn  = document.getElementById('card-close');
+    if (!overlay || !panel || !front || !back) return;
+
+    var cards = Array.prototype.slice.call(document.querySelectorAll('[data-expandable]'));
+    if (!cards.length) return;
+
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var MORPH_MS = 560;
+    var current = null, scrollY = 0, closeTimer = null;
+
+    // The panel has no layout size until it opens, so its fluid canvases have to
+    // be re-measured and started by hand rather than on hover.
+    function fluid(method) {
+        [frontFace, backFace].forEach(function(f) {
+            if (f && f._fluid && f._fluid[method]) f._fluid[method]();
+        });
+    }
+
+    // Target rect: a large centred panel, generous on desktop, near-full on phones.
+    function targetRect() {
+        var vw = window.innerWidth, vh = window.innerHeight;
+        var w = Math.min(880, vw * (vw < 620 ? 0.92 : 0.86));
+        var h = Math.min(660, vh * (vw < 620 ? 0.86 : 0.82));
+        return { top: (vh - h) / 2, left: (vw - w) / 2, width: w, height: h };
+    }
+
+    function applyRect(r) {
+        panel.style.top    = r.top + 'px';
+        panel.style.left   = r.left + 'px';
+        panel.style.width  = r.width + 'px';
+        panel.style.height = r.height + 'px';
+    }
+
+    function open(card) {
+        if (current) return;
+        if (closeTimer) { window.clearTimeout(closeTimer); closeTimer = null; }
+        current = card;
+
+        // Front face mirrors the card so the morph starts from something identical.
+        var label = card.querySelector('.tech-card-label');
+        var pills = card.querySelector('.tech-pills');
+        front.innerHTML = '';
+        if (label) front.appendChild(label.cloneNode(true));
+        if (pills) front.appendChild(pills.cloneNode(true));
+
+        // Detail content is already translated in place by the i18n pass,
+        // so copying it here always yields the current language.
+        var detail = card.querySelector('.tech-detail');
+        back.innerHTML = detail ? detail.innerHTML : '';
+        if (pills) back.appendChild(pills.cloneNode(true));
+        var title = back.querySelector('.card-detail-title');
+        if (title) title.id = 'card-panel-title';
+
+        // Locking the body removes the scrollbar, which would shift the page
+        // sideways — pad by exactly the width it used to take up.
+        scrollY = window.scrollY;
+        var sbw = window.innerWidth - document.documentElement.clientWidth;
+        document.body.style.position = 'fixed';
+        document.body.style.top = -scrollY + 'px';
+        document.body.style.width = '100%';
+        if (sbw > 0) document.body.style.paddingRight = sbw + 'px';
+
+        overlay.setAttribute('aria-hidden', 'false');
+        card.setAttribute('aria-expanded', 'true');
+
+        // Plant the panel exactly on the card with transitions off, otherwise it
+        // animates in from its default size before the morph even begins.
+        var start = card.getBoundingClientRect();
+        panel.classList.add('no-transition');
+        panel.classList.remove('flipped');
+        applyRect({ top: start.top, left: start.left, width: start.width, height: start.height });
+        void panel.offsetWidth;
+        panel.classList.remove('no-transition');
+
+        card.classList.add('is-open');
+        overlay.classList.remove('closing');
+        overlay.classList.add('open');
+
+        if (reduce.matches) {
+            applyRect(targetRect());
+            panel.classList.add('flipped');
+            fluid('start');
+        } else {
+            requestAnimationFrame(function() {
+                applyRect(targetRect());
+                panel.classList.add('flipped');
+                // Size the fluid to the panel once it has reached full size.
+                window.setTimeout(function() { if (current) fluid('start'); }, MORPH_MS);
+            });
+        }
+        closeBtn.focus({ preventScroll: true });
+    }
+
+    function close() {
+        if (!current) return;
+        var card = current;
+        current = null;
+        var end = card.getBoundingClientRect();
+
+        // Play the open animation backwards: un-flip and shrink onto the card,
+        // fading only the backdrop so the panel stays visible the whole way.
+        overlay.classList.add('closing');
+        panel.classList.remove('flipped');
+        applyRect({ top: end.top, left: end.left, width: end.width, height: end.height });
+        fluid('stop');
+
+        closeTimer = window.setTimeout(function() {
+            closeTimer = null;
+            overlay.classList.remove('open', 'closing');
+            card.classList.remove('is-open');
+            overlay.setAttribute('aria-hidden', 'true');
+            card.setAttribute('aria-expanded', 'false');
+
+            // Restore the scroll lock. scroll-behavior is smooth on <html>, which
+            // would animate this restore into a visible jump — force it instant.
+            var root = document.documentElement;
+            var prev = root.style.scrollBehavior;
+            root.style.scrollBehavior = 'auto';
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            document.body.style.paddingRight = '';
+            window.scrollTo(0, scrollY);
+            root.style.scrollBehavior = prev;
+
+            card.focus({ preventScroll: true });
+        }, reduce.matches ? 0 : MORPH_MS);
+    }
+
+    cards.forEach(function(card) {
+        card.addEventListener('click', function() { open(card); });
+        card.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault();
+                open(card);
+            }
+        });
+    });
+
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) close(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && current) close(); });
+    // Keep the panel centred if the viewport changes while it's open.
+    window.addEventListener('resize', function() { if (current) applyRect(targetRect()); });
 })();
 
 // ── Chapter rail: highlight the chapter in view ───────────────────
@@ -2019,10 +2350,14 @@ if (trackWrap && track) {
 
         // Handle resize
         window.addEventListener('resize', function() { if (active) resize(); });
+
+        // Expose the controls so the expanded card panel — which has no size
+        // until it opens — can size and run its own fluid on demand.
+        card._fluid = { start: start, stop: stop, resize: resize };
     }
 
     // Attach to all card faces
-    document.querySelectorAll('.app-card-front, .app-card-back, .tech-card, .srv, .contact-box, .imp-modal').forEach(initFluid);
+    document.querySelectorAll('.app-card-front, .app-card-back, .tech-card, .srv, .contact-box, .imp-modal, .card-face-front, .card-face-back').forEach(initFluid);
 })();
 
 // ── Impressum modal ──────────────────────────────────────────────
