@@ -225,8 +225,15 @@
             backface-visibility: hidden; -webkit-backface-visibility: hidden;
             background: var(--surface); border: 1px solid var(--border);
             border-radius: 16px;
-            transition: border-color 200ms var(--ease);
+            transition: border-color 200ms var(--ease), opacity 0s linear 350ms;
         }
+        /* Same Safari backface bug as the card panel: the portrait canvas is
+           composited and bleeds through the bio. Swap opacity at the flip
+           midpoint (350ms of 700ms) instead of trusting backface culling. */
+        .hero-face-front { opacity: 1; }
+        .hero-face.flipped .hero-face-front { opacity: 0; }
+        .hero-face-back { opacity: 0; }
+        .hero-face.flipped .hero-face-back { opacity: 1; }
         .hero-face:hover .hero-face-front,
         .hero-face:hover .hero-face-back { border-color: var(--border-visible); }
         /* Same coplanar hit-testing caveat as the expanded card faces: once
@@ -258,6 +265,8 @@
         }
         @media (prefers-reduced-motion: reduce) {
             .hero-face-inner { transition: none; }
+            /* The flip is instant here, so the face swap must be too. */
+            .hero-face-front, .hero-face-back { transition-delay: 0s; }
         }
 
         .hero-chip {
@@ -561,16 +570,27 @@
            hides it once flipped but does NOT stop it hit-testing — it stays
            coplanar with the back face and would swallow every click. */
         .card-face-front { pointer-events: none; }
+        /* Safari bug: composited children (the fluid canvas, z-indexed content)
+           escape the parent's backface-visibility and bleed a mirrored front
+           face through the back. Don't depend on backface culling at all —
+           swap the faces' opacity at the flip midpoint (280ms of 560ms), when
+           the panel is edge-on and the swap is invisible. */
+        .card-face-front { opacity: 1; transition: opacity 0s linear 280ms; }
+        .card-panel.flipped .card-face-front { opacity: 0; }
         .card-face-back {
             transform: rotateY(180deg);
             padding: var(--space-2xl);
             overflow-y: auto; scrollbar-width: none;
+            opacity: 0; transition: opacity 0s linear 280ms;
         }
+        .card-panel.flipped .card-face-back { opacity: 1; }
         .card-face-back::-webkit-scrollbar { display: none; }
         /* Keep the orange pixel-fluid running behind the expanded card. */
         .card-face .pixel-fluid { opacity: 1; }
         .card-face-content { position: relative; z-index: 1; }
         .card-face .tech-card-label { margin-bottom: var(--space-md); }
+        /* Expanded tech card: pills between the title and the body text */
+        .card-face-back .tech-pills { margin-bottom: var(--space-lg); }
         .card-detail-title {
             font-family: var(--font-display); font-size: 30px; font-weight: 400;
             letter-spacing: -0.02em; line-height: 1.15;
@@ -609,6 +629,8 @@
         /* Without motion the flip and the morph are pointless — just cross-fade. */
         @media (prefers-reduced-motion: reduce) {
             .card-panel { transition: opacity 200ms var(--ease); }
+            /* The flip is instant here, so the face swap must be too. */
+            .card-face-front, .card-face-back { transition-delay: 0s; }
         }
 
         /* ─── Services ──────────────────────────────────────────── */
@@ -1908,9 +1930,14 @@ document.querySelectorAll('[data-reveal]').forEach(function(r) { io.observe(r); 
         // so copying it here always yields the current language.
         var detail = card.querySelector('.card-detail');
         back.innerHTML = detail ? detail.innerHTML : '';
-        var pills = card.querySelector('.tech-pills');
-        if (pills) back.appendChild(pills.cloneNode(true));
         var title = back.querySelector('.card-detail-title');
+        // Pills sit between the title and the body text
+        var pills = card.querySelector('.tech-pills');
+        if (pills) {
+            var pillsClone = pills.cloneNode(true);
+            if (title) title.insertAdjacentElement('afterend', pillsClone);
+            else back.insertBefore(pillsClone, back.firstChild);
+        }
         if (title) title.id = 'card-panel-title';
 
         // Let CSS distinguish an app card's richer detail from a tech card's.
