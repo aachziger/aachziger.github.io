@@ -401,6 +401,13 @@
             height: 40px; width: auto;
             transition: opacity 200ms var(--ease);
         }
+        /* Two store badges side by side — slightly smaller so both fit the card */
+        .badge-row {
+            position: relative; z-index: 1;
+            display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+        }
+        .badge-row .badge-link { align-self: auto; }
+        .badge-row .badge-link img { height: 34px; }
         .badge-link img:hover { opacity: 0.7; }
 
         /* ─── About ─────────────────────────────────────────────── */
@@ -1115,7 +1122,7 @@
         <div class="apps-head section-head">
             <div class="eyebrow" data-i18n="apps.eyebrow">Chapter 03 · The Artifacts</div>
             <h2 class="sh" data-i18n-html="apps.heading">What <span class="accent">escaped</span> the lab</h2>
-            <p class="sb"       data-i18n="apps.desc">Each app began as one of those questions — about play, reflexes, attention, typing. In order of appearance:</p>
+            <p class="sb"       data-i18n="apps.desc">Each app began as one of those questions — about play, reflexes, attention, typing, and lately climbing and skating. In order of appearance:</p>
         </div>
 
         <div class="app-track-wrap">
@@ -1247,6 +1254,82 @@
                             </div>
                             <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link" onclick="event.stopPropagation()">
                                 <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Up Dino Up -->
+                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
+                    <div class="app-card-inner">
+                        <div class="app-card-front">
+                            <span class="app-act" aria-hidden="true">V</span>
+                            <div class="app-card-visual">
+                                <img src="dist/images/up_dino_up.webp" alt="Up Dino Up endless climbing game" class="app-img" loading="lazy" decoding="async">
+                            </div>
+                            <span class="app-label" data-i18n="ud.label">Arcade · Platformer</span>
+                            <h3 class="app-title">Up Dino Up</h3>
+                            <div class="badge-row">
+                                <a href="https://apps.apple.com/us/app/up-dino-up/id6766686500" class="badge-link" onclick="event.stopPropagation()">
+                                    <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Up Dino Up on the App Store">
+                                </a>
+                                <a href="https://play.google.com/store/apps/details?id=com.zerodeathgames.updinoup" class="badge-link" onclick="event.stopPropagation()">
+                                    <img src="src/images/GetItOnGooglePlay.svg" decoding="async" alt="Get Up Dino Up on Google Play">
+                                </a>
+                            </div>
+                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
+                        </div>
+                        <div class="app-card-back">
+                            <div class="app-back-visual">
+                                <img src="dist/images/up_dino_up.webp" alt="Up Dino Up endless climbing game" class="app-back-img" loading="lazy" decoding="async">
+                            </div>
+                            <h3 class="app-back-title">Up Dino Up</h3>
+                            <p class="app-desc" data-i18n="ud.desc">A little dino, an endless tower, and a novel take on jump-and-run controls: hold a side to run, swipe to jump, kick off the walls — fast, agile movement from two simple gestures. Every climb is freshly generated, from dark caves up into the open sky.</p>
+                            <div class="app-perks">
+                                <span class="app-perk" data-i18n="ud.perk1">Novel hold-and-swipe movement controls</span>
+                                <span class="app-perk" data-i18n="ud.perk2">Wall-jumps, double jumps & crumbling blocks</span>
+                                <span class="app-perk" data-i18n="ud.perk3">4 dinos · 23 languages · kid-friendly</span>
+                            </div>
+                            <div class="badge-row">
+                                <a href="https://apps.apple.com/us/app/up-dino-up/id6766686500" class="badge-link" onclick="event.stopPropagation()">
+                                    <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Up Dino Up on the App Store">
+                                </a>
+                                <a href="https://play.google.com/store/apps/details?id=com.zerodeathgames.updinoup" class="badge-link" onclick="event.stopPropagation()">
+                                    <img src="src/images/GetItOnGooglePlay.svg" decoding="async" alt="Get Up Dino Up on Google Play">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skaty Watch -->
+                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
+                    <div class="app-card-inner">
+                        <div class="app-card-front">
+                            <span class="app-act" aria-hidden="true">VI</span>
+                            <div class="app-card-visual">
+                                <img src="dist/images/skaty_watch.png" alt="Skaty Watch skateboarding game for Apple Watch" class="app-img" loading="lazy" decoding="async">
+                            </div>
+                            <span class="app-label" data-i18n="sk.label">Apple Watch · Game</span>
+                            <h3 class="app-title">Skaty Watch</h3>
+                            <a href="https://apps.apple.com/us/app/skaty-watch/id6449743798" class="badge-link" onclick="event.stopPropagation()">
+                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Skaty Watch on the App Store">
+                            </a>
+                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
+                        </div>
+                        <div class="app-card-back">
+                            <div class="app-back-visual">
+                                <img src="dist/images/skaty_watch.png" alt="Skaty Watch skateboarding game for Apple Watch" class="app-back-img" loading="lazy" decoding="async">
+                            </div>
+                            <h3 class="app-back-title">Skaty Watch</h3>
+                            <p class="app-desc" data-i18n="sk.desc">A flip-trick game on your wrist — no riding around, just you and the board. Crouch, flick to pop and spin, tap to catch — land flat for a Perfect. Satisfying flick controls with real skate timing, from ollies to 360 flips.</p>
+                            <div class="app-perks">
+                                <span class="app-perk" data-i18n="sk.perk1">Pure flip tricks — flick, spin, catch</span>
+                                <span class="app-perk" data-i18n="sk.perk2">Ollies to 360 flips, regular or goofy</span>
+                                <span class="app-perk" data-i18n="sk.perk3">Four modes, haptics, no ads</span>
+                            </div>
+                            <a href="https://apps.apple.com/us/app/skaty-watch/id6449743798" class="badge-link" onclick="event.stopPropagation()">
+                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Skaty Watch on the App Store">
                             </a>
                         </div>
                     </div>
@@ -1441,7 +1524,7 @@ const T = {
         'int3.l2':'Now I walk it with others.',
 
         'apps.eyebrow':'CHAPTER 03 · THE ARTIFACTS', 'apps.heading':'What <span class="accent">escaped</span> the lab',
-        'apps.desc':'Each app began as one of those questions — about play, reflexes, attention, typing. In order of appearance:',
+        'apps.desc':'Each app began as one of those questions — about play, reflexes, attention, typing, and lately climbing and skating. In order of appearance:',
 
         'mk.label':'KEYBOARD · PRODUCTIVITY',
         'mk.desc':'The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.',
@@ -1458,6 +1541,14 @@ const T = {
         'wt.label':'MULTIPLAYER · STRATEGY',
         'wt.desc':'Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center.',
         'wt.perk1':'Real-time multiplayer via Bluetooth', 'wt.perk2':'Game Center integration', 'wt.perk3':'Unique orbit-based mechanics',
+
+        'ud.label':'ARCADE · PLATFORMER',
+        'ud.desc':'A little dino, an endless tower, and a novel take on jump-and-run controls: hold a side to run, swipe to jump, kick off the walls — fast, agile movement from two simple gestures. Every climb is freshly generated, from dark caves up into the open sky.',
+        'ud.perk1':'Novel hold-and-swipe movement controls', 'ud.perk2':'Wall-jumps, double jumps & crumbling blocks', 'ud.perk3':'4 dinos · 23 languages · kid-friendly',
+
+        'sk.label':'APPLE WATCH · GAME',
+        'sk.desc':'A flip-trick game on your wrist — no riding around, just you and the board. Crouch, flick to pop and spin, tap to catch — land flat for a Perfect. Satisfying flick controls with real skate timing, from ollies to 360 flips.',
+        'sk.perk1':'Pure flip tricks — flick, spin, catch', 'sk.perk2':'Ollies to 360 flips, regular or goofy', 'sk.perk3':'Four modes, haptics, no ads',
 
         'about.eyebrow':'CHAPTER 01 \u00b7 THE QUESTION', 'about.heading':'It began with a <span class="accent">question</span>',
         'about.desc':'\u201cHow does a mind work?\u201d I chased that question into Cognitive Science \u2014 computer science, AI, psychology, philosophy, neuroscience. I came back with fewer answers and much better obsessions:',
@@ -1536,7 +1627,7 @@ const T = {
         'int3.l2':'Jetzt gehe ich sie mit anderen.',
 
         'apps.eyebrow':'KAPITEL 03 \u00b7 DIE ARTEFAKTE', 'apps.heading':'Was dem Labor <span class="accent">entkommen</span> ist',
-        'apps.desc':'Jede App begann als eine dieser Fragen \u2013 \u00fcber Spiel, Reflexe, Aufmerksamkeit, Tippen. In der Reihenfolge ihres Erscheinens:',
+        'apps.desc':'Jede App begann als eine dieser Fragen \u2013 \u00fcber Spiel, Reflexe, Aufmerksamkeit, Tippen \u2013 und zuletzt Klettern und Skaten. In der Reihenfolge ihres Erscheinens:',
 
         'mk.label':'TASTATUR \u00b7 PRODUKTIVIT\u00c4T',
         'mk.desc':'Die erste dynamische Tastatur, die dir hilft, sauberer und mit weniger Fehlern zu tippen. Bring MergeKey neue W\u00f6rter bei, und sie lernt dazu \u2013 jeder Tastendruck wird dadurch smarter.',
@@ -1553,6 +1644,14 @@ const T = {
         'wt.label':'MULTIPLAYER \u00b7 STRATEGIE',
         'wt.desc':'Erstelle Umlaufbahnen, halte sie und fordere andere quer durch den Kosmos heraus. Sammle alle Sterne \u2013 am besten mit 2 Spielern per Bluetooth oder Game Center.',
         'wt.perk1':'Echtzeit-Multiplayer per Bluetooth', 'wt.perk2':'Game Center-Integration', 'wt.perk3':'Einzigartige umlaufbahnbasierte Spielmechanik',
+
+        'ud.label':'ARCADE · PLATTFORMER',
+        'ud.desc':'Ein kleiner Dino, ein endloser Turm und eine neuartige Jump-’n’-Run-Steuerung: eine Seite halten zum Rennen, wischen zum Springen, von Wänden abspringen – schnelle, agile Bewegung aus zwei simplen Gesten. Jeder Aufstieg wird neu generiert, von dunklen Höhlen bis in den offenen Himmel.',
+        'ud.perk1':'Neuartige Halten-und-Wischen-Steuerung', 'ud.perk2':'Wall-Jumps, Doppelsprünge & bröckelnde Blöcke', 'ud.perk3':'4 Dinos · 23 Sprachen · kinderfreundlich',
+
+        'sk.label':'APPLE WATCH · SPIEL',
+        'sk.desc':'Ein Flip-Trick-Spiel am Handgelenk – kein Herumfahren, nur du und das Board. Ducken, flicken für Pop und Spin, tippen zum Fangen – flach landen für ein Perfect. Herrlich direkte Flick-Steuerung mit echtem Skate-Timing, von Ollies bis 360 Flips.',
+        'sk.perk1':'Pure Flip-Tricks – flicken, drehen, fangen', 'sk.perk2':'Von Ollies bis 360 Flips, regular oder goofy', 'sk.perk3':'Vier Modi, Haptik, keine Werbung',
 
         'about.eyebrow':'KAPITEL 01 \u00b7 DIE FRAGE', 'about.heading':'Alles begann mit einer <span class="accent">Frage</span>',
         'about.desc':'\u201eWie funktioniert ein Kopf?\u201c Diese Frage f\u00fchrte mich zur Kognitionswissenschaft \u2013 Informatik, KI, Psychologie, Philosophie, Neurowissenschaften. Zur\u00fcck kam ich mit weniger Antworten und deutlich besseren Obsessionen:',
