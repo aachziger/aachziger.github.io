@@ -344,9 +344,104 @@
             height: 220px; margin-bottom: var(--space-lg);
             position: relative; z-index: 1;
         }
-        .app-img {
-            max-height: 210px; max-width: 100%; width: auto; border-radius: 12px;
+        /* ─── Device frames (drawn in CSS, screen content is a video/still) ───
+           Every measurement derives from --u, the screen's short side, so one
+           frame renders at card size on the front and in miniature on the back. */
+        .device { position: relative; display: inline-flex; flex: none; }
+        .device-screen { display: block; object-fit: cover; background: #000; }
+
+        /* iPhone — thin black bezel, titanium edge, Dynamic Island, side buttons */
+        .phone {
+            --u: 93px;
+            padding: calc(var(--u) * 0.048);
+            border-radius: calc(var(--u) * 0.23);
+            background: #050505;
+            box-shadow:
+                0 0 0 calc(var(--u) * 0.016) #8e8e93,
+                0 0 0 calc(var(--u) * 0.028) #3a3a3c,
+                0 calc(var(--u) * 0.12) calc(var(--u) * 0.3) calc(var(--u) * -0.08) rgba(0, 0, 0, 0.6);
         }
+        .phone .device-screen {
+            width: var(--u); aspect-ratio: 1170 / 2532;
+            border-radius: calc(var(--u) * 0.184);
+        }
+        .phone .island {
+            position: absolute; left: 50%; top: calc(var(--u) * 0.076);
+            width: calc(var(--u) * 0.32); height: calc(var(--u) * 0.093);
+            transform: translateX(-50%);
+            border-radius: 999px; background: #000;
+        }
+        /* volume buttons (left, second one via shadow) and power button (right) */
+        .phone::before, .phone::after {
+            content: ''; position: absolute; border-radius: calc(var(--u) * 0.01);
+            background: #6e6e73;
+        }
+        .phone::before {
+            left: calc(var(--u) * -0.036); top: calc(var(--u) * 0.44);
+            width: calc(var(--u) * 0.02); height: calc(var(--u) * 0.15);
+            box-shadow: 0 calc(var(--u) * 0.22) 0 #6e6e73;
+        }
+        .phone::after {
+            right: calc(var(--u) * -0.036); top: calc(var(--u) * 0.56);
+            width: calc(var(--u) * 0.02); height: calc(var(--u) * 0.24);
+        }
+        /* Held sideways: island on the left, buttons on the long edges */
+        .phone.landscape { --u: 100px; }
+        .phone.landscape .device-screen { width: auto; height: var(--u); aspect-ratio: 2532 / 1170; }
+        .phone.landscape .island {
+            left: calc(var(--u) * 0.076); top: 50%; transform: translateY(-50%);
+            width: calc(var(--u) * 0.093); height: calc(var(--u) * 0.32);
+        }
+        .phone.landscape::before {
+            left: calc(var(--u) * 0.44); top: auto; bottom: calc(var(--u) * -0.036);
+            width: calc(var(--u) * 0.15); height: calc(var(--u) * 0.02);
+            box-shadow: calc(var(--u) * 0.22) 0 0 #6e6e73;
+        }
+        .phone.landscape::after {
+            left: calc(var(--u) * 0.56); right: auto; top: calc(var(--u) * -0.036);
+            width: calc(var(--u) * 0.24); height: calc(var(--u) * 0.02);
+        }
+
+        /* Apple Watch — rounded case, digital crown, side button, sport band */
+        .watch {
+            --u: 114px;
+            padding: calc(var(--u) * 0.06);
+            border-radius: calc(var(--u) * 0.3);
+            background: #050505;
+            box-shadow:
+                0 0 0 calc(var(--u) * 0.022) #2c2c2e,
+                0 0 0 calc(var(--u) * 0.032) #58585d,
+                0 calc(var(--u) * 0.1) calc(var(--u) * 0.26) calc(var(--u) * -0.06) rgba(0, 0, 0, 0.6);
+        }
+        .watch .device-screen {
+            width: var(--u); aspect-ratio: 368 / 448;
+            border-radius: calc(var(--u) * 0.24);
+        }
+        /* Straps start under the case and reach 0.24u beyond it, top and bottom */
+        .watch .band {
+            position: absolute; left: 50%; z-index: -1;
+            width: calc(var(--u) * 0.74); height: calc(var(--u) * 0.5);
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, #17181c, #25262c 50%, #17181c);
+        }
+        .watch .band.top    { top: calc(var(--u) * -0.24);    border-radius: calc(var(--u) * 0.1) calc(var(--u) * 0.1) 0 0; }
+        .watch .band.bottom { bottom: calc(var(--u) * -0.24); border-radius: 0 0 calc(var(--u) * 0.1) calc(var(--u) * 0.1); }
+        .watch .crown {
+            position: absolute; right: calc(var(--u) * -0.085); top: calc(var(--u) * 0.3);
+            width: calc(var(--u) * 0.08); height: calc(var(--u) * 0.22);
+            border-radius: calc(var(--u) * 0.03);
+            background: repeating-linear-gradient(0deg, #a1a1a6 0 1px, #5d5d62 1px 2px);
+        }
+        .watch .crown::after {
+            content: ''; position: absolute; left: calc(var(--u) * 0.025);
+            top: calc(var(--u) * 0.44); width: calc(var(--u) * 0.03); height: calc(var(--u) * 0.3);
+            border-radius: calc(var(--u) * 0.01); background: #48484a;
+        }
+
+        /* Miniatures on the card backs */
+        .app-back-visual .phone           { --u: 28px; }
+        .app-back-visual .phone.landscape { --u: 52px; }
+        .app-back-visual .watch           { --u: 36px; }
 
         .app-label {
             font-family: var(--font-mono); font-size: 11px; font-weight: 400;
@@ -376,9 +471,6 @@
             display: flex; justify-content: center; align-items: center;
             height: 68px; margin-bottom: 12px;
             position: relative; z-index: 1;
-        }
-        .app-back-img {
-            max-height: 64px; max-width: 100%; width: auto; border-radius: 10px;
         }
         .app-back-title {
             font-family: var(--font-display); font-size: 20px; font-weight: 400;
@@ -808,7 +900,6 @@
             .privacy-box { padding: var(--space-lg) var(--space-md); }
             .app-card-wrapper { flex: 0 0 280px; }
             .app-back-visual { height: 70px; margin-bottom: var(--space-sm); }
-            .app-back-img { max-height: 60px; }
             .app-card-back { padding: var(--space-md) var(--space-md) var(--space-lg); }
             .app-desc { font-size: 13px; margin-bottom: var(--space-sm); }
             .app-perks { gap: 4px; margin-bottom: var(--space-md); }
@@ -1187,7 +1278,7 @@
                         <div class="app-card-front">
                             <span class="app-act" aria-hidden="true">I</span>
                             <div class="app-card-visual">
-                                <img src="dist/images/iphone-feature-02.png" alt="Weltraum space game" class="app-img" decoding="async">
+                                <div class="device phone"><video class="device-screen" src="dist/videos/weltraum.mp4" poster="dist/videos/weltraum.jpg" muted loop playsinline preload="none" aria-label="Weltraum gameplay"></video><span class="island"></span></div>
                             </div>
                             <span class="app-label" data-i18n="wt.label">Multiplayer · Strategy</span>
                             <h3 class="app-title">Weltraum</h3>
@@ -1198,7 +1289,7 @@
                         </div>
                         <div class="app-card-back">
                             <div class="app-back-visual">
-                                <img src="dist/images/iphone-feature-02.png" alt="Weltraum space game" class="app-back-img" decoding="async">
+                                <div class="device phone"><img class="device-screen" src="dist/videos/weltraum.jpg" alt="" decoding="async"><span class="island"></span></div>
                             </div>
                             <h3 class="app-back-title">Weltraum</h3>
                             <p class="app-desc" data-i18n="wt.desc">Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center.</p>
@@ -1219,7 +1310,7 @@
                         <div class="app-card-front">
                             <span class="app-act" aria-hidden="true">II</span>
                             <div class="app-card-visual">
-                                <img src="dist/images/Random%20Drop.png" alt="Random Drop randomizer app" class="app-img" decoding="async">
+                                <div class="device phone"><video class="device-screen" src="dist/videos/random.mp4" poster="dist/videos/random.jpg" muted loop playsinline preload="none" aria-label="Random Drop gameplay"></video><span class="island"></span></div>
                             </div>
                             <span class="app-label" data-i18n="rd.label">Arcade · Game</span>
                             <h3 class="app-title">Random Drop</h3>
@@ -1230,7 +1321,7 @@
                         </div>
                         <div class="app-card-back">
                             <div class="app-back-visual">
-                                <img src="dist/images/Random%20Drop.png" alt="Random Drop arcade game" class="app-back-img" decoding="async">
+                                <div class="device phone"><img class="device-screen" src="dist/videos/random.jpg" alt="" decoding="async"><span class="island"></span></div>
                             </div>
                             <h3 class="app-back-title">Random Drop</h3>
                             <p class="app-desc" data-i18n="rd.desc">A fast-paced arcade game where balls drop in out of nowhere. Pure reflex, pure fun — pick it up anytime, anywhere, and see how long you last.</p>
@@ -1252,7 +1343,7 @@
                         <div class="app-card-front">
                             <span class="app-act" aria-hidden="true">III</span>
                             <div class="app-card-visual">
-                                <img src="dist/images/fishy_watch.png" alt="Fishy Watch Apple Watch game" class="app-img" decoding="async">
+                                <div class="device watch"><span class="band top"></span><span class="band bottom"></span><img class="device-screen" src="dist/videos/fishy.jpg" alt="Fishy Watch gameplay" decoding="async"><span class="crown"></span></div>
                             </div>
                             <span class="app-label" data-i18n="fw.label">Apple Watch · Game</span>
                             <h3 class="app-title">Fishy Watch</h3>
@@ -1263,7 +1354,7 @@
                         </div>
                         <div class="app-card-back">
                             <div class="app-back-visual">
-                                <img src="dist/images/fishy_watch.png" alt="Fishy Watch Apple Watch game" class="app-back-img" decoding="async">
+                                <div class="device watch"><span class="band top"></span><span class="band bottom"></span><img class="device-screen" src="dist/videos/fishy.jpg" alt="" decoding="async"><span class="crown"></span></div>
                             </div>
                             <h3 class="app-back-title">Fishy Watch</h3>
                             <p class="app-desc" data-i18n="fw.desc">A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.</p>
@@ -1285,7 +1376,7 @@
                         <div class="app-card-front">
                             <span class="app-act" aria-hidden="true">IV</span>
                             <div class="app-card-visual">
-                                <img src="dist/images/mergeKey.gif" alt="MergeKey keyboard app preview" class="app-img" decoding="async">
+                                <div class="device phone"><video class="device-screen" src="dist/videos/merge.mp4" poster="dist/videos/merge.jpg" muted loop playsinline preload="none" aria-label="MergeKey typing demo"></video><span class="island"></span></div>
                             </div>
                             <span class="app-label" data-i18n="mk.label">Keyboard · Productivity</span>
                             <h3 class="app-title">MergeKey</h3>
@@ -1296,7 +1387,7 @@
                         </div>
                         <div class="app-card-back">
                             <div class="app-back-visual">
-                                <img src="dist/images/mergeKey.gif" alt="MergeKey keyboard app preview" class="app-back-img" decoding="async">
+                                <div class="device phone"><img class="device-screen" src="dist/videos/merge.jpg" alt="" decoding="async"><span class="island"></span></div>
                             </div>
                             <h3 class="app-back-title">MergeKey</h3>
                             <p class="app-desc" data-i18n="mk.desc">The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.</p>
@@ -1320,7 +1411,7 @@
                         <div class="app-card-front">
                             <span class="app-act" aria-hidden="true">V</span>
                             <div class="app-card-visual">
-                                <img src="dist/images/up_dino_up.webp" alt="Up Dino Up endless climbing game" class="app-img" decoding="async">
+                                <div class="device phone landscape"><video class="device-screen" src="dist/videos/dino.mp4" poster="dist/videos/dino.jpg" muted loop playsinline preload="none" aria-label="Up Dino Up gameplay"></video><span class="island"></span></div>
                             </div>
                             <span class="app-label" data-i18n="ud.label">Arcade · Platformer</span>
                             <h3 class="app-title">Up Dino Up</h3>
@@ -1336,7 +1427,7 @@
                         </div>
                         <div class="app-card-back">
                             <div class="app-back-visual">
-                                <img src="dist/images/up_dino_up.webp" alt="Up Dino Up endless climbing game" class="app-back-img" decoding="async">
+                                <div class="device phone landscape"><img class="device-screen" src="dist/videos/dino.jpg" alt="" decoding="async"><span class="island"></span></div>
                             </div>
                             <h3 class="app-back-title">Up Dino Up</h3>
                             <p class="app-desc" data-i18n="ud.desc">A little dino, an endless tower, and a novel take on jump-and-run controls: hold a side to run, swipe to jump, kick off the walls — fast, agile movement from two simple gestures. Every climb is freshly generated, from dark caves up into the open sky.</p>
@@ -1363,7 +1454,7 @@
                         <div class="app-card-front">
                             <span class="app-act" aria-hidden="true">VI</span>
                             <div class="app-card-visual">
-                                <img src="dist/images/skaty_watch.png" alt="Skaty Watch skateboarding game for Apple Watch" class="app-img" decoding="async">
+                                <div class="device watch"><span class="band top"></span><span class="band bottom"></span><video class="device-screen" src="dist/videos/skaty.mp4" poster="dist/videos/skaty.jpg" muted loop playsinline preload="none" aria-label="Skaty Watch gameplay"></video><span class="crown"></span></div>
                             </div>
                             <span class="app-label" data-i18n="sk.label">Apple Watch · Game</span>
                             <h3 class="app-title">Skaty Watch</h3>
@@ -1374,7 +1465,7 @@
                         </div>
                         <div class="app-card-back">
                             <div class="app-back-visual">
-                                <img src="dist/images/skaty_watch.png" alt="Skaty Watch skateboarding game for Apple Watch" class="app-back-img" decoding="async">
+                                <div class="device watch"><span class="band top"></span><span class="band bottom"></span><img class="device-screen" src="dist/videos/skaty.jpg" alt="" decoding="async"><span class="crown"></span></div>
                             </div>
                             <h3 class="app-back-title">Skaty Watch</h3>
                             <p class="app-desc" data-i18n="sk.desc">A flip-trick game on your wrist — no riding around, just you and the board. Crouch, flick to pop and spin, tap to catch — land flat for a Perfect. Satisfying flick controls with real skate timing, from ollies to 360 flips.</p>
@@ -1944,6 +2035,25 @@ if (trackWrap && track) {
             clone.onclick = function() { clone.classList.toggle('flipped'); };
             track.appendChild(clone);
         });
+    }
+
+    // Card videos play only while on screen: the clones make 25 of them, and
+    // decoding all at once would burn battery. Reduced motion keeps the posters.
+    // A rejected play() (e.g. iOS Low Power Mode) simply leaves the poster up.
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        var ioVideo = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) {
+                var v = e.target;
+                if (e.isIntersecting) {
+                    v.muted = true; // clones don't reliably keep the muted state autoplay needs
+                    var p = v.play();
+                    if (p && p.catch) p.catch(function() {});
+                } else {
+                    v.pause();
+                }
+            });
+        }, { threshold: 0.25 });
+        track.querySelectorAll('video.device-screen').forEach(function(v) { ioVideo.observe(v); });
     }
 
     // Staggered reveal for originals; clones fade in with the last original
