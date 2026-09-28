@@ -392,30 +392,24 @@
             position: relative; z-index: 1;
         }
         .app-perks { display: flex; flex-direction: column; gap: 4px; margin-bottom: var(--space-md); position: relative; z-index: 1; }
-        .app-privacy-link {
-            position: relative; z-index: 1;
-            font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
-            color: var(--text-secondary); margin-left: var(--space-sm);
-            transition: color 200ms var(--ease);
-        }
-        .app-privacy-link:hover { color: var(--orange); }
         .app-perk {
             font-family: var(--font-mono); font-size: 12px;
             color: var(--text-secondary); letter-spacing: 0.01em;
         }
         .app-perk::before { content: '— '; color: var(--text-disabled); }
-        .badge-link { position: relative; z-index: 1; display: inline-flex; align-self: flex-start; }
+        /* Store badges sit centred on the card, alone or in a row of several.
+           36px keeps an App Store + Google Play pair on one line on phones. */
+        .badge-link { position: relative; z-index: 1; display: inline-flex; align-self: center; }
         .badge-link img {
-            height: 40px; width: auto;
+            height: 36px; width: auto;
             transition: opacity 200ms var(--ease);
         }
-        /* Two store badges side by side — slightly smaller so both fit the card */
         .badge-row {
-            position: relative; z-index: 1;
-            display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+            position: relative; z-index: 1; align-self: stretch;
+            display: flex; flex-wrap: wrap; gap: 8px;
+            justify-content: center; align-items: center;
         }
         .badge-row .badge-link { align-self: auto; }
-        .badge-row .badge-link img { height: 34px; }
         .badge-link img:hover { opacity: 0.7; }
 
         /* ─── About ─────────────────────────────────────────────── */
@@ -789,6 +783,7 @@
             .app-desc { font-size: 13px; margin-bottom: var(--space-sm); }
             .app-perks { gap: 4px; margin-bottom: var(--space-md); }
             .app-perk { font-size: 11px; }
+            .badge-link img { height: 34px; }
         }
 
         /* ─── Dot-matrix section dividers ───────────────────────── */
@@ -1266,7 +1261,6 @@
                                 <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link" onclick="event.stopPropagation()">
                                     <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store">
                                 </a>
-                                <a href="mergekey-privacy.html" class="app-privacy-link" onclick="event.stopPropagation()" data-i18n="mk.privacy">Privacy policy →</a>
                             </div>
                         </div>
                     </div>
@@ -1543,7 +1537,6 @@ const T = {
         'mk.label':'KEYBOARD · PRODUCTIVITY',
         'mk.desc':'The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.',
         'mk.perk1':'Dynamic, adaptive word learning', 'mk.perk2':'Reduces typos in real time', 'mk.perk3':'Fully customizable personal dictionary',
-        'mk.privacy':'Privacy policy →',
         'privacy.mk':'MergeKey has its own, more detailed policy: <a href="mergekey-privacy.html">MergeKey privacy policy</a>.',
 
         'fw.label':'APPLE WATCH · GAME',
@@ -1648,7 +1641,6 @@ const T = {
         'mk.label':'TASTATUR \u00b7 PRODUKTIVIT\u00c4T',
         'mk.desc':'Die erste dynamische Tastatur, die dir hilft, sauberer und mit weniger Fehlern zu tippen. Bring MergeKey neue W\u00f6rter bei, und sie lernt dazu \u2013 jeder Tastendruck wird dadurch smarter.',
         'mk.perk1':'Dynamisches, adaptives Wortlernen', 'mk.perk2':'Reduziert Tippfehler in Echtzeit', 'mk.perk3':'Vollst\u00e4ndig anpassbares pers\u00f6nliches W\u00f6rterbuch',
-        'mk.privacy':'Datenschutzerkl\u00e4rung \u2192',
         'privacy.mk':'MergeKey hat eine eigene, ausf\u00fchrlichere Erkl\u00e4rung: <a href="mergekey-privacy.html">Datenschutzerkl\u00e4rung von MergeKey</a>.',
 
         'fw.label':'APPLE WATCH \u00b7 SPIEL',
