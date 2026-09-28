@@ -301,7 +301,10 @@
         }
         .app-card-wrapper.visible { opacity: 1; transition: opacity 300ms var(--ease); }
 
+        /* Both faces share one grid cell, so the card is as tall as its taller
+           face — a long back never clips, and the track keeps cards uniform. */
         .app-card-inner {
+            display: grid;
             position: relative; width: 100%; height: 100%;
             transition: transform 0.6s var(--ease);
             transform-style: preserve-3d;
@@ -311,6 +314,7 @@
 
         .app-card-front,
         .app-card-back {
+            grid-area: 1 / 1;
             position: relative;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
@@ -328,13 +332,10 @@
         .app-card-front:hover { border-color: var(--border-visible); }
 
         .app-card-back {
-            position: absolute; inset: 0;
             transform: rotateY(180deg) translateZ(1px);
             -webkit-transform: rotateY(180deg) translateZ(1px);
-            overflow-y: auto;
-            scrollbar-width: none;
+            padding-bottom: var(--space-lg);
         }
-        .app-card-back::-webkit-scrollbar { display: none; }
         .app-card-back:hover { border-color: var(--border-visible); }
 
         /* ─── Front face ────────────────────────────────────────── */
@@ -373,11 +374,11 @@
         /* ─── Back face ─────────────────────────────────────────── */
         .app-back-visual {
             display: flex; justify-content: center; align-items: center;
-            height: 100px; margin-bottom: var(--space-md);
+            height: 68px; margin-bottom: 12px;
             position: relative; z-index: 1;
         }
         .app-back-img {
-            max-height: 90px; max-width: 100%; width: auto; border-radius: 10px;
+            max-height: 64px; max-width: 100%; width: auto; border-radius: 10px;
         }
         .app-back-title {
             font-family: var(--font-display); font-size: 20px; font-weight: 400;
@@ -386,11 +387,18 @@
             position: relative; z-index: 1;
         }
         .app-desc {
-            font-size: 14px; color: var(--text-secondary); line-height: 1.5;
-            margin-bottom: var(--space-md); flex: 1;
+            font-size: 13px; color: var(--text-secondary); line-height: 1.5;
+            margin-bottom: 12px; flex: 1;
             position: relative; z-index: 1;
         }
-        .app-perks { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--space-lg); position: relative; z-index: 1; }
+        .app-perks { display: flex; flex-direction: column; gap: 4px; margin-bottom: var(--space-md); position: relative; z-index: 1; }
+        .app-privacy-link {
+            position: relative; z-index: 1;
+            font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
+            color: var(--text-secondary); margin-left: var(--space-sm);
+            transition: color 200ms var(--ease);
+        }
+        .app-privacy-link:hover { color: var(--orange); }
         .app-perk {
             font-family: var(--font-mono); font-size: 12px;
             color: var(--text-secondary); letter-spacing: 0.01em;
@@ -555,6 +563,8 @@
             margin-bottom: var(--space-sm);
         }
         .privacy-box p:last-child { margin-bottom: 0; }
+        .privacy-box a { color: var(--interactive); transition: color 200ms var(--ease); }
+        .privacy-box a:hover { color: var(--text-display); }
 
         /* ─── Footer ────────────────────────────────────────────── */
         .site-footer {
@@ -1252,9 +1262,12 @@
                                 <span class="app-perk" data-i18n="mk.perk2">Reduces typos in real time</span>
                                 <span class="app-perk" data-i18n="mk.perk3">Fully customizable personal dictionary</span>
                             </div>
-                            <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store">
-                            </a>
+                            <div class="badge-row">
+                                <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link" onclick="event.stopPropagation()">
+                                    <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store">
+                                </a>
+                                <a href="mergekey-privacy.html" class="app-privacy-link" onclick="event.stopPropagation()" data-i18n="mk.privacy">Privacy policy →</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1424,6 +1437,7 @@
             <p data-i18n="privacy.p2">Andrei Achziger does not take responsibility for data processed by third-party platforms such as Google, as I have no access to or insight into their data collection and processing practices. Any data collection via those platforms is primarily used to serve relevant ads.</p>
             <p data-i18n="privacy.p4">My apps are suitable for children. Since my apps collect no personal information at all, no data from children or any other users is collected, stored, or shared. Game progress and settings (such as high scores) are saved only locally on your device and are removed when the app is uninstalled.</p>
             <p data-i18n="privacy.p5">Health data: Fishy Watch can read your heart rate to power in-game features such as the fish tank experience. All heart rate measurements are processed exclusively on your device and never leave it — they are not stored permanently, transmitted, or shared with me or any third party.</p>
+            <p data-i18n-html="privacy.mk">MergeKey has its own, more detailed policy: <a href="mergekey-privacy.html">MergeKey privacy policy</a>.</p>
             <p data-i18n="privacy.p3">This policy may be updated when necessary — please check this page periodically for changes. Updates take effect immediately upon posting. — Andrei Achziger</p>
         </div>
     </div>
@@ -1529,6 +1543,8 @@ const T = {
         'mk.label':'KEYBOARD · PRODUCTIVITY',
         'mk.desc':'The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.',
         'mk.perk1':'Dynamic, adaptive word learning', 'mk.perk2':'Reduces typos in real time', 'mk.perk3':'Fully customizable personal dictionary',
+        'mk.privacy':'Privacy policy →',
+        'privacy.mk':'MergeKey has its own, more detailed policy: <a href="mergekey-privacy.html">MergeKey privacy policy</a>.',
 
         'fw.label':'APPLE WATCH · GAME',
         'fw.desc':'A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.',
@@ -1632,6 +1648,8 @@ const T = {
         'mk.label':'TASTATUR \u00b7 PRODUKTIVIT\u00c4T',
         'mk.desc':'Die erste dynamische Tastatur, die dir hilft, sauberer und mit weniger Fehlern zu tippen. Bring MergeKey neue W\u00f6rter bei, und sie lernt dazu \u2013 jeder Tastendruck wird dadurch smarter.',
         'mk.perk1':'Dynamisches, adaptives Wortlernen', 'mk.perk2':'Reduziert Tippfehler in Echtzeit', 'mk.perk3':'Vollst\u00e4ndig anpassbares pers\u00f6nliches W\u00f6rterbuch',
+        'mk.privacy':'Datenschutzerkl\u00e4rung \u2192',
+        'privacy.mk':'MergeKey hat eine eigene, ausf\u00fchrlichere Erkl\u00e4rung: <a href="mergekey-privacy.html">Datenschutzerkl\u00e4rung von MergeKey</a>.',
 
         'fw.label':'APPLE WATCH \u00b7 SPIEL',
         'fw.desc':'Ein Angelspiel f\u00fcr dein Handgelenk. Fange Fische, f\u00fcttere sie und spiele mit ihnen \u2013 direkt von deiner Apple Watch. Viele Arten zu entdecken; der Ozean ist nur einen Tipp entfernt.',

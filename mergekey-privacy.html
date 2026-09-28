@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MergeKey — Privacy Policy · Andrei Achziger</title>
+    <meta name="description" content="Privacy policy of MergeKey, the keyboard that hides the keys you don't need. Nothing you type leaves your device.">
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500&family=Space+Mono:wght@400;700&family=Doto&display=swap" rel="stylesheet">
+    <script>
+        // The site's saved theme (index.html, 'aach_theme'), else the system's.
+        (function () {
+            var t = localStorage.getItem('aach_theme');
+            if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+    <style>
+        /* Tokens and card styles as on index.html (Impressum cards). */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --black: #000000; --surface: #111111; --border: #222222; --border-visible: #333333;
+            --text-disabled: #666666; --text-secondary: #999999; --text-primary: #E8E8E8; --text-display: #FFFFFF;
+            --orange: #FF6B00; --interactive: #5B9BF6;
+            --space-xs: 4px; --space-sm: 8px; --space-md: 16px; --space-lg: 24px; --space-xl: 32px; --space-2xl: 48px; --space-3xl: 64px;
+            --font-body: 'Space Grotesk', 'DM Sans', system-ui, sans-serif;
+            --font-mono: 'Space Mono', 'JetBrains Mono', 'SF Mono', monospace;
+            --font-display: 'Doto', 'Space Mono', monospace;
+            --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        [data-theme="light"] {
+            --black: #e8dcc6; --surface: #f0e4d0; --border: #cfc0a6; --border-visible: #bdb094;
+            --text-disabled: #8e8474; --text-secondary: #524a3e; --text-primary: #18160e; --text-display: #080602;
+            --interactive: #007AFF;
+        }
+        html { background: var(--black); }
+        body {
+            background: var(--black); color: var(--text-primary);
+            font-family: var(--font-body); font-size: 15px; line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        .wrap { max-width: 820px; margin: 0 auto; padding: var(--space-3xl) var(--space-lg); }
+        .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-2xl); }
+        .back, .lang {
+            font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--text-secondary); text-decoration: none; background: none; cursor: pointer;
+            border: 1px solid var(--border-visible); border-radius: 999px; padding: 6px 14px;
+            transition: color 200ms var(--ease), border-color 200ms var(--ease);
+        }
+        .back:hover, .lang:hover { color: var(--text-display); border-color: var(--text-display); }
+        .page-eyebrow {
+            font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--orange); margin-bottom: var(--space-sm);
+        }
+        .page-title {
+            font-family: var(--font-display); font-size: 36px; font-weight: 400; letter-spacing: -0.02em;
+            color: var(--text-display); margin-bottom: var(--space-sm);
+        }
+        .page-meta { font-family: var(--font-mono); font-size: 11px; color: var(--text-disabled); margin-bottom: var(--space-2xl); }
+        .lead { font-size: 18px; color: var(--text-display); margin-bottom: var(--space-xl); }
+        .card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+            padding: var(--space-xl); margin-bottom: var(--space-md);
+            transition: border-color 200ms var(--ease);
+        }
+        .card:hover { border-color: var(--border-visible); }
+        .card h2 {
+            font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--orange); margin-bottom: var(--space-md);
+        }
+        .card p + p, .card p + ul, .card ul + p { margin-top: var(--space-sm); }
+        .card ul { padding-left: 20px; }
+        .card li + li { margin-top: 6px; }
+        strong { color: var(--text-display); font-weight: 500; }
+        a { color: var(--interactive); text-decoration: none; }
+        a:hover { color: var(--text-display); }
+        @media (max-width: 600px) { .card { padding: var(--space-lg) var(--space-md); } .page-title { font-size: 28px; } }
+    </style>
+</head>
+<body>
+<main class="wrap">
+    <div class="topbar">
+        <a class="back" href="index.html#privacy" data-i18n="back">← Back</a>
+        <button class="lang" id="lang-btn" aria-label="Language">🇩🇪</button>
+    </div>
+
+    <div class="page-eyebrow" data-i18n="eyebrow">Legal · MergeKey</div>
+    <h1 class="page-title" data-i18n="title">Privacy Policy</h1>
+    <p class="page-meta" data-i18n="meta">Effective 28 September 2026 · Andrei Achziger</p>
+    <p class="lead" data-i18n-html="lead">MergeKey is a keyboard app for Android and iOS. The short version: <strong>nothing you type leaves your device.</strong></p>
+
+    <section class="card">
+        <h2 data-i18n="not.h">What MergeKey does not do</h2>
+        <ul data-i18n-html="not.body">
+            <li>MergeKey does <strong>not collect, transmit, sell or share</strong> anything you type.</li>
+            <li>The Android app has <strong>no internet permission</strong>. It cannot connect to the internet or send data anywhere.</li>
+            <li>MergeKey contains <strong>no ads, no analytics and no tracking</strong>, and no third-party code that collects data.</li>
+        </ul>
+    </section>
+
+    <section class="card">
+        <h2 data-i18n="warn.h">Why Android shows a warning</h2>
+        <p data-i18n="warn.p1">When you turn on any third-party keyboard, Android shows a notice that the keyboard “may be able to collect all the text you type”. Android shows this for every keyboard, because a keyboard technically sees your typing.</p>
+        <p data-i18n="warn.p2">MergeKey only uses what you type on your device, while you type: to hide the keys that can't continue your word, to suggest words and to correct typos. It stores none of your text.</p>
+    </section>
+
+    <section class="card">
+        <h2 data-i18n="stored.h">What is stored on your device</h2>
+        <p data-i18n="stored.p1">MergeKey keeps a few things locally, in the app's own private storage, so it works the way you set it up:</p>
+        <ul data-i18n-html="stored.list">
+            <li><strong>Settings</strong> — language, style, colours and the other options you choose.</li>
+            <li><strong>Learned words</strong> — words you teach MergeKey (swipe up, type, space). You can view and delete them in the app under Dictionary.</li>
+            <li><strong>Typing statistics</strong> — counts such as words typed, suggestions used and how often each letter key was tapped (the key heatmap). Not the text itself. You can reset the heatmap in the app.</li>
+            <li><strong>Emoji use</strong> — how often you picked each emoji, to show your favourites first.</li>
+        </ul>
+        <p data-i18n="stored.p2">In password fields MergeKey records no statistics, and in password, email, username and web-address fields it learns no words. All of this is removed when you uninstall MergeKey.</p>
+    </section>
+
+    <section class="card">
+        <h2 data-i18n="backup.h">Device backup</h2>
+        <p data-i18n="backup.p">On Android, the system's own backup may include MergeKey's settings and learned words in your Google account backup, if you have device backup turned on. This is handled by Android and Google under your account's settings, not by MergeKey; MergeKey itself never sends anything.</p>
+    </section>
+
+    <section class="card">
+        <h2 data-i18n="tips.h">Purchases (iOS)</h2>
+        <p data-i18n="tips.p">On iOS, optional tips are handled entirely by Apple's App Store. MergeKey does not receive any payment details.</p>
+    </section>
+
+    <section class="card">
+        <h2 data-i18n="kids.h">Children</h2>
+        <p data-i18n="kids.p">MergeKey collects no personal information from anyone, including children.</p>
+    </section>
+
+    <section class="card">
+        <h2 data-i18n="contact.h">Changes and contact</h2>
+        <p data-i18n="contact.p1">If this policy changes, the new version is posted on this page with a new effective date.</p>
+        <p data-i18n-html="contact.p2">Questions: Andrei Achziger — <a href="mailto:andrei.zerodeathgames@gmail.com">andrei.zerodeathgames@gmail.com</a></p>
+    </section>
+</main>
+<script>
+// English is in the page; German below. The choice is the site's ('aach_lang').
+var DE = {
+    'back': '← Zurück',
+    'eyebrow': 'Rechtliches · MergeKey',
+    'title': 'Datenschutzerklärung',
+    'meta': 'Gültig ab 28. September 2026 · Andrei Achziger',
+    'lead': 'MergeKey ist eine Tastatur-App für Android und iOS. Kurz gesagt: <strong>Nichts, was du tippst, verlässt dein Gerät.</strong>',
+    'not.h': 'Was MergeKey nicht tut',
+    'not.body': '<li>MergeKey <strong>sammelt, überträgt, verkauft und teilt nichts</strong> von dem, was du tippst.</li>' +
+        '<li>Die Android-App hat <strong>keine Internetberechtigung</strong>. Sie kann keine Verbindung ins Internet aufbauen und keine Daten senden.</li>' +
+        '<li>MergeKey enthält <strong>keine Werbung, keine Analyse und kein Tracking</strong> und keinen Fremdcode, der Daten sammelt.</li>',
+    'warn.h': 'Warum Android einen Hinweis zeigt',
+    'warn.p1': 'Wenn du eine Tastatur eines Drittanbieters aktivierst, zeigt Android den Hinweis, dass sie „möglicherweise alle eingegebenen Texte erfassen“ kann. Android zeigt das bei jeder Tastatur, weil eine Tastatur technisch sieht, was du tippst.',
+    'warn.p2': 'MergeKey nutzt deine Eingaben nur auf deinem Gerät und nur während du tippst: um die Tasten auszublenden, die dein Wort nicht fortsetzen können, um Wörter vorzuschlagen und Tippfehler zu korrigieren. Es speichert keinen deiner Texte.',
+    'stored.h': 'Was auf deinem Gerät gespeichert wird',
+    'stored.p1': 'MergeKey speichert ein paar Dinge lokal im eigenen, privaten Speicher der App, damit es so funktioniert, wie du es eingestellt hast:',
+    'stored.list': '<li><strong>Einstellungen</strong> — Sprache, Stil, Farben und die anderen Optionen, die du wählst.</li>' +
+        '<li><strong>Gelernte Wörter</strong> — Wörter, die du MergeKey beibringst (nach oben wischen, tippen, Leertaste). Du kannst sie in der App unter Wörterbuch ansehen und löschen.</li>' +
+        '<li><strong>Tipp-Statistik</strong> — Zählwerte wie getippte Wörter, genutzte Vorschläge und wie oft jede Buchstabentaste getippt wurde (die Tasten-Heatmap). Nicht der Text selbst. Die Heatmap kannst du in der App zurücksetzen.</li>' +
+        '<li><strong>Emoji-Nutzung</strong> — wie oft du welches Emoji gewählt hast, um deine Lieblinge zuerst zu zeigen.</li>',
+    'stored.p2': 'In Passwortfeldern erfasst MergeKey keine Statistik, und in Passwort-, E-Mail-, Benutzernamen- und Webadressfeldern lernt es keine Wörter. All das wird entfernt, wenn du MergeKey deinstallierst.',
+    'backup.h': 'Geräte-Backup',
+    'backup.p': 'Unter Android kann das systemeigene Backup die Einstellungen und gelernten Wörter von MergeKey in deinem Google-Konto-Backup enthalten, wenn du die Gerätesicherung eingeschaltet hast. Das übernehmen Android und Google nach den Einstellungen deines Kontos, nicht MergeKey; MergeKey selbst sendet nie etwas.',
+    'tips.h': 'Käufe (iOS)',
+    'tips.p': 'Unter iOS werden optionale Trinkgelder vollständig über Apples App Store abgewickelt. MergeKey erhält keine Zahlungsdaten.',
+    'kids.h': 'Kinder',
+    'kids.p': 'MergeKey erhebt von niemandem personenbezogene Daten, auch nicht von Kindern.',
+    'contact.h': 'Änderungen und Kontakt',
+    'contact.p1': 'Wenn sich diese Erklärung ändert, wird die neue Fassung auf dieser Seite mit neuem Datum veröffentlicht.',
+    'contact.p2': 'Fragen: Andrei Achziger — <a href="mailto:andrei.zerodeathgames@gmail.com">andrei.zerodeathgames@gmail.com</a>'
+};
+var EN = {};
+document.querySelectorAll('[data-i18n]').forEach(function (el) { EN[el.dataset.i18n] = el.textContent; });
+document.querySelectorAll('[data-i18n-html]').forEach(function (el) { EN[el.dataset.i18nHtml] = el.innerHTML; });
+
+function applyLang(lang) {
+    var t = lang === 'de' ? DE : EN;
+    document.querySelectorAll('[data-i18n]').forEach(function (el) { el.textContent = t[el.dataset.i18n]; });
+    document.querySelectorAll('[data-i18n-html]').forEach(function (el) { el.innerHTML = t[el.dataset.i18nHtml]; });
+    document.documentElement.lang = lang;
+    document.getElementById('lang-btn').textContent = lang === 'de' ? '🇺🇸' : '🇩🇪';
+    document.title = (lang === 'de' ? 'MergeKey — Datenschutzerklärung' : 'MergeKey — Privacy Policy') + ' · Andrei Achziger';
+}
+var lang = localStorage.getItem('aach_lang') ||
+    ((navigator.language || '').toLowerCase().startsWith('de') ? 'de' : 'en');
+applyLang(lang);
+document.getElementById('lang-btn').addEventListener('click', function () {
+    var next = document.documentElement.lang === 'de' ? 'en' : 'de';
+    localStorage.setItem('aach_lang', next);
+    applyLang(next);
+});
+</script>
+</body>
+</html>
