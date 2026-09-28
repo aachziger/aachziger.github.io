@@ -540,6 +540,36 @@
             min-height: 44px;
         }
         .email-btn:hover { opacity: 0.85; }
+        /* Pixel rocket that lifts off out of the button on hover / tap */
+        .rocket {
+            width: 11px; height: 16px; overflow: visible;
+            fill: currentColor; shape-rendering: crispEdges;
+        }
+        .rocket .porthole, .rocket .flame { fill: var(--orange); }
+        .rocket .flame { opacity: 0; }
+        @media (prefers-reduced-motion: no-preference) {
+            .email-btn:hover .rocket, .email-btn.launching .rocket {
+                animation: rocket-launch 1.4s var(--ease) both;
+            }
+            .email-btn:hover .rocket .flame, .email-btn.launching .rocket .flame {
+                animation: rocket-flame 1.4s linear both;
+            }
+        }
+        @keyframes rocket-launch {
+            0%   { transform: none; opacity: 1; }
+            8%   { transform: translateX(-1px); }
+            14%  { transform: translateX(1px); }
+            20%  { transform: none; }
+            58%  { transform: translateY(-56px); opacity: 0; }
+            59%  { transform: translateY(14px); opacity: 0; }
+            100% { transform: none; opacity: 1; }
+        }
+        @keyframes rocket-flame {
+            0%, 6% { opacity: 0; }
+            10%, 26%, 42% { opacity: 1; }
+            18%, 34%, 50% { opacity: 0.45; }
+            57%, 100% { opacity: 0; }
+        }
 
         /* ─── Privacy ───────────────────────────────────────────── */
         .privacy { position: relative; z-index: 1; padding: 0 0 var(--space-3xl); }
@@ -835,7 +865,19 @@
         .chapter-rail a.active .rail-dot  { background: var(--orange); transform: scale(1.35); }
         .chapter-rail a.active .rail-label { color: var(--orange); opacity: 1; }
         .chapter-rail a:hover .rail-label  { opacity: 1; }
-        @media (max-width: 1279px) { .chapter-rail { display: none; } }
+        /* Altitude readout under the chapter rail — climbs to orbit as you scroll */
+        .alt-hud {
+            position: fixed; left: 20px; bottom: 24px; z-index: 90;
+            display: flex; flex-direction: column; gap: 2px;
+            font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em;
+            color: var(--text-disabled); pointer-events: none;
+        }
+        .alt-val {
+            font-family: var(--font-display); font-size: 20px; letter-spacing: 0;
+            line-height: 1; color: var(--orange);
+        }
+        .alt-status { margin-top: 4px; color: var(--text-secondary); }
+        @media (max-width: 1279px) { .chapter-rail, .alt-hud { display: none; } }
 
         /* ─── Hero: prologue typewriter + scroll cue ─────────────── */
         .hero-type {
@@ -912,6 +954,12 @@
 
 <!-- ═══════════ STORY CHROME ═════════════════════════════════════ -->
 <div class="story-progress" id="story-progress" aria-hidden="true"></div>
+<div class="alt-hud" aria-hidden="true">
+    <span data-i18n="hud.alt">ALT</span>
+    <span class="alt-val" id="alt-val">000</span>
+    <span>KM</span>
+    <span class="alt-status" id="alt-status" data-i18n="hud.pad">ON PAD</span>
+</div>
 <nav class="chapter-rail" id="chapter-rail" aria-label="Chapters">
     <a href="#prologue" class="active" aria-label="Prologue"><span class="rail-dot"></span><span class="rail-label">P</span></a>
     <a href="#about"    aria-label="Chapter 1"><span class="rail-dot"></span><span class="rail-label">01</span></a>
@@ -955,7 +1003,7 @@
     <div class="wrap">
         <div class="hero-inner">
             <div class="hero-text">
-                <div class="eyebrow" data-i18n="hero.eyebrow">Prologue</div>
+                <div class="eyebrow" data-i18n="hero.eyebrow">T−00 · Prologue</div>
                 <h1 class="hero-title">
                     <span data-i18n="hero.greeting">Hello, I'm</span><br>Andrei
                 </h1>
@@ -985,7 +1033,7 @@
     <div class="wrap">
         <div class="about-grid">
             <div>
-                <div class="eyebrow" data-i18n="about.eyebrow">Chapter 01 · The Question</div>
+                <div class="eyebrow" data-i18n="about.eyebrow">T+01 · The Question</div>
                 <h2 class="sh" data-i18n-html="about.heading">It began with a <span class="accent">question</span></h2>
                 <p class="sb" data-i18n="about.desc">"How does a mind work?" I chased that question into Cognitive Science — computer science, AI, psychology, philosophy, neuroscience. I came back with fewer answers and much better obsessions:</p>
                 <div class="tags">
@@ -1029,7 +1077,7 @@
 <section class="section" id="tech">
     <div class="wrap">
         <div class="tech-head section-head">
-            <div class="eyebrow" data-i18n="tech.eyebrow">Chapter 02 · The Craft</div>
+            <div class="eyebrow" data-i18n="tech.eyebrow">T+02 · The Craft</div>
             <h2 class="sh" data-i18n-html="tech.heading">Tools, collected <span class="accent">one problem at a time</span></h2>
             <p class="sb"        data-i18n="tech.desc">Startups, industry floors, long indie nights. Every project left a tool behind — from native iOS to cloud infrastructure.</p>
         </div>
@@ -1125,7 +1173,7 @@
     <div class="wrap">
 
         <div class="apps-head section-head">
-            <div class="eyebrow" data-i18n="apps.eyebrow">Chapter 03 · The Artifacts</div>
+            <div class="eyebrow" data-i18n="apps.eyebrow">T+03 · The Artifacts</div>
             <h2 class="sh" data-i18n-html="apps.heading">What <span class="accent">escaped</span> the lab</h2>
             <p class="sb"       data-i18n="apps.desc">Each app began as one of those questions — about play, reflexes, attention, typing, and lately climbing and skating. In order of appearance:</p>
         </div>
@@ -1365,7 +1413,7 @@
 <section class="section" id="services">
     <div class="wrap">
         <div class="services-head section-head">
-            <div class="eyebrow" data-i18n="srv.eyebrow">Chapter 04 · Your Story</div>
+            <div class="eyebrow" data-i18n="srv.eyebrow">T+04 · Your Story</div>
             <h2 class="sh" data-i18n-html="srv.heading">What I can <span class="accent">build</span> with you</h2>
             <p class="sb"        data-i18n="srv.desc">Years across startups, industry, and indie development — here's where I add real value to your story.</p>
         </div>
@@ -1412,11 +1460,18 @@
 <section class="section" id="contact">
     <div class="wrap">
         <div class="contact-box">
-            <div class="eyebrow" data-i18n="contact.eyebrow">Epilogue</div>
+            <div class="eyebrow" data-i18n="contact.eyebrow">T+05 · Epilogue</div>
             <h2 class="contact-title" data-i18n-html="contact.title">Every ending is a <span class="accent">beginning</span></h2>
             <p  class="contact-sub"   data-i18n="contact.sub">Have an idea for the next chapter — or just want to say hi? I'm happy to hear from you.</p>
-            <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website" class="email-btn" data-i18n="contact.btn">
-                Mail me
+            <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website" class="email-btn" id="email-btn">
+                <svg class="rocket" viewBox="0 0 9 13" aria-hidden="true">
+                    <rect x="4" y="0" width="1" height="1"/><rect x="3" y="1" width="3" height="8"/>
+                    <rect x="2" y="6" width="1" height="3"/><rect x="6" y="6" width="1" height="3"/>
+                    <rect x="1" y="8" width="1" height="1"/><rect x="7" y="8" width="1" height="1"/>
+                    <rect class="porthole" x="4" y="3" width="1" height="1"/>
+                    <g class="flame"><rect x="3" y="9" width="3" height="1"/><rect x="4" y="10" width="1" height="2"/></g>
+                </svg>
+                <span data-i18n="contact.btn">Mail me</span>
             </a>
         </div>
     </div>
@@ -1514,7 +1569,7 @@ const T = {
         'nav.apps':'APPS', 'nav.about':'ABOUT', 'nav.skills':'SKILLS',
         'nav.services':'SERVICES', 'nav.contact':'CONTACT',
 
-        'hero.eyebrow':'PROLOGUE',
+        'hero.eyebrow':'T−00 · PROLOGUE',
         'hero.greeting':"Hello, I'm",
         'hero.sub':'This is the story of a curious mind that learned to code — and started shipping. Mobile apps, games, and tools that are useful, playful, and a little unexpected.',
         'hero.type1':'I studied how minds work.',
@@ -1531,7 +1586,7 @@ const T = {
         'int3.l1':'Shipping my own apps taught me the whole journey.',
         'int3.l2':'Now I walk it with others.',
 
-        'apps.eyebrow':'CHAPTER 03 · THE ARTIFACTS', 'apps.heading':'What <span class="accent">escaped</span> the lab',
+        'apps.eyebrow':'T+03 · THE ARTIFACTS', 'apps.heading':'What <span class="accent">escaped</span> the lab',
         'apps.desc':'Each app began as one of those questions — about play, reflexes, attention, typing, and lately climbing and skating. In order of appearance:',
 
         'mk.label':'KEYBOARD · PRODUCTIVITY',
@@ -1559,7 +1614,7 @@ const T = {
         'sk.desc':'A flip-trick game on your wrist — no riding around, just you and the board. Crouch, flick to pop and spin, tap to catch — land flat for a Perfect. Satisfying flick controls with real skate timing, from ollies to 360 flips.',
         'sk.perk1':'Pure flip tricks — flick, spin, catch', 'sk.perk2':'Ollies to 360 flips, regular or goofy', 'sk.perk3':'Four modes, haptics, no ads',
 
-        'about.eyebrow':'CHAPTER 01 \u00b7 THE QUESTION', 'about.heading':'It began with a <span class="accent">question</span>',
+        'about.eyebrow':'T+01 \u00b7 THE QUESTION', 'about.heading':'It began with a <span class="accent">question</span>',
         'about.desc':'\u201cHow does a mind work?\u201d I chased that question into Cognitive Science \u2014 computer science, AI, psychology, philosophy, neuroscience. I came back with fewer answers and much better obsessions:',
 
         'tag.philosophy':'PHILOSOPHY', 'tag.neuro':'NEUROSCIENCE', 'tag.psych':'PSYCHOLOGY', 'tag.dataviz':'DATA VIZ',
@@ -1568,14 +1623,14 @@ const T = {
         'tag.graphs':'GRAPH THEORY', 'tag.maths':'MATHEMATICS',        'tag.space':'SPACE', 'tag.games':'VIDEO GAMES',
 
 
-        'tech.eyebrow':'CHAPTER 02 · THE CRAFT', 'tech.heading':'Tools, collected <span class="accent">one problem at a time</span>',
+        'tech.eyebrow':'T+02 · THE CRAFT', 'tech.heading':'Tools, collected <span class="accent">one problem at a time</span>',
         'tech.desc':'Startups, industry floors, long indie nights. Every project left a tool behind — from native iOS to cloud infrastructure.',
         'tech.lbl.ios':'IOS & APPLE PLATFORMS', 'tech.lbl.cross':'MOBILE & CROSS-PLATFORM',
         'tech.lbl.web':'WEB & BACKEND', 'tech.lbl.cloud':'CLOUD & DEVOPS',
         'tech.lbl.hw':'CONNECTIVITY & HARDWARE', 'tech.lbl.ai':'AI & MACHINE LEARNING',
         'tech.lbl.game':'GAME DEV & 3D', 'tech.lbl.design':'DESIGN & TOOLS',
 
-        'srv.eyebrow':'CHAPTER 04 · YOUR STORY', 'srv.heading':'What I can <span class="accent">build</span> with you',
+        'srv.eyebrow':'T+04 · YOUR STORY', 'srv.heading':'What I can <span class="accent">build</span> with you',
         'srv.desc':"Years across startups, industry, and indie development — here's where I add real value to your story.",
         'srv1.title':'Mobile App Development',
         'srv1.desc':'Native iOS in Swift/SwiftUI or cross-platform with React Native and Flutter. From initial concept through App Store submission — including WatchKit, CoreBluetooth, and hardware integrations.',
@@ -1590,10 +1645,11 @@ const T = {
         'srv6.title':'Tech Consulting',
         'srv6.desc':'Interdisciplinary background in Cognitive Science, AI, and engineering — great for architecture reviews, stack decisions, MVP scoping, code quality, and turning complex ideas into working prototypes fast.',
 
-        'contact.eyebrow':'EPILOGUE',
+        'contact.eyebrow':'T+05 · EPILOGUE',
         'contact.title':'Every ending is a <span class="accent">beginning</span>',
         'contact.sub':"Have an idea for the next chapter — or just want to say hi? I'm happy to hear from you.",
         'contact.btn':'MAIL ME',
+        'hud.alt':'ALT', 'hud.pad':'ON PAD', 'hud.ascent':'ASCENT', 'hud.orbit':'ORBIT',
 
         'privacy.heading':'Privacy Policy',
         'privacy.p1':'Apps provided by Andrei Achziger are intended for use as is. This page informs visitors about my policies regarding the collection, use, and disclosure of personal information. If you choose to use my services, your personal information will not be stored, distributed, or analyzed by me.',
@@ -1618,7 +1674,7 @@ const T = {
         'nav.apps':'APPS', 'nav.about':'\u00dcBER MICH', 'nav.skills':'F\u00c4HIGKEITEN',
         'nav.services':'LEISTUNGEN', 'nav.contact':'KONTAKT',
 
-        'hero.eyebrow':'PROLOG',
+        'hero.eyebrow':'T−00 · PROLOG',
         'hero.greeting':'Hallo, ich bin',
         'hero.sub':'Das ist die Geschichte eines neugierigen Kopfes, der programmieren lernte \u2013 und anfing zu ver\u00f6ffentlichen. Mobile Apps, Spiele und Tools: n\u00fctzlich, verspielt und manchmal \u00fcberraschend.',
         'hero.type1':'Ich habe studiert, wie Denken funktioniert.',
@@ -1635,7 +1691,7 @@ const T = {
         'int3.l1':'Eigene Apps haben mich die ganze Reise gelehrt.',
         'int3.l2':'Jetzt gehe ich sie mit anderen.',
 
-        'apps.eyebrow':'KAPITEL 03 \u00b7 DIE ARTEFAKTE', 'apps.heading':'Was dem Labor <span class="accent">entkommen</span> ist',
+        'apps.eyebrow':'T+03 \u00b7 DIE ARTEFAKTE', 'apps.heading':'Was dem Labor <span class="accent">entkommen</span> ist',
         'apps.desc':'Jede App begann als eine dieser Fragen \u2013 \u00fcber Spiel, Reflexe, Aufmerksamkeit, Tippen \u2013 und zuletzt Klettern und Skaten. In der Reihenfolge ihres Erscheinens:',
 
         'mk.label':'TASTATUR \u00b7 PRODUKTIVIT\u00c4T',
@@ -1663,7 +1719,7 @@ const T = {
         'sk.desc':'Ein Flip-Trick-Spiel am Handgelenk – kein Herumfahren, nur du und das Board. Ducken, flicken für Pop und Spin, tippen zum Fangen – flach landen für ein Perfect. Herrlich direkte Flick-Steuerung mit echtem Skate-Timing, von Ollies bis 360 Flips.',
         'sk.perk1':'Pure Flip-Tricks – flicken, drehen, fangen', 'sk.perk2':'Von Ollies bis 360 Flips, regular oder goofy', 'sk.perk3':'Vier Modi, Haptik, keine Werbung',
 
-        'about.eyebrow':'KAPITEL 01 \u00b7 DIE FRAGE', 'about.heading':'Alles begann mit einer <span class="accent">Frage</span>',
+        'about.eyebrow':'T+01 \u00b7 DIE FRAGE', 'about.heading':'Alles begann mit einer <span class="accent">Frage</span>',
         'about.desc':'\u201eWie funktioniert ein Kopf?\u201c Diese Frage f\u00fchrte mich zur Kognitionswissenschaft \u2013 Informatik, KI, Psychologie, Philosophie, Neurowissenschaften. Zur\u00fcck kam ich mit weniger Antworten und deutlich besseren Obsessionen:',
 
         'tag.philosophy':'PHILOSOPHIE', 'tag.neuro':'NEUROWISSENSCHAFTEN', 'tag.psych':'PSYCHOLOGIE', 'tag.dataviz':'DATENVISUALISIERUNG',
@@ -1672,14 +1728,14 @@ const T = {
         'tag.graphs':'GRAPHENTHEORIE', 'tag.maths':'MATHEMATIK',        'tag.space':'WELTRAUM', 'tag.games':'VIDEOSPIELE',
 
 
-        'tech.eyebrow':'KAPITEL 02 \u00b7 DAS HANDWERK', 'tech.heading':'Werkzeuge, gesammelt <span class="accent">Problem f\u00fcr Problem</span>',
+        'tech.eyebrow':'T+02 \u00b7 DAS HANDWERK', 'tech.heading':'Werkzeuge, gesammelt <span class="accent">Problem f\u00fcr Problem</span>',
         'tech.desc':'Startups, Industriehallen, lange Indie-N\u00e4chte. Jedes Projekt hat ein Werkzeug dagelassen \u2013 von nativem iOS bis zur Cloud-Infrastruktur.',
         'tech.lbl.ios':'IOS & APPLE-PLATTFORMEN', 'tech.lbl.cross':'MOBIL & PLATTFORM\u00dcBERGREIFEND',
         'tech.lbl.web':'WEB & BACKEND', 'tech.lbl.cloud':'CLOUD & DEVOPS',
         'tech.lbl.hw':'KONNEKTIVIT\u00c4T & HARDWARE', 'tech.lbl.ai':'KI & MACHINE LEARNING',
         'tech.lbl.game':'GAME DEV & 3D', 'tech.lbl.design':'DESIGN & TOOLS',
 
-        'srv.eyebrow':'KAPITEL 04 · DEINE GESCHICHTE', 'srv.heading':'Was ich mit dir <span class="accent">bauen</span> kann',
+        'srv.eyebrow':'T+04 · DEINE GESCHICHTE', 'srv.heading':'Was ich mit dir <span class="accent">bauen</span> kann',
         'srv.desc':'Jahre in Startups, Industrie und Indie-Entwicklung – hier bringe ich echten Mehrwert in deine Geschichte.',
         'srv1.title':'Mobile App-Entwicklung',
         'srv1.desc':'Natives iOS in Swift/SwiftUI oder plattform\u00fcbergreifend mit React Native und Flutter. Vom ersten Konzept bis zur App Store-Ver\u00f6ffentlichung \u2013 inklusive WatchKit, CoreBluetooth und Hardware-Integrationen.',
@@ -1694,10 +1750,11 @@ const T = {
         'srv6.title':'Tech-Beratung',
         'srv6.desc':'Interdisziplin\u00e4rer Hintergrund in Kognitionswissenschaft, KI und Engineering \u2013 ideal f\u00fcr Architektur-Reviews, Stack-Entscheidungen, MVP-Scoping, Code-Qualit\u00e4t und die schnelle Umsetzung komplexer Ideen in funktionierende Prototypen.',
 
-        'contact.eyebrow':'EPILOG',
+        'contact.eyebrow':'T+05 · EPILOG',
         'contact.title':'Jedes Ende ist ein <span class="accent">Anfang</span>',
         'contact.sub':'Du hast eine Idee f\u00fcr das n\u00e4chste Kapitel \u2013 oder willst einfach Hallo sagen? Ich freue mich von dir zu h\u00f6ren.',
         'contact.btn':'SCHREIB MIR',
+        'hud.alt':'HÖHE', 'hud.pad':'STARTRAMPE', 'hud.ascent':'AUFSTIEG', 'hud.orbit':'ORBIT',
 
         'privacy.heading':'Datenschutzrichtlinie',
         'privacy.p1':'Die von Andrei Achziger bereitgestellten Apps sind zur Nutzung bestimmt wie sie sind. Diese Seite informiert Besucher \u00fcber meine Richtlinien bez\u00fcglich der Erhebung, Nutzung und Offenlegung personenbezogener Daten. Wenn du meine Dienste nutzt, werden deine personenbezogenen Daten von mir nicht gespeichert, verteilt oder analysiert.',
@@ -1766,17 +1823,45 @@ document.querySelectorAll('[data-reveal]').forEach(function(r) { io.observe(r); 
 (function() {
     var bar = document.getElementById('story-progress');
     if (!bar) return;
+    var altVal = document.getElementById('alt-val');
+    var altStatus = document.getElementById('alt-status');
     var ticking = false;
     function update() {
         var d = document.documentElement;
         var max = d.scrollHeight - window.innerHeight;
-        bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, window.scrollY / max) : 0) + ')';
+        var p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+        bar.style.transform = 'scaleX(' + p + ')';
+        if (altVal) {
+            // Accelerates like a launch; 408 km is the ISS's orbit.
+            altVal.textContent = String(Math.round(408 * Math.pow(p, 1.5))).padStart(3, '0');
+            var key = p < 0.03 ? 'hud.pad' : p >= 0.97 ? 'hud.orbit' : 'hud.ascent';
+            if (altStatus.dataset.i18n !== key) {
+                // Keeping the key on the element lets a language switch re-translate it.
+                altStatus.dataset.i18n = key;
+                var t = T[document.documentElement.lang] || T.en;
+                altStatus.textContent = t[key];
+            }
+        }
         ticking = false;
     }
     window.addEventListener('scroll', function() {
         if (!ticking) { ticking = true; requestAnimationFrame(update); }
     }, { passive: true });
     update();
+})();
+
+// ── Contact rocket: touch screens have no hover, so a tap launches it ─
+(function() {
+    var btn = document.getElementById('email-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+        btn.classList.remove('launching');
+        void btn.offsetWidth; // restart the animation on repeated taps
+        btn.classList.add('launching');
+    });
+    btn.addEventListener('animationend', function(e) {
+        if (e.animationName === 'rocket-launch') btn.classList.remove('launching');
+    });
 })();
 
 // ── Chapter rail: highlight the chapter in view ───────────────────
