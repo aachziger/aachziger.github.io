@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Andrei Achziger — iOS Developer &amp; Indie Game Creator. Apps: MergeKey, Fishy Watch, Weltraum.">
-    <title>Andrei Achziger</title>
+    <meta name="description" content="Apps for iPhone, Apple Watch and Android by Andrei Achziger: Skaty Watch, Up Dino Up, MergeKey, Fishy Watch, Random Drop and Weltraum. App development and consulting.">
+    <title>Andrei Achziger · Mission Control</title>
 
     <link rel="icon" href="/favicon.ico" sizes="48x48">
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
@@ -13,380 +13,32 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500&family=Space+Mono:wght@400;700&family=Doto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Doto:wght@700&family=Space+Grotesk:wght@400;500&family=Space+Mono&display=swap" rel="stylesheet">
 
     <style>
-        /* ─── Reset ─────────────────────────────────────────────── */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        /* ─── Nothing Design Tokens — Dark (default) ────────────── */
-        :root {
-            --black:           #000000;
-            --surface:         #111111;
-            --surface-raised:  #1A1A1A;
-            --border:          #222222;
-            --border-visible:  #333333;
-            --text-disabled:   #666666;
-            --text-secondary:  #999999;
-            --text-primary:    #E8E8E8;
-            --text-display:    #FFFFFF;
-            --accent:          #D71921;
-            --accent-subtle:   rgba(215,25,33,0.15);
-            --orange:          #FF6B00;
-            --orange-subtle:   rgba(255,107,0,0.15);
-            --success:         #4A9E5C;
-            --warning:         #D4A843;
-            --interactive:     #5B9BF6;
-
-            --space-xs:  4px;
-            --space-sm:  8px;
-            --space-md:  16px;
-            --space-lg:  24px;
-            --space-xl:  32px;
-            --space-2xl: 48px;
-            --space-3xl: 64px;
-            --space-4xl: 96px;
-
-            --font-body:    'Space Grotesk', 'DM Sans', system-ui, sans-serif;
-            --font-mono:    'Space Mono', 'JetBrains Mono', 'SF Mono', monospace;
-            --font-display: 'Doto', 'Space Mono', monospace;
-
-            --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-
-        /* ─── Light Mode Tokens ─────────────────────────────────── */
-        [data-theme="light"] {
-            --black:           #e8dcc6;
-            --surface:         #f0e4d0;
-            --surface-raised:  #ddd0b8;
-            --border:          #cfc0a6;
-            --border-visible:  #bdb094;
-            --text-disabled:   #8e8474;
-            --text-secondary:  #524a3e;
-            --text-primary:    #18160e;
-            --text-display:    #080602;
-            --interactive:     #007AFF;
-        }
-
-        /* ─── System preference auto-detect (only if no manual override) ── */
-        @media (prefers-color-scheme: light) {
-            :root:not([data-theme="dark"]):not([data-theme="light"]) {
-                --black:           #e8dcc6;
-                --surface:         #f0e4d0;
-                --surface-raised:  #ddd0b8;
-                --border:          #cfc0a6;
-                --border-visible:  #bdb094;
-                --text-disabled:   #8e8474;
-                --text-secondary:  #524a3e;
-                --text-primary:    #18160e;
-                --text-display:    #080602;
-                --interactive:     #007AFF;
-            }
-        }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-            background: var(--black);
-            color: var(--text-primary);
-            font-family: var(--font-body);
-            font-size: 16px;
-            line-height: 1.5;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        a { color: inherit; text-decoration: none; }
-        img { display: block; max-width: 100%; }
-
-        /* ─── Layout ─────────────────────────────────────────────── */
-        .wrap    { max-width: 1100px; margin: 0 auto; padding: 0 var(--space-lg); }
-        .wrap-sm { max-width: 680px;  margin: 0 auto; padding: 0 var(--space-lg); }
-
-        /* ─── Header ────────────────────────────────────────────── */
-        .site-header {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            padding: var(--space-md) 0;
-            background: transparent;
-            transition: background 250ms var(--ease), border-color 250ms var(--ease);
-            border-bottom: 1px solid transparent;
-        }
-        .site-header.scrolled {
-            background: var(--black);
-            border-bottom-color: var(--border);
-        }
-        .header-row { display: flex; align-items: center; justify-content: space-between; }
-        .logo { display: flex; align-items: center; gap: var(--space-sm); }
-        .logo canvas { width: 32px; height: 32px; border-radius: 8px; }
-        .logo-name {
-            font-family: var(--font-display); font-size: 18px; font-weight: 400;
-            letter-spacing: -0.02em;
-            color: var(--text-display);
-        }
-        nav { display: flex; align-items: center; gap: var(--space-sm); }
-        nav ul { display: flex; gap: var(--space-lg); list-style: none; }
-        nav a {
-            font-family: var(--font-mono); font-size: 11px; font-weight: 400;
-            letter-spacing: 0.08em; text-transform: uppercase;
-            color: var(--text-disabled);
-            transition: color 200ms var(--ease);
-        }
-        nav a:hover { color: var(--text-display); }
-        .nav-contact {
-            color: var(--text-display);
-            border: 1px solid var(--border-visible);
-            border-radius: 999px;
-            padding: 8px 20px;
-            transition: border-color 200ms var(--ease);
-        }
-        .nav-contact:hover { border-color: var(--text-display); }
-
-        /* ─── Header controls ──────────────────────────────────── */
-        .header-controls { display: flex; align-items: center; gap: var(--space-sm); }
-        .ctrl-btn {
-            background: none; border: 1px solid var(--border-visible);
-            border-radius: 999px; padding: 6px 14px;
-            font-family: var(--font-mono); font-size: 11px; font-weight: 400;
-            letter-spacing: 0.06em; text-transform: uppercase;
-            color: var(--text-secondary);
-            cursor: pointer; transition: color 200ms var(--ease), border-color 200ms var(--ease);
-        }
-        .ctrl-btn:hover { color: var(--text-display); border-color: var(--text-display); }
-
-        /* ─── Hero ──────────────────────────────────────────────── */
-        .hero {
-            position: relative; z-index: 1;
-            min-height: 100dvh; display: flex; align-items: center;
-            padding: var(--space-4xl) 0 var(--space-3xl);
-        }
-        .hero-inner {
-            display: flex; align-items: center; gap: var(--space-3xl);
-            position: relative;
-        }
-        .hero-text {
-            display: flex; flex-direction: column; align-items: flex-start;
-            flex: 1; min-width: 0;
-        }
-        .hero-face {
-            flex: 0 0 280px; height: 340px;
-            position: relative; overflow: hidden;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 16px;
-            transition: border-color 200ms var(--ease);
-        }
-        .hero-face:hover { border-color: var(--border-visible); }
-        .hero-face canvas {
-            display: block; width: 100%; height: 100%;
-        }
-
-        .hero-chip {
-            font-family: var(--font-mono); font-size: 11px; font-weight: 400;
-            letter-spacing: 0.08em; text-transform: uppercase;
-            color: var(--text-secondary);
-            margin-bottom: var(--space-lg);
-            display: flex; align-items: center; gap: var(--space-sm);
-        }
-        .hero-chip::before {
-            content: ''; width: 6px; height: 6px; border-radius: 50%;
-            background: var(--orange);
-        }
-
-        .hero-title {
-            font-family: var(--font-display);
-            font-size: clamp(48px, 10vw, 96px);
-            font-weight: 400; line-height: 1.0; letter-spacing: -0.03em;
-            color: var(--text-display);
-            margin-bottom: var(--space-lg);
-        }
-
-        .hero-sub {
-            font-family: var(--font-body);
-            font-size: 18px; line-height: 1.5;
-            color: var(--text-primary);
-            max-width: 520px;
-            margin-bottom: var(--space-2xl);
-        }
-
-        .hero-actions { display: flex; gap: var(--space-md); flex-wrap: wrap; }
-
-        /* Dot grid background — hero only */
-        .hero::before {
-            content: ''; position: absolute; inset: 0; z-index: -1;
-            background-image: radial-gradient(circle, var(--border) 0.5px, transparent 0.5px);
-            background-size: 12px 12px;
-            opacity: 0.4;
-        }
-
-        /* ─── Buttons ───────────────────────────────────────────── */
-        .btn {
-            display: inline-flex; align-items: center; gap: var(--space-sm);
-            padding: 12px 24px; border-radius: 999px;
-            font-family: var(--font-mono); font-size: 13px; font-weight: 400;
-            letter-spacing: 0.06em; text-transform: uppercase;
-            cursor: pointer; border: none;
-            transition: opacity 200ms var(--ease), border-color 200ms var(--ease);
-            min-height: 44px;
-        }
-        .btn-primary {
-            background: var(--text-display); color: var(--black);
-        }
-        .btn-primary:hover { opacity: 0.85; }
-        .btn-secondary {
-            background: transparent; color: var(--text-primary);
-            border: 1px solid var(--border-visible);
-        }
-        .btn-secondary:hover { border-color: var(--text-display); color: var(--text-display); }
-
-        /* ─── Section shared ────────────────────────────────────── */
-        .section { position: relative; z-index: 1; padding: var(--space-4xl) 0; }
-        .section-head { margin-bottom: var(--space-2xl); }
-
-        .eyebrow {
-            font-family: var(--font-mono); font-size: 11px; font-weight: 400;
-            letter-spacing: 0.08em; text-transform: uppercase;
-            color: var(--orange);
-            margin-bottom: var(--space-sm);
-        }
-        .sh {
-            font-family: var(--font-display);
-            font-size: clamp(28px, 4vw, 36px);
-            font-weight: 400; letter-spacing: -0.02em; line-height: 1.1;
-            color: var(--text-display);
-            margin-bottom: var(--space-sm);
-        }
-        .sh .accent { color: var(--orange); }
-        .sb {
-            font-size: 16px; color: var(--text-secondary); line-height: 1.5;
-            max-width: 500px;
-        }
-
-        .divider { height: 1px; background: var(--orange); opacity: 0.25; }
-
-        /* ─── Apps section ──────────────────────────────────────── */
-        .apps-head { text-align: center; margin-bottom: var(--space-2xl); }
-        .apps-head .sb { margin: 0 auto; }
-
-        .app-track-wrap {
-            overflow: hidden;
-            touch-action: pan-y;             /* let vertical page-scroll through; we own horizontal */
-            user-select: none; -webkit-user-select: none;
-            margin: 0 calc(-1 * var(--space-lg)); padding: var(--space-sm) var(--space-lg) var(--space-xl);
-            cursor: grab;
-        }
-        .app-track-wrap:active { cursor: grabbing; }
-        .app-track { display: flex; gap: var(--space-md); padding-right: var(--space-lg); will-change: transform; }
-        .app-track img { -webkit-user-drag: none; user-drag: none; }
-
-        /* ─── Pixel fluid overlay (canvas) ─────────────────────── */
-        .pixel-fluid {
-            position: absolute; inset: 0;
-            border-radius: inherit;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0;
-            transition: opacity 0.5s var(--ease);
-        }
-        .app-card-wrapper:hover .pixel-fluid,
-        .tech-card:hover .pixel-fluid,
-        .srv:hover .pixel-fluid,
-        .stat:hover .pixel-fluid,
-        .contact-box:hover .pixel-fluid { opacity: 1; }
-
-        /* ─── App card flip container ───────────────────────────── */
-        .app-card-wrapper {
-            flex: 0 0 340px; scroll-snap-align: start;
-            perspective: 900px;
-            opacity: 0;
-            cursor: pointer;
-        }
-        .app-card-wrapper.visible { opacity: 1; transition: opacity 300ms var(--ease); }
-
-        /* Both faces share one grid cell, so the card is as tall as its taller
-           face — a long back never clips, and the track keeps cards uniform. */
-        .app-card-inner {
-            display: grid;
-            position: relative; width: 100%; height: 100%;
-            transition: transform 0.6s var(--ease);
-            transform-style: preserve-3d;
-            -webkit-transform-style: preserve-3d;
-        }
-        .app-card-wrapper.flipped .app-card-inner { transform: rotateY(180deg); }
-
-        .app-card-front,
-        .app-card-back {
-            grid-area: 1 / 1;
-            position: relative;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 16px; padding: var(--space-lg) var(--space-lg) var(--space-xl);
-            display: flex; flex-direction: column;
-            transition: border-color 200ms var(--ease);
-        }
-
-        /* (pixel fluid canvas replaces old shimmer ::before) */
-        .app-card-front {
-            transform: rotateY(0deg) translateZ(1px);
-            -webkit-transform: rotateY(0deg) translateZ(1px);
-        }
-        .app-card-front:hover { border-color: var(--border-visible); }
-
-        .app-card-back {
-            transform: rotateY(180deg) translateZ(1px);
-            -webkit-transform: rotateY(180deg) translateZ(1px);
-            padding-bottom: var(--space-lg);
-        }
-        .app-card-back:hover { border-color: var(--border-visible); }
-
-        /* ─── Front face ────────────────────────────────────────── */
-        .app-card-visual {
-            display: flex; justify-content: center; align-items: center;
-            height: 220px; margin-bottom: var(--space-lg);
-            position: relative; z-index: 1;
-        }
-        /* ─── Device frames (drawn in CSS, screen content is a video/still) ───
-           Every measurement derives from --u, the screen's short side, so one
-           frame renders at card size on the front and in miniature on the back. */
+        /* ─── Device frames (drawn in CSS; the screen is a looping video) ───
+           Every measurement derives from --u, the screen's short side. */
         .device { position: relative; display: inline-flex; flex: none; }
         .device-screen { display: block; object-fit: cover; background: #000; }
-
-        /* iPhone — thin black bezel, titanium edge, Dynamic Island, side buttons */
+        .device .band, .device .crown { display: none; }
         .phone {
-            --u: 93px;
-            padding: calc(var(--u) * 0.048);
-            border-radius: calc(var(--u) * 0.23);
-            background: #050505;
-            box-shadow:
-                0 0 0 calc(var(--u) * 0.016) #8e8e93,
-                0 0 0 calc(var(--u) * 0.028) #3a3a3c,
-                0 calc(var(--u) * 0.12) calc(var(--u) * 0.3) calc(var(--u) * -0.08) rgba(0, 0, 0, 0.6);
+            --u: 120px;
+            padding: calc(var(--u) * 0.048); border-radius: calc(var(--u) * 0.23); background: #050505;
+            box-shadow: 0 0 0 calc(var(--u) * 0.016) #8e8e93, 0 0 0 calc(var(--u) * 0.028) #3a3a3c,
+                        0 calc(var(--u) * 0.12) calc(var(--u) * 0.3) calc(var(--u) * -0.08) rgba(0, 0, 0, 0.45);
         }
-        .phone .device-screen {
-            width: var(--u); aspect-ratio: 1170 / 2532;
-            border-radius: calc(var(--u) * 0.184);
-        }
+        .phone .device-screen { width: var(--u); aspect-ratio: 1170 / 2532; border-radius: calc(var(--u) * 0.184); }
         .phone .island {
-            position: absolute; left: 50%; top: calc(var(--u) * 0.076);
-            width: calc(var(--u) * 0.32); height: calc(var(--u) * 0.093);
-            transform: translateX(-50%);
-            border-radius: 999px; background: #000;
+            position: absolute; left: 50%; top: calc(var(--u) * 0.076); transform: translateX(-50%);
+            width: calc(var(--u) * 0.32); height: calc(var(--u) * 0.093); border-radius: 999px; background: #000;
         }
-        /* volume buttons (left, second one via shadow) and power button (right) */
-        .phone::before, .phone::after {
-            content: ''; position: absolute; border-radius: calc(var(--u) * 0.01);
-            background: #6e6e73;
-        }
+        .phone::before, .phone::after { content: ''; position: absolute; border-radius: calc(var(--u) * 0.01); background: #6e6e73; }
         .phone::before {
-            left: calc(var(--u) * -0.036); top: calc(var(--u) * 0.44);
-            width: calc(var(--u) * 0.02); height: calc(var(--u) * 0.15);
+            left: calc(var(--u) * -0.036); top: calc(var(--u) * 0.44); width: calc(var(--u) * 0.02); height: calc(var(--u) * 0.15);
             box-shadow: 0 calc(var(--u) * 0.22) 0 #6e6e73;
         }
-        .phone::after {
-            right: calc(var(--u) * -0.036); top: calc(var(--u) * 0.56);
-            width: calc(var(--u) * 0.02); height: calc(var(--u) * 0.24);
-        }
-        /* Held sideways: island on the left, buttons on the long edges */
-        .phone.landscape { --u: 100px; }
+        .phone::after { right: calc(var(--u) * -0.036); top: calc(var(--u) * 0.56); width: calc(var(--u) * 0.02); height: calc(var(--u) * 0.24); }
+        .phone.landscape { --u: 130px; }
         .phone.landscape .device-screen { width: auto; height: var(--u); aspect-ratio: 2532 / 1170; }
         .phone.landscape .island {
             left: calc(var(--u) * 0.076); top: 50%; transform: translateY(-50%);
@@ -394,383 +46,39 @@
         }
         .phone.landscape::before {
             left: calc(var(--u) * 0.44); top: auto; bottom: calc(var(--u) * -0.036);
-            width: calc(var(--u) * 0.15); height: calc(var(--u) * 0.02);
-            box-shadow: calc(var(--u) * 0.22) 0 0 #6e6e73;
+            width: calc(var(--u) * 0.15); height: calc(var(--u) * 0.02); box-shadow: calc(var(--u) * 0.22) 0 0 #6e6e73;
         }
         .phone.landscape::after {
             left: calc(var(--u) * 0.56); right: auto; top: calc(var(--u) * -0.036);
             width: calc(var(--u) * 0.24); height: calc(var(--u) * 0.02);
         }
-
-        /* Apple Watch — rounded case, digital crown, side button, sport band */
         .watch {
-            --u: 114px;
-            padding: calc(var(--u) * 0.06);
-            border-radius: calc(var(--u) * 0.3);
-            background: #050505;
-            box-shadow:
-                0 0 0 calc(var(--u) * 0.022) #2c2c2e,
-                0 0 0 calc(var(--u) * 0.032) #58585d,
-                0 calc(var(--u) * 0.1) calc(var(--u) * 0.26) calc(var(--u) * -0.06) rgba(0, 0, 0, 0.6);
+            --u: 150px;
+            padding: calc(var(--u) * 0.06); border-radius: calc(var(--u) * 0.3); background: #050505;
+            box-shadow: 0 0 0 calc(var(--u) * 0.022) #2c2c2e, 0 0 0 calc(var(--u) * 0.032) #58585d,
+                        0 calc(var(--u) * 0.1) calc(var(--u) * 0.26) calc(var(--u) * -0.06) rgba(0, 0, 0, 0.45);
         }
-        .watch .device-screen {
-            width: var(--u); aspect-ratio: 368 / 448;
-            border-radius: calc(var(--u) * 0.24);
-        }
-        /* Straps start under the case and reach 0.24u beyond it, top and bottom */
+        .watch .island { display: none; }
+        .watch .device-screen { width: var(--u); aspect-ratio: 368 / 448; border-radius: calc(var(--u) * 0.24); }
         .watch .band {
-            position: absolute; left: 50%; z-index: -1;
-            width: calc(var(--u) * 0.74); height: calc(var(--u) * 0.5);
-            transform: translateX(-50%);
+            display: block; position: absolute; left: 50%; z-index: -1;
+            width: calc(var(--u) * 0.74); height: calc(var(--u) * 0.5); transform: translateX(-50%);
             background: linear-gradient(90deg, #17181c, #25262c 50%, #17181c);
         }
         .watch .band.top    { top: calc(var(--u) * -0.24);    border-radius: calc(var(--u) * 0.1) calc(var(--u) * 0.1) 0 0; }
         .watch .band.bottom { bottom: calc(var(--u) * -0.24); border-radius: 0 0 calc(var(--u) * 0.1) calc(var(--u) * 0.1); }
         .watch .crown {
-            position: absolute; right: calc(var(--u) * -0.085); top: calc(var(--u) * 0.3);
-            width: calc(var(--u) * 0.08); height: calc(var(--u) * 0.22);
-            border-radius: calc(var(--u) * 0.03);
+            display: block; position: absolute; right: calc(var(--u) * -0.085); top: calc(var(--u) * 0.3);
+            width: calc(var(--u) * 0.08); height: calc(var(--u) * 0.22); border-radius: calc(var(--u) * 0.03);
             background: repeating-linear-gradient(0deg, #a1a1a6 0 1px, #5d5d62 1px 2px);
         }
         .watch .crown::after {
-            content: ''; position: absolute; left: calc(var(--u) * 0.025);
-            top: calc(var(--u) * 0.44); width: calc(var(--u) * 0.03); height: calc(var(--u) * 0.3);
-            border-radius: calc(var(--u) * 0.01); background: #48484a;
+            content: ''; position: absolute; left: calc(var(--u) * 0.025); top: calc(var(--u) * 0.44);
+            width: calc(var(--u) * 0.03); height: calc(var(--u) * 0.3); border-radius: calc(var(--u) * 0.01); background: #48484a;
         }
+        .cam .device { isolation: isolate; }
 
-        /* Miniatures on the card backs */
-        .app-back-visual .phone           { --u: 28px; }
-        .app-back-visual .phone.landscape { --u: 52px; }
-        .app-back-visual .watch           { --u: 36px; }
-
-        .app-label {
-            font-family: var(--font-mono); font-size: 11px; font-weight: 400;
-            letter-spacing: 0.08em; text-transform: uppercase;
-            color: var(--text-secondary);
-            border: 1px solid var(--border-visible);
-            border-radius: 999px; padding: 4px 12px;
-            margin-bottom: var(--space-md); align-self: flex-start;
-            position: relative; z-index: 1;
-        }
-        .app-banner-img { max-width: 200px; height: auto; margin-bottom: var(--space-sm); }
-        .app-title {
-            font-family: var(--font-display); font-size: 24px; font-weight: 400;
-            letter-spacing: -0.01em; line-height: 1.2;
-            color: var(--text-display); margin-bottom: var(--space-sm);
-            position: relative; z-index: 1;
-        }
-        .app-flip-hint {
-            font-family: var(--font-mono); font-size: 11px;
-            color: var(--text-disabled); letter-spacing: 0.04em;
-            margin-top: auto; padding-top: var(--space-md);
-            position: relative; z-index: 1;
-        }
-
-        /* ─── Back face ─────────────────────────────────────────── */
-        .app-back-visual {
-            display: flex; justify-content: center; align-items: center;
-            height: 68px; margin-bottom: 12px;
-            position: relative; z-index: 1;
-        }
-        .app-back-title {
-            font-family: var(--font-display); font-size: 20px; font-weight: 400;
-            letter-spacing: -0.01em; line-height: 1.2;
-            color: var(--text-display); margin-bottom: var(--space-sm);
-            position: relative; z-index: 1;
-        }
-        .app-desc {
-            font-size: 13px; color: var(--text-secondary); line-height: 1.5;
-            margin-bottom: 12px; flex: 1;
-            position: relative; z-index: 1;
-        }
-        .app-perks { display: flex; flex-direction: column; gap: 4px; margin-bottom: var(--space-md); position: relative; z-index: 1; }
-        .app-perk {
-            font-family: var(--font-mono); font-size: 12px;
-            color: var(--text-secondary); letter-spacing: 0.01em;
-        }
-        .app-perk::before { content: '— '; color: var(--text-disabled); }
-        /* Store badges sit centred on the card, alone or in a row of several.
-           36px keeps an App Store + Google Play pair on one line on phones. */
-        .badge-link { position: relative; z-index: 1; display: inline-flex; align-self: center; }
-        .badge-link img {
-            height: 36px; width: auto;
-            transition: opacity 200ms var(--ease);
-        }
-        .badge-row {
-            position: relative; z-index: 1; align-self: stretch;
-            display: flex; flex-wrap: wrap; gap: 8px;
-            justify-content: center; align-items: center;
-        }
-        .badge-row .badge-link { align-self: auto; }
-        .badge-link img:hover { opacity: 0.7; }
-
-        /* ─── About ─────────────────────────────────────────────── */
-        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3xl); align-items: stretch; }
-
-        .tags { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-lg); }
-        .tag {
-            font-family: var(--font-mono); font-size: 11px; font-weight: 400;
-            letter-spacing: 0.06em; text-transform: uppercase;
-            color: var(--text-secondary);
-            border: 1px solid var(--border-visible); border-radius: 999px;
-            padding: 4px 12px;
-            transition: color 200ms var(--ease), border-color 200ms var(--ease);
-        }
-        .tag { position: relative; overflow: visible; cursor: default; }
-        .tag:hover { color: var(--text-display); border-color: var(--text-display); }
-
-        /* ─── Emoji pixel canvas card ───────────────────────────── */
-        .emoji-card {
-            position: relative; overflow: hidden;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 16px;
-            min-height: 100%;
-            transition: border-color 200ms var(--ease);
-        }
-        .emoji-card:hover { border-color: var(--border-visible); }
-        .emoji-canvas {
-            display: block; width: 100%; height: 100%;
-        }
-
-        /* ─── Tech Stack ────────────────────────────────────────── */
-        .tech-head { text-align: center; margin-bottom: var(--space-2xl); }
-        .tech-head .sb { margin: 0 auto; }
-        .tech-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md); }
-        .tech-card {
-            position: relative; overflow: hidden;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 12px; padding: var(--space-lg);
-            transition: border-color 200ms var(--ease);
-        }
-        /* (pixel fluid canvas replaces old tech-card ::before) */
-        .tech-card:hover { border-color: var(--border-visible); }
-        .tech-card-label {
-            position: relative; z-index: 1;
-            font-family: var(--font-mono); font-size: 11px; font-weight: 700;
-            letter-spacing: 0.08em; text-transform: uppercase;
-            color: var(--orange); margin-bottom: var(--space-md);
-        }
-        .tech-pills { position: relative; z-index: 1; }
-        .tech-pills { display: flex; flex-wrap: wrap; gap: 6px; }
-        .tech-pill {
-            font-family: var(--font-mono); font-size: 11px;
-            letter-spacing: 0.04em;
-            border: 1px solid var(--border-visible); border-radius: 4px;
-            padding: 3px 8px; color: var(--text-secondary);
-        }
-        @media (max-width: 1000px) { .tech-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 480px)  { .tech-grid { grid-template-columns: 1fr; } }
-
-        /* ─── Services ──────────────────────────────────────────── */
-        .services-head { text-align: center; margin-bottom: var(--space-2xl); }
-        .services-head .sb { margin: 0 auto; }
-        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md); }
-        .srv {
-            position: relative; overflow: hidden;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 12px; padding: var(--space-lg);
-            transition: border-color 200ms var(--ease);
-        }
-        /* (pixel fluid canvas replaces old srv ::before) */
-        .srv:hover { border-color: var(--border-visible); }
-        .srv-cat {
-            position: relative; z-index: 1;
-            font-family: var(--font-mono); font-size: 11px; font-weight: 700;
-            letter-spacing: 0.08em; text-transform: uppercase;
-            color: var(--orange); margin-bottom: var(--space-sm);
-        }
-        .srv-title {
-            position: relative; z-index: 1;
-            font-family: var(--font-display); font-size: 18px; font-weight: 400;
-            color: var(--text-display); margin-bottom: var(--space-sm);
-            letter-spacing: -0.01em;
-        }
-        .srv-desc {
-            position: relative; z-index: 1;
-            font-size: 14px; color: var(--text-secondary); line-height: 1.5;
-            margin-bottom: var(--space-md);
-        }
-        .srv-tags { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 6px; }
-        .srv-tag {
-            font-family: var(--font-mono); font-size: 11px;
-            letter-spacing: 0.04em;
-            border: 1px solid var(--border-visible); border-radius: 4px;
-            padding: 3px 8px; color: var(--text-secondary);
-        }
-        @media (max-width: 900px) { .services-grid { grid-template-columns: 1fr 1fr; } }
-        @media (max-width: 560px) { .services-grid { grid-template-columns: 1fr; } }
-
-        /* ─── Contact ───────────────────────────────────────────── */
-        .contact-box {
-            position: relative; overflow: hidden;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 16px; padding: var(--space-3xl) var(--space-2xl);
-            max-width: 660px; margin: 0 auto; text-align: center;
-            transition: border-color 200ms var(--ease);
-        }
-        .contact-box:hover { border-color: var(--border-visible); }
-        .contact-title {
-            position: relative; z-index: 1;
-            font-family: var(--font-display); font-size: 36px; font-weight: 400;
-            letter-spacing: -0.02em; color: var(--text-display);
-            margin-bottom: var(--space-sm);
-        }
-        .contact-title .accent { color: var(--orange); }
-        .contact-sub {
-            position: relative; z-index: 1;
-            font-size: 16px; color: var(--text-secondary); line-height: 1.5;
-            margin-bottom: var(--space-xl);
-        }
-        .email-btn {
-            position: relative; z-index: 1;
-            display: inline-flex; align-items: center; gap: var(--space-sm);
-            padding: 12px 24px; border-radius: 999px;
-            background: var(--text-display); color: var(--black);
-            font-family: var(--font-mono); font-size: 13px; font-weight: 400;
-            letter-spacing: 0.06em; text-transform: uppercase;
-            transition: opacity 200ms var(--ease);
-            min-height: 44px;
-        }
-        .email-btn:hover { opacity: 0.85; }
-        /* Pixel rocket that lifts off out of the button on hover / tap */
-        .rocket {
-            width: 11px; height: 16px; overflow: visible;
-            fill: currentColor; shape-rendering: crispEdges;
-        }
-        .rocket .porthole, .rocket .flame { fill: var(--orange); }
-        .rocket .flame { opacity: 0; }
-        @media (prefers-reduced-motion: no-preference) {
-            .email-btn:hover .rocket, .email-btn.launching .rocket {
-                animation: rocket-launch 1.4s var(--ease) both;
-            }
-            .email-btn:hover .rocket .flame, .email-btn.launching .rocket .flame {
-                animation: rocket-flame 1.4s linear both;
-            }
-        }
-        @keyframes rocket-launch {
-            0%   { transform: none; opacity: 1; }
-            8%   { transform: translateX(-1px); }
-            14%  { transform: translateX(1px); }
-            20%  { transform: none; }
-            58%  { transform: translateY(-56px); opacity: 0; }
-            59%  { transform: translateY(14px); opacity: 0; }
-            100% { transform: none; opacity: 1; }
-        }
-        @keyframes rocket-flame {
-            0%, 6% { opacity: 0; }
-            10%, 26%, 42% { opacity: 1; }
-            18%, 34%, 50% { opacity: 0.45; }
-            57%, 100% { opacity: 0; }
-        }
-
-        /* ─── Privacy ───────────────────────────────────────────── */
-        .privacy { position: relative; z-index: 1; padding: 0 0 var(--space-3xl); }
-        .privacy-box {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 12px; padding: var(--space-xl) var(--space-xl);
-            max-width: 820px; margin: 0 auto;
-        }
-        .privacy-box h3 {
-            font-family: var(--font-body); font-size: 18px; font-weight: 500;
-            color: var(--text-display); margin-bottom: var(--space-md);
-        }
-        .privacy-box p {
-            font-size: 14px; color: var(--text-secondary); line-height: 1.6;
-            margin-bottom: var(--space-sm);
-        }
-        .privacy-box p:last-child { margin-bottom: 0; }
-        .privacy-box a { color: var(--interactive); transition: color 200ms var(--ease); }
-        .privacy-box a:hover { color: var(--text-display); }
-
-        /* ─── Footer ────────────────────────────────────────────── */
-        .site-footer {
-            position: relative; z-index: 1;
-            border-top: 1px solid var(--border);
-            padding: var(--space-lg) 0;
-        }
-        .footer-row {
-            display: flex; align-items: center; justify-content: space-between;
-            flex-wrap: wrap; gap: var(--space-md);
-        }
-        .footer-copy {
-            font-family: var(--font-mono); font-size: 11px;
-            letter-spacing: 0.04em; color: var(--text-disabled);
-        }
-        .footer-links { display: flex; gap: var(--space-lg); list-style: none; }
-        .footer-links a {
-            font-family: var(--font-mono); font-size: 11px;
-            letter-spacing: 0.08em; text-transform: uppercase;
-            color: var(--text-disabled);
-            transition: color 200ms var(--ease);
-        }
-        .footer-links a:hover { color: var(--text-display); }
-
-        /* ─── Impressum Modal ───────────────────────────────────── */
-        .imp-overlay {
-            position: fixed; inset: 0; z-index: 200;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.3s var(--ease);
-            padding: var(--space-lg);
-        }
-        .imp-overlay.open { opacity: 1; pointer-events: auto; }
-        .imp-modal {
-            background: var(--black); border: 1px solid var(--border);
-            border-radius: 16px; padding: var(--space-2xl);
-            max-width: 720px; width: 100%; max-height: 85vh;
-            overflow: hidden; position: relative;
-        }
-        .imp-modal-scroll {
-            position: relative; z-index: 1;
-            max-height: calc(85vh - 96px); overflow-y: auto;
-            scrollbar-width: none;
-        }
-        .imp-modal-scroll::-webkit-scrollbar { display: none; }
-        .imp-modal .pixel-fluid { opacity: 1; }
-        .imp-close {
-            position: absolute; top: var(--space-md); right: var(--space-md);
-            background: none; border: 1px solid var(--border-visible);
-            border-radius: 999px; width: 36px; height: 36px;
-            display: flex; align-items: center; justify-content: center;
-            font-family: var(--font-mono); font-size: 16px;
-            color: var(--text-secondary); cursor: pointer;
-            transition: color 200ms var(--ease), border-color 200ms var(--ease);
-        }
-        .imp-close:hover { color: var(--text-display); border-color: var(--text-display); }
-        .imp-modal .page-eyebrow {
-            font-family: var(--font-mono); font-size: 11px;
-            letter-spacing: 0.08em; text-transform: uppercase;
-            color: var(--orange); margin-bottom: var(--space-sm);
-        }
-        .imp-modal .page-title {
-            font-family: var(--font-display); font-size: 36px;
-            font-weight: 400; letter-spacing: -0.02em;
-            color: var(--text-display); margin-bottom: var(--space-2xl);
-        }
-        .imp-card {
-            position: relative; overflow: hidden;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 12px; padding: var(--space-xl);
-            margin-bottom: var(--space-md);
-            transition: border-color 200ms var(--ease);
-        }
-        .imp-card:hover { border-color: var(--border-visible); }
-        .imp-card h2 {
-            position: relative; z-index: 1;
-            font-family: var(--font-mono); font-size: 11px; font-weight: 700;
-            letter-spacing: 0.08em; text-transform: uppercase;
-            color: var(--orange); margin-bottom: var(--space-md);
-        }
-        .imp-card p {
-            position: relative; z-index: 1;
-            font-size: 15px; color: var(--text-primary); line-height: 1.6;
-        }
-        .imp-card p + p { margin-top: var(--space-sm); }
-        .imp-card a { color: var(--interactive); text-decoration: none; }
-        .imp-card a:hover { color: var(--text-display); }
-
+        
         /* ─── Space background ─────────────────────────────────── */
         .space-bg {
             position: fixed; inset: 0; z-index: 0;
@@ -855,9 +163,6 @@
         }
 
 
-        /* Tone it down in light mode */
-        [data-theme="light"] .space-bg { opacity: 0.35; }
-
         /* ─── Globe background (centred, behind everything) ─── */
         /* Canvas is intentionally larger than the globe itself so the arcs,
            which bow outward from the sphere's surface, have room to render
@@ -874,855 +179,370 @@
             height: 120vmin;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.75;
+            opacity: 0.6;
         }
         @media (max-width: 800px) {
             .globe-bg { width: 99vmin; height: 99vmin; }
         }
 
-        /* ─── Scroll reveal ────────────────────────────────────── */
-        [data-reveal] { opacity: 0; transition: opacity 300ms var(--ease); }
-        [data-reveal].visible { opacity: 1; }
+        
+        /* Mission Control: a launch console over the globe. Apps lead; personal details stay small. */
+        :root {
+            --void: #070B14; --panel: rgba(9, 14, 25, 0.88); --line: #1C2636; --line-soft: #141B27;
+            --text: #E6EBF2; --text-display: #FFFFFF; --soft: #AEB8C7; --muted: #8A95A6;
+            --orange: #FF6B00; --teal: #4CE6E6;
+            --font: 'Space Grotesk', system-ui, sans-serif;
+            --mono: 'Space Mono', 'SF Mono', Menlo, monospace;
+            --dots: 'Doto', 'Space Mono', monospace;
+            --gutter: 40px; --head-h: 62px;
+            --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+            color-scheme: dark;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; scroll-padding-top: calc(var(--head-h) + 16px); background: var(--void); }
+        body { background: var(--void); color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+        a { color: inherit; }
+        button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+        :focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+        .wrap { max-width: 1240px; margin: 0 auto; padding-inline: var(--gutter); }
+        main, .site-foot { position: relative; z-index: 1; }
 
-        /* ─── Responsive ────────────────────────────────────────── */
-        @media (max-width: 800px) {
-            nav ul { display: none; }
-            .hero-inner { flex-direction: column; }
-            .hero-face { flex: none; width: 100%; height: 260px; }
-            .app-card-wrapper { flex: 0 0 300px; }
-            .about-grid { grid-template-columns: 1fr; }
-            .contact-box { padding: var(--space-xl) var(--space-lg); }
-            .footer-row { flex-direction: column; text-align: center; }
-        }
-        @media (max-width: 480px) {
-            .hero-actions { flex-direction: column; width: 100%; }
-            .btn { justify-content: center; }
-            .privacy-box { padding: var(--space-lg) var(--space-md); }
-            .app-card-wrapper { flex: 0 0 280px; }
-            .app-back-visual { height: 70px; margin-bottom: var(--space-sm); }
-            .app-card-back { padding: var(--space-md) var(--space-md) var(--space-lg); }
-            .app-desc { font-size: 13px; margin-bottom: var(--space-sm); }
-            .app-perks { gap: 4px; margin-bottom: var(--space-md); }
-            .app-perk { font-size: 11px; }
-            .badge-link img { height: 34px; }
-        }
+        .site-head { position: sticky; top: 0; z-index: 20; background: rgba(7, 11, 20, 0.86); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+        .site-head .wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: var(--head-h); }
+        .mark { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-decoration: none; white-space: nowrap; }
+        .mark b { font-family: var(--dots); font-size: 24px; font-weight: 700; color: var(--orange); letter-spacing: 0; }
+        .head-right { display: flex; align-items: center; gap: 26px; }
+        .site-nav { display: flex; gap: 22px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+        .site-nav a { text-decoration: none; }
+        .site-nav a:hover { color: var(--text); }
+        .alt { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--muted); white-space: nowrap; }
+        .alt b { font-family: var(--dots); font-size: 18px; color: var(--orange); letter-spacing: 0; margin-inline: 3px; }
+        .toggle { font-family: var(--mono); font-size: 11px; min-width: 38px; height: 30px; padding-inline: 8px; border: 1px solid var(--line); border-radius: 999px; }
+        .toggle:hover { border-color: var(--soft); }
 
-        /* ─── Dot-matrix section dividers ───────────────────────── */
-        .dot-divider {
-            height: 5px;
-            margin: 0 auto;
-            max-width: 1100px;
-            background-image: radial-gradient(circle at center, var(--border-visible) 1px, transparent 1.6px);
-            background-size: 14px 5px;
-            background-repeat: repeat-x;
-            background-position: center;
-            opacity: 0.55;
-        }
+        .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); }
+        .hero { padding-block: 72px 44px; }
+        .hero h1 { font-family: var(--dots); font-weight: 700; font-size: clamp(42px, 7.4vw, 96px); line-height: 0.98; letter-spacing: -0.02em; color: var(--text-display); margin: 18px 0 22px; }
+        .hero .sub { font-size: clamp(17px, 1.7vw, 20px); color: var(--soft); max-width: 32em; margin-bottom: 28px; }
+        .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+        .btn { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; padding: 13px 22px; min-height: 44px; border-radius: 999px; border: 1px solid #2E3A4E; text-decoration: none; display: inline-flex; align-items: center; background: rgba(7, 11, 20, 0.6); transition: border-color 200ms var(--ease), opacity 200ms var(--ease); }
+        .btn:hover { border-color: var(--soft); }
+        .btn.solid { background: var(--orange); border-color: var(--orange); color: #0A0E16; }
+        .btn.solid:hover { opacity: 0.88; }
+        .tele { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 48px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); }
+        .tele > div { padding: 18px 22px; border-right: 1px solid var(--line); min-width: 0; }
+        .tele > div:last-child { border-right: 0; }
+        .tele small { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 8px; }
+        .tele b { font-family: var(--dots); font-size: 34px; line-height: 1; font-weight: 700; }
+        .tele span { font-size: 16px; }
+
+        .sec-head { display: flex; justify-content: space-between; gap: 16px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); font-weight: 400; margin-bottom: 14px; }
+        .sec-head span:last-child { color: var(--teal); }
+        .section { padding-block: 32px; }
+        .console { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+        .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; }
+        .log-cols, .row { display: grid; grid-template-columns: 30px 48px minmax(0, 1fr) 132px 92px 58px; gap: 14px; align-items: center; padding-inline: 18px; }
+        .log-cols { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--muted); padding-block: 12px; }
+        .row { width: 100%; text-align: left; padding-block: 12px; border-top: 1px solid var(--line-soft); transition: background 160ms var(--ease); }
+        .row .no, .row .veh, .row .date { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+        .row .veh, .row .date { color: var(--soft); }
+        .row img { width: 46px; height: 46px; object-fit: cover; object-position: top; border-radius: 9px; display: block; }
+        .row .name { font-size: clamp(19px, 2vw, 25px); font-weight: 500; line-height: 1.1; transition: color 160ms var(--ease); }
+        .row .status { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; color: var(--teal); white-space: nowrap; }
+        .row[aria-pressed="true"] { background: rgba(255, 107, 0, 0.08); }
+        .row[aria-pressed="true"] .name { color: var(--orange); }
+        @media (hover: hover) { .row:hover .name { color: var(--orange); } }
+
+        .pane { position: sticky; top: calc(var(--head-h) + 16px); padding: 12px 12px 20px; }
+        .cam { position: relative; height: 340px; display: grid; place-items: center; background: radial-gradient(circle at 50% 42%, #142440, #070B14 72%); overflow: hidden; border-radius: 2px; }
+        .cam > i { position: absolute; width: 18px; height: 18px; border: 0 solid var(--teal); }
+        .cam .tl { top: 10px; left: 10px; border-width: 1px 0 0 1px; } .cam .tr { top: 10px; right: 10px; border-width: 1px 1px 0 0; }
+        .cam .bl { bottom: 10px; left: 10px; border-width: 0 0 1px 1px; } .cam .br { bottom: 10px; right: 10px; border-width: 0 1px 1px 0; }
+        .cam .lbl { position: absolute; top: 16px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--teal); }
+        .cam .lbl.l { left: 36px; } .cam .lbl.r { right: 36px; color: var(--orange); }
+        .pane-body { padding: 14px 8px 0; }
+        .meta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; color: var(--muted); }
+        .pane h2 { font-size: 26px; font-weight: 500; line-height: 1.15; margin: 6px 0 8px; }
+        .pane .desc { font-size: 15px; color: var(--soft); }
+        .perks { list-style: none; display: grid; gap: 3px; margin: 12px 0 14px; font-family: var(--mono); font-size: 11.5px; color: var(--soft); }
+        .perks li::before { content: '› '; color: var(--orange); }
+        .stores { display: flex; flex-wrap: wrap; gap: 8px; }
+        .stores a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-decoration: none; padding: 8px 14px; border: 1px solid #2E3A4E; border-radius: 999px; }
+        .stores a:hover { border-color: var(--orange); color: var(--orange); }
+
+        .svc { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+        .svc > div { padding: 22px; }
+        .svc h3 { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
+        .svc p { font-size: 14.5px; color: var(--soft); }
+        .tools { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px 28px; padding: 22px; }
+        .tools dt { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--orange); margin-bottom: 6px; }
+        .tools dd { font-size: 14px; color: var(--soft); }
+        .duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+        .duo > div { min-width: 0; }
+        .duo .sec-head { margin-bottom: 14px; }
+        .box { padding: 22px; min-height: 164px; }
+        .crew { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 18px; align-items: start; }
+        .crew img { width: 76px; height: 92px; object-fit: cover; object-position: top; display: block; background: radial-gradient(circle at 50% 40%, #142440, #070B14 72%); border: 1px solid var(--line); border-radius: 2px; }
+        .crew p, .contact p { font-size: 15px; color: var(--soft); }
+        .contact p { margin-bottom: 14px; }
+        .mail-line { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+        .addr { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+        .email-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 12px 22px; border-radius: 999px; background: var(--text); color: #0A0E16; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-decoration: none; transition: opacity 200ms var(--ease); }
+        .email-btn:hover { opacity: 0.88; }
+        .rocket { width: 11px; height: 16px; overflow: visible; fill: currentColor; shape-rendering: crispEdges; }
+        .rocket .porthole, .rocket .flame { fill: var(--orange); }
+        .rocket .flame { opacity: 0; }
         @media (prefers-reduced-motion: no-preference) {
-            .dot-divider { animation: dot-drift 6s linear infinite; }
+            .email-btn:hover .rocket, .email-btn.launching .rocket { animation: rocket-launch 1.4s var(--ease) both; }
+            .email-btn:hover .rocket .flame, .email-btn.launching .rocket .flame { animation: rocket-flame 1.4s linear both; }
         }
-        @keyframes dot-drift {
-            from { background-position-x: 0; }
-            to   { background-position-x: 14px; }
+        @keyframes rocket-launch {
+            0% { transform: none; opacity: 1; } 8% { transform: translateX(-1px); } 14% { transform: translateX(1px); } 20% { transform: none; }
+            58% { transform: translateY(-56px); opacity: 0; } 59% { transform: translateY(14px); opacity: 0; } 100% { transform: none; opacity: 1; }
+        }
+        @keyframes rocket-flame {
+            0%, 6% { opacity: 0; } 10%, 26%, 42% { opacity: 1; } 18%, 34%, 50% { opacity: 0.45; } 57%, 100% { opacity: 0; }
+        }
+        .privacy .box p { font-size: 13.5px; color: var(--muted); max-width: 78ch; }
+        .privacy .box p + p { margin-top: 8px; }
+        .privacy a { color: var(--soft); }
+        .site-foot { border-top: 1px solid var(--line); margin-top: 28px; background: rgba(7, 11, 20, 0.8); }
+        .site-foot .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; padding-block: 22px 28px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+        .site-foot nav { display: flex; gap: 18px; }
+        .site-foot a { text-decoration: none; } .site-foot a:hover { color: var(--text); }
+
+        .imp-overlay { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 24px; background: rgba(0, 0, 0, 0.6); opacity: 0; pointer-events: none; transition: opacity 200ms var(--ease); }
+        .imp-overlay.open { opacity: 1; pointer-events: auto; }
+        .imp-modal { position: relative; width: min(640px, 100%); max-height: min(80vh, 720px); overflow-y: auto; background: #0B111E; border: 1px solid var(--line); border-radius: 6px; padding: 34px 30px 30px; }
+        .imp-close { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border-radius: 50%; font-size: 20px; }
+        .imp-close:hover { background: var(--line); }
+        .imp-modal h2 { font-family: var(--dots); font-size: 32px; font-weight: 700; margin-bottom: 16px; }
+        .imp-modal h3 { font-family: var(--mono); font-size: 11px; font-weight: 400; letter-spacing: 0.1em; color: var(--orange); margin: 18px 0 6px; }
+        .imp-modal p { font-size: 15px; color: var(--soft); }
+        .imp-modal p + p { margin-top: 8px; }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .space-bg .star { animation: none; opacity: 0.3; }
+            .space-bg .comet { display: none; }
+        }
+        @media (max-width: 1180px) { .alt { display: none; } }
+        @media (max-width: 1040px) {
+            .log-cols, .row { grid-template-columns: 26px 46px minmax(0, 1fr) 92px 54px; }
+            .log-cols .c-veh, .row .veh { display: none; }
+            .tools { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .svc { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 860px) {
+            :root { --gutter: 16px; }
+            .site-nav { display: none; }
+            .mark span { display: none; }
+            .hero { padding-top: 48px; }
+            .tele { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .tele > div:nth-child(2) { border-right: 0; }
+            .tele > div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+            .console { grid-template-columns: minmax(0, 1fr); }
+            .log-cols { display: none; }
+            .row { grid-template-columns: 22px 44px minmax(0, 1fr) auto; padding-inline: 12px; }
+            .row .date { display: none; }
+            .list .pane { position: static; padding: 0 8px 16px; border-top: 1px solid var(--line-soft); }
+            #pane-slot:empty { display: none; }
+            .cam { height: 300px; margin-top: 8px; }
+            .phone { --u: 104px; } .phone.landscape { --u: 120px; } .watch { --u: 128px; }
+            .svc, .duo, .tools { grid-template-columns: minmax(0, 1fr); }
         }
 
-        /* ─── Story chrome: progress bar + chapter rail ──────────── */
-        .story-progress {
-            position: fixed; top: 0; left: 0; right: 0; height: 2px;
-            z-index: 200; pointer-events: none;
-            background: linear-gradient(90deg, var(--orange), var(--accent));
-            transform: scaleX(0); transform-origin: 0 50%;
-        }
-        .chapter-rail {
-            position: fixed; left: 20px; top: 50%;
-            transform: translateY(-50%); z-index: 90;
-            display: flex; flex-direction: column; gap: 20px;
-        }
-        .chapter-rail a {
-            display: flex; align-items: center; gap: 8px;
-            text-decoration: none;
-        }
-        .rail-dot {
-            width: 7px; height: 7px; border-radius: 50%;
-            background: var(--border-visible);
-            transition: background 250ms var(--ease), transform 250ms var(--ease);
-        }
-        .rail-label {
-            font-family: var(--font-mono); font-size: 9px;
-            letter-spacing: 0.12em;
-            color: var(--text-disabled); opacity: 0.6;
-            transition: color 250ms var(--ease), opacity 250ms var(--ease);
-        }
-        .chapter-rail a.active .rail-dot  { background: var(--orange); transform: scale(1.35); }
-        .chapter-rail a.active .rail-label { color: var(--orange); opacity: 1; }
-        .chapter-rail a:hover .rail-label  { opacity: 1; }
-        /* Altitude readout under the chapter rail — climbs to orbit as you scroll */
-        .alt-hud {
-            position: fixed; left: 20px; bottom: 24px; z-index: 90;
-            display: flex; flex-direction: column; gap: 2px;
-            font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em;
-            color: var(--text-disabled); pointer-events: none;
-        }
-        .alt-val {
-            font-family: var(--font-display); font-size: 20px; letter-spacing: 0;
-            line-height: 1; color: var(--orange);
-        }
-        .alt-status { margin-top: 4px; color: var(--text-secondary); }
-        @media (max-width: 1279px) { .chapter-rail, .alt-hud { display: none; } }
-
-        /* ─── Hero: prologue typewriter + scroll cue ─────────────── */
-        .hero-type {
-            font-family: var(--font-mono); font-size: 14px;
-            letter-spacing: 0.04em; color: var(--orange);
-            min-height: 21px;
-            margin: calc(-1 * var(--space-lg)) 0 var(--space-xl);
-        }
-        #type-text::after {
-            content: ''; display: inline-block;
-            width: 8px; height: 1em; margin-left: 3px;
-            background: var(--orange);
-            vertical-align: text-bottom;
-        }
-        @media (prefers-reduced-motion: no-preference) {
-            #type-text::after { animation: caret-blink 1s steps(1) infinite; }
-        }
-        @keyframes caret-blink { 50% { opacity: 0; } }
-        .scroll-cue {
-            position: absolute; bottom: 24px; left: 50%;
-            transform: translateX(-50%);
-            display: flex; flex-direction: column; align-items: center; gap: 8px;
-            font-family: var(--font-mono); font-size: 10px;
-            letter-spacing: 0.16em; text-transform: uppercase;
-            color: var(--text-disabled);
-        }
-        .scroll-cue::after {
-            content: ''; width: 1px; height: 32px;
-            background: linear-gradient(var(--orange), transparent);
-        }
-        @media (prefers-reduced-motion: no-preference) {
-            .scroll-cue::after { animation: cue-pulse 1.8s var(--ease) infinite; }
-        }
-        @keyframes cue-pulse {
-            0%   { transform: scaleY(0); transform-origin: top; }
-            45%  { transform: scaleY(1); transform-origin: top; }
-            55%  { transform: scaleY(1); transform-origin: bottom; }
-            100% { transform: scaleY(0); transform-origin: bottom; }
-        }
-
-        /* ─── Interludes: big narrative lines between chapters ───── */
-        .interlude {
-            position: relative; z-index: 1;
-            padding: var(--space-3xl) 0;
-            text-align: center;
-        }
-        .interlude-line {
-            font-family: var(--font-display);
-            font-size: clamp(22px, 3.4vw, 34px);
-            line-height: 1.35; letter-spacing: -0.01em;
-            color: var(--text-secondary);
-            opacity: 0; transform: translateY(14px);
-            transition: opacity 600ms var(--ease), transform 600ms var(--ease);
-        }
-        .interlude-line-strong {
-            margin-top: var(--space-sm);
-            color: var(--text-display);
-            transition-delay: 280ms;
-        }
-        .interlude.visible .interlude-line { opacity: 1; transform: none; }
-
-        /* ─── App act chips (story numbering on cards) ───────────── */
-        .app-act {
-            position: absolute; top: 12px; right: 12px; z-index: 2;
-            font-family: var(--font-mono); font-size: 10px;
-            letter-spacing: 0.1em; color: var(--orange);
-            border: 1px solid var(--border-visible); border-radius: 999px;
-            padding: 3px 8px;
-            background: var(--surface);
-        }
     </style>
 </head>
 <body>
 
-<!-- ═══════════ STORY CHROME ═════════════════════════════════════ -->
-<div class="story-progress" id="story-progress" aria-hidden="true"></div>
-<div class="alt-hud" aria-hidden="true">
-    <span data-i18n="hud.alt">ALT</span>
-    <span class="alt-val" id="alt-val">000</span>
-    <span>KM</span>
-    <span class="alt-status" id="alt-status" data-i18n="hud.pad">ON PAD</span>
-</div>
-<nav class="chapter-rail" id="chapter-rail" aria-label="Chapters">
-    <a href="#prologue" class="active" aria-label="Prologue"><span class="rail-dot"></span><span class="rail-label">P</span></a>
-    <a href="#about"    aria-label="Chapter 1"><span class="rail-dot"></span><span class="rail-label">01</span></a>
-    <a href="#tech"     aria-label="Chapter 2"><span class="rail-dot"></span><span class="rail-label">02</span></a>
-    <a href="#apps"     aria-label="Chapter 3"><span class="rail-dot"></span><span class="rail-label">03</span></a>
-    <a href="#services" aria-label="Chapter 4"><span class="rail-dot"></span><span class="rail-label">04</span></a>
-    <a href="#contact"  aria-label="Epilogue"><span class="rail-dot"></span><span class="rail-label">E</span></a>
-</nav>
-
-<!-- ═══════════ SPACE BACKGROUND ═════════════════════════════════ -->
 <div class="space-bg" id="space-bg" aria-hidden="true"></div>
 <canvas class="globe-bg" id="globe-bg" aria-hidden="true"></canvas>
 
-<!-- ═══════════ HEADER ════════════════════════════════════════════ -->
-<header class="site-header" id="hdr">
+<header class="site-head">
     <div class="wrap">
-        <div class="header-row">
-            <a href="#" class="logo">
-                <canvas id="logo-face-canvas" width="32" height="32"></canvas>
-                <span class="logo-name">Andrei Achziger</span>
-            </a>
-            <nav>
-                <ul>
-                    <li><a href="#about"    data-i18n="nav.about">About</a></li>
-                    <li><a href="#tech"     data-i18n="nav.skills">Skills</a></li>
-                    <li><a href="#apps"     data-i18n="nav.apps">Apps</a></li>
-                    <li><a href="#services" data-i18n="nav.services">Services</a></li>
-                    <li><a href="#contact"  data-i18n="nav.contact" class="nav-contact">Contact</a></li>
-                </ul>
-                <div class="header-controls">
-                    <button class="ctrl-btn" id="theme-btn" aria-label="Toggle theme">☀️</button>
-                    <button class="ctrl-btn" id="lang-btn" aria-label="Switch language">🇩🇪</button>
-                </div>
+        <a class="mark" href="#top"><b>AA</b><span>ACHZIGER / MISSION CONTROL</span></a>
+        <div class="head-right">
+            <nav class="site-nav" aria-label="Sections">
+                <a href="#apps" data-i18n="nav.apps">Apps</a>
+                <a href="#services" data-i18n="nav.services">Services</a>
+                <a href="#tools" data-i18n="nav.tools">Tools</a>
+                <a href="#crew" data-i18n="nav.about">About</a>
+                <a href="#contact" data-i18n="nav.contact">Contact</a>
             </nav>
+            <div class="alt" aria-hidden="true"><span data-i18n="hud.alt">ALT</span> <b id="alt-val">000</b> KM · <span id="alt-status" data-i18n="hud.pad">ON PAD</span></div>
+            <button class="toggle" id="lang-btn" type="button" aria-label="Deutsch">DE</button>
         </div>
     </div>
 </header>
 
-<!-- ═══════════ HERO ══════════════════════════════════════════════ -->
-<section class="hero" id="prologue">
-    <div class="wrap">
-        <div class="hero-inner">
-            <div class="hero-text">
-                <div class="eyebrow" data-i18n="hero.eyebrow">T−00 · Prologue</div>
-                <h1 class="hero-title">
-                    <span data-i18n="hero.greeting">Hello, I'm</span><br>Andrei
-                </h1>
-                <p class="hero-sub" data-i18n="hero.sub">
-                    This is the story of a curious mind that learned to code — and started shipping. Mobile apps, games, and tools that are useful, playful, and a little unexpected.
-                </p>
-                <p class="hero-type" aria-hidden="true"><span id="type-text"></span></p>
-                <div class="hero-actions">
-                    <a href="#about"   class="btn btn-primary" data-i18n="hero.cta_apps">Start the Story</a>
-                    <a href="#contact" class="btn btn-secondary" data-i18n="hero.cta_contact">Get in Touch</a>
-                </div>
-            </div>
-            <div class="hero-face" id="hero-face">
-                <canvas id="hero-face-canvas"></canvas>
-            </div>
+<main id="top">
+    <section class="wrap hero">
+        <p class="eyebrow" data-i18n="hero.eyebrow">LAUNCH CONTROL · SINCE 2020</p>
+        <h1 data-i18n-html="hero.title">Six launches.<br>All still in orbit.</h1>
+        <p class="sub" data-i18n="hero.sub">Games and tools for iPhone, Apple Watch and Android, built by Andrei Achziger.</p>
+        <div class="ctas"><a class="btn solid" href="#apps" data-i18n="hero.cta1">VIEW LAUNCH LOG</a><a class="btn" href="#contact" data-i18n="hero.cta2">OPEN A CHANNEL</a></div>
+        <div class="tele">
+            <div><small data-i18n="tele.launches">LAUNCHES</small><b>06</b></div>
+            <div><small data-i18n="tele.first">FIRST LAUNCH</small><b>2020</b></div>
+            <div><small data-i18n="tele.latest">LATEST LAUNCH</small><b>2026</b></div>
+            <div><small data-i18n="tele.platforms">PLATFORMS</small><span>iPhone · Apple Watch · Android</span></div>
         </div>
-    </div>
-    <div class="scroll-cue" data-i18n="hero.scroll">Scroll to begin</div>
-</section>
+    </section>
 
-<div class="divider"></div>
-
-<!-- ═══════════ ABOUT ═════════════════════════════════════════════ -->
-<div class="dot-divider" aria-hidden="true"></div>
-
-<section class="section" id="about">
-    <div class="wrap">
-        <div class="about-grid">
-            <div>
-                <div class="eyebrow" data-i18n="about.eyebrow">T+01 · The Question</div>
-                <h2 class="sh" data-i18n-html="about.heading">It began with a <span class="accent">question</span></h2>
-                <p class="sb" data-i18n="about.desc">"How does a mind work?" I chased that question into Cognitive Science — computer science, AI, psychology, philosophy, neuroscience. I came back with fewer answers and much better obsessions:</p>
-                <div class="tags">
-                    <span class="tag" data-emoji="📖" data-i18n="tag.philosophy">Philosophy</span>
-                    <span class="tag" data-emoji="🧠" data-i18n="tag.neuro">Neuroscience</span>
-                    <span class="tag" data-emoji="🎭" data-i18n="tag.psych">Psychology</span>
-                    <span class="tag" data-emoji="📊" data-i18n="tag.dataviz">Data Visualization</span>
-                    <span class="tag" data-emoji="♟️" data-i18n="tag.chess">Chess</span>
-                    <span class="tag" data-emoji="🛹" data-i18n="tag.skate">Skateboarding</span>
-                    <span class="tag" data-emoji="🤖" data-i18n="tag.ai">AI</span>
-                    <span class="tag" data-emoji="🏃" data-i18n="tag.running">Running</span>
-                    <span class="tag" data-emoji="🎸" data-i18n="tag.guitar">Guitar</span>
-                    <span class="tag" data-emoji="🐾" data-i18n="tag.animals">Animals</span>
-                    <span class="tag" data-emoji="💬" data-i18n="tag.langs">Languages</span>
-                    <span class="tag" data-emoji="🕸️" data-i18n="tag.graphs">Graph Theory</span>
-                    <span class="tag" data-emoji="🔢" data-i18n="tag.maths">Mathematics</span>
-
-                    <span class="tag" data-emoji="🚀" data-i18n="tag.space">Space</span>
-                    <span class="tag" data-emoji="🎮" data-i18n="tag.games">Video Games</span>
-                </div>
+    <section class="wrap section" id="apps" aria-labelledby="log-title">
+        <h2 class="sec-head"><span id="log-title" data-i18n="log.title">LAUNCH LOG</span><span>6 / 6 LIVE</span></h2>
+        <div class="console">
+            <div class="panel list" id="app-list">
+                <div class="log-cols" aria-hidden="true"><span data-i18n="log.no">NO.</span><span></span><span>MISSION</span><span class="c-veh" data-i18n="log.vehicle">PLATFORM</span><span data-i18n="log.launch">LAUNCH</span><span>STATUS</span></div>
+                    <button class="row" type="button" data-k="sk" aria-pressed="true" aria-controls="app-pane"><span class="no">06</span><img src="dist/videos/skaty.jpg" alt=""><span class="name">Skaty Watch</span><span class="veh">APPLE WATCH</span><span class="date">2026-09-08</span><span class="status">● LIVE</span></button>
+                    <button class="row" type="button" data-k="ud" aria-pressed="false" aria-controls="app-pane"><span class="no">05</span><img src="dist/videos/dino.jpg" alt=""><span class="name">Up Dino Up</span><span class="veh">iPHONE · ANDROID</span><span class="date">2026-08-24</span><span class="status">● LIVE</span></button>
+                    <button class="row" type="button" data-k="mk" aria-pressed="false" aria-controls="app-pane"><span class="no">04</span><img src="dist/videos/merge.jpg" alt=""><span class="name">MergeKey</span><span class="veh">iPHONE</span><span class="date">2024-08-13</span><span class="status">● LIVE</span></button>
+                    <button class="row" type="button" data-k="fw" aria-pressed="false" aria-controls="app-pane"><span class="no">03</span><img src="dist/videos/fishy.jpg" alt=""><span class="name">Fishy Watch</span><span class="veh">APPLE WATCH</span><span class="date">2023-06-06</span><span class="status">● LIVE</span></button>
+                    <button class="row" type="button" data-k="rd" aria-pressed="false" aria-controls="app-pane"><span class="no">02</span><img src="dist/videos/random.jpg" alt=""><span class="name">Random Drop</span><span class="veh">iPHONE</span><span class="date">2020-05-18</span><span class="status">● LIVE</span></button>
+                    <button class="row" type="button" data-k="wt" aria-pressed="false" aria-controls="app-pane"><span class="no">01</span><img src="dist/videos/weltraum.jpg" alt=""><span class="name">Weltraum</span><span class="veh">iPHONE</span><span class="date">2020-03-20</span><span class="status">● LIVE</span></button>
             </div>
-            <div class="emoji-card" id="emoji-card">
-                <canvas class="emoji-canvas" id="emoji-canvas"></canvas>
-            </div>
-        </div>
-    </div>
-</section>
-
-<div class="divider"></div>
-
-<section class="interlude">
-    <div class="wrap">
-        <p class="interlude-line" data-i18n="int1.l1">Questions are cheap.</p>
-        <p class="interlude-line interlude-line-strong" data-i18n="int1.l2">Building answers is the fun part.</p>
-    </div>
-</section>
-
-<!-- ═══════════ TECH STACK ════════════════════════════════════════ -->
-<div class="dot-divider" aria-hidden="true"></div>
-
-<section class="section" id="tech">
-    <div class="wrap">
-        <div class="tech-head section-head">
-            <div class="eyebrow" data-i18n="tech.eyebrow">T+02 · The Craft</div>
-            <h2 class="sh" data-i18n-html="tech.heading">Tools, collected <span class="accent">one problem at a time</span></h2>
-            <p class="sb"        data-i18n="tech.desc">Startups, industry floors, long indie nights. Every project left a tool behind — from native iOS to cloud infrastructure.</p>
-        </div>
-        <div class="tech-grid">
-            <div class="tech-card">
-                <div class="tech-card-label" data-i18n="tech.lbl.ios">iOS & Apple Platforms</div>
-                <div class="tech-pills">
-                    <span class="tech-pill">Swift</span><span class="tech-pill">SwiftUI</span>
-                    <span class="tech-pill">UIKit</span><span class="tech-pill">WatchKit</span>
-                    <span class="tech-pill">CoreML</span><span class="tech-pill">ARKit</span>
-                    <span class="tech-pill">CoreBluetooth</span><span class="tech-pill">SpriteKit</span>
-                    <span class="tech-pill">CoreMotion</span><span class="tech-pill">AVFoundation</span>
-                    <span class="tech-pill">StoreKit</span><span class="tech-pill">Objective-C</span>
-                </div>
-            </div>
-            <div class="tech-card">
-                <div class="tech-card-label" data-i18n="tech.lbl.cross">Mobile & Cross-Platform</div>
-                <div class="tech-pills">
-                    <span class="tech-pill">React Native</span><span class="tech-pill">Flutter</span>
-                    <span class="tech-pill">.NET MAUI</span><span class="tech-pill">Xamarin</span>
-                    <span class="tech-pill">Ionic</span><span class="tech-pill">Cordova</span>
-                    <span class="tech-pill">Dart</span><span class="tech-pill">C#</span>
-                </div>
-            </div>
-            <div class="tech-card">
-                <div class="tech-card-label" data-i18n="tech.lbl.web">Web & Backend</div>
-                <div class="tech-pills">
-                    <span class="tech-pill">TypeScript</span><span class="tech-pill">JavaScript</span>
-                    <span class="tech-pill">Angular</span><span class="tech-pill">Node.js</span>
-                    <span class="tech-pill">HTML / CSS</span><span class="tech-pill">REST APIs</span>
-                    <span class="tech-pill">Firebase</span>
-                </div>
-            </div>
-            <div class="tech-card">
-                <div class="tech-card-label" data-i18n="tech.lbl.cloud">Cloud & DevOps</div>
-                <div class="tech-pills">
-                    <span class="tech-pill">Kubernetes</span><span class="tech-pill">Docker</span>
-                    <span class="tech-pill">GCP</span><span class="tech-pill">Microsoft Azure</span>
-                    <span class="tech-pill">GitLab CI</span><span class="tech-pill">GitHub</span>
-                    <span class="tech-pill">Git</span>
-                </div>
-            </div>
-            <div class="tech-card">
-                <div class="tech-card-label" data-i18n="tech.lbl.hw">Connectivity & Hardware</div>
-                <div class="tech-pills">
-                    <span class="tech-pill">NFC</span><span class="tech-pill">Bluetooth LE</span>
-                    <span class="tech-pill">Multipeer Connectivity</span><span class="tech-pill">IoT</span>
-                    <span class="tech-pill">Tinkerforge</span><span class="tech-pill">Game Center</span>
-                </div>
-            </div>
-            <div class="tech-card">
-                <div class="tech-card-label" data-i18n="tech.lbl.ai">AI & Machine Learning</div>
-                <div class="tech-pills">
-                    <span class="tech-pill">CoreML</span><span class="tech-pill">Vision Framework</span>
-                    <span class="tech-pill">LLM APIs</span><span class="tech-pill">Prompt Engineering</span>
-                    <span class="tech-pill">Computer Vision</span><span class="tech-pill">Python</span>
-                    <span class="tech-pill">Firebase ML</span>
-                </div>
-            </div>
-            <div class="tech-card">
-                <div class="tech-card-label" data-i18n="tech.lbl.game">Game Dev & 3D</div>
-                <div class="tech-pills">
-                    <span class="tech-pill">Unity</span><span class="tech-pill">Blender</span>
-                    <span class="tech-pill">C#</span><span class="tech-pill">SpriteKit</span>
-                    <span class="tech-pill">ARKit</span><span class="tech-pill">SceneKit</span>
-                    <span class="tech-pill">Aseprite</span>
-                </div>
-            </div>
-            <div class="tech-card">
-                <div class="tech-card-label" data-i18n="tech.lbl.design">Design & Tools</div>
-                <div class="tech-pills">
-                    <span class="tech-pill">Figma</span><span class="tech-pill">Adobe Ps / Ai / Ae</span>
-                    <span class="tech-pill">Sketch</span><span class="tech-pill">AutoCAD</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<div class="divider"></div>
-
-<section class="interlude">
-    <div class="wrap">
-        <p class="interlude-line" data-i18n="int2.l1">At some point, learning isn&rsquo;t enough.</p>
-        <p class="interlude-line interlude-line-strong" data-i18n="int2.l2">You have to ship.</p>
-    </div>
-</section>
-
-<div class="dot-divider" aria-hidden="true"></div>
-
-<!-- ═══════════ APPS ══════════════════════════════════════════════ -->
-<section class="section" id="apps">
-    <div class="wrap">
-
-        <div class="apps-head section-head">
-            <div class="eyebrow" data-i18n="apps.eyebrow">T+03 · The Artifacts</div>
-            <h2 class="sh" data-i18n-html="apps.heading">What <span class="accent">escaped</span> the lab</h2>
-            <p class="sb"       data-i18n="apps.desc">Each app began as one of those questions — about play, reflexes, attention, typing, and lately climbing and skating. In order of appearance:</p>
-        </div>
-
-        <div class="app-track-wrap">
-            <div class="app-track">
-
-<!-- Weltraum -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <span class="app-act" aria-hidden="true">I</span>
-                            <div class="app-card-visual">
-                                <div class="device phone"><video class="device-screen" src="dist/videos/weltraum.mp4" poster="dist/videos/weltraum.jpg" muted loop playsinline preload="none" aria-label="Weltraum gameplay"></video><span class="island"></span></div>
-                            </div>
-                            <span class="app-label" data-i18n="wt.label">Multiplayer · Strategy</span>
-                            <h3 class="app-title">Weltraum</h3>
-                            <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Weltraum on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
-                        </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <div class="device phone"><img class="device-screen" src="dist/videos/weltraum.jpg" alt="" decoding="async"><span class="island"></span></div>
-                            </div>
-                            <h3 class="app-back-title">Weltraum</h3>
-                            <p class="app-desc" data-i18n="wt.desc">Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="wt.perk1">Real-time multiplayer via Bluetooth</span>
-                                <span class="app-perk" data-i18n="wt.perk2">Game Center integration</span>
-                                <span class="app-perk" data-i18n="wt.perk3">Unique orbit-based mechanics</span>
-                            </div>
-                            <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Weltraum on the App Store">
-                            </a>
+            <div id="pane-slot">
+                <div class="panel pane" id="app-pane" role="region" aria-live="polite" aria-label="App preview">
+                    <div class="cam">
+                        <i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i>
+                        <span class="lbl l" id="cam-label">CAM 06 · SKATY WATCH</span><span class="lbl r">● REC</span>
+                        <div class="device watch" id="device">
+                            <span class="band top"></span><span class="band bottom"></span>
+                            <video class="device-screen" id="app-video" src="dist/videos/skaty.mp4" poster="dist/videos/skaty.jpg" muted loop playsinline preload="none" aria-label="Skaty Watch gameplay"></video>
+                            <span class="island"></span><span class="crown"></span>
                         </div>
                     </div>
-                </div>
-<!-- Random Drop -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <span class="app-act" aria-hidden="true">II</span>
-                            <div class="app-card-visual">
-                                <div class="device phone"><video class="device-screen" src="dist/videos/random.mp4" poster="dist/videos/random.jpg" muted loop playsinline preload="none" aria-label="Random Drop gameplay"></video><span class="island"></span></div>
-                            </div>
-                            <span class="app-label" data-i18n="rd.label">Arcade · Game</span>
-                            <h3 class="app-title">Random Drop</h3>
-                            <a href="https://apps.apple.com/us/app/random-drop/id1513193929" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Random Drop on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
-                        </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <div class="device phone"><img class="device-screen" src="dist/videos/random.jpg" alt="" decoding="async"><span class="island"></span></div>
-                            </div>
-                            <h3 class="app-back-title">Random Drop</h3>
-                            <p class="app-desc" data-i18n="rd.desc">A fast-paced arcade game where balls drop in out of nowhere. Pure reflex, pure fun — pick it up anytime, anywhere, and see how long you last.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="rd.perk1">Instant pick-up-and-play action</span>
-                                <span class="app-perk" data-i18n="rd.perk2">Unpredictable ball drops</span>
-                                <span class="app-perk" data-i18n="rd.perk3">Short rounds, endless replay</span>
-                            </div>
-                            <a href="https://apps.apple.com/us/app/random-drop/id1513193929" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Random Drop on the App Store">
-                            </a>
-                        </div>
+                    <div class="pane-body">
+                        <div class="meta"><span id="pane-year">2026</span><span id="pane-plat">Apple Watch</span><span id="pane-type">APPLE WATCH · GAME</span></div>
+                        <h2 id="pane-name">Skaty Watch</h2>
+                        <p class="desc" id="pane-desc"></p>
+                        <ul class="perks" id="pane-perks"></ul>
+                        <div class="stores" id="pane-stores"><a href="https://apps.apple.com/us/app/skaty-watch/id6449743798" target="_blank" rel="noopener">App Store ↗</a></div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
 
-                <!-- Fishy Watch -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <span class="app-act" aria-hidden="true">III</span>
-                            <div class="app-card-visual">
-                                <div class="device watch"><span class="band top"></span><span class="band bottom"></span><video class="device-screen" src="dist/videos/fishy.mp4" poster="dist/videos/fishy.jpg" muted loop playsinline preload="none" aria-label="Fishy Watch gameplay"></video><span class="crown"></span></div>
-                            </div>
-                            <span class="app-label" data-i18n="fw.label">Apple Watch · Game</span>
-                            <h3 class="app-title">Fishy Watch</h3>
-                            <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Fishy Watch on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
-                        </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <div class="device watch"><span class="band top"></span><span class="band bottom"></span><img class="device-screen" src="dist/videos/fishy.jpg" alt="" decoding="async"><span class="crown"></span></div>
-                            </div>
-                            <h3 class="app-back-title">Fishy Watch</h3>
-                            <p class="app-desc" data-i18n="fw.desc">A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="fw.perk1">Dozens of fish to catch & collect</span>
-                                <span class="app-perk" data-i18n="fw.perk2">Feed and interact with your catch</span>
-                                <span class="app-perk" data-i18n="fw.perk3">Designed natively for Apple Watch</span>
-                            </div>
-                            <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Fishy Watch on the App Store">
-                            </a>
-                        </div>
-                    </div>
+    <section class="wrap section" id="services" aria-labelledby="services-label">
+        <h2 class="sec-head"><span id="services-label" data-i18n="services.label">Services</span></h2>
+        <div class="svc">
+                <div class="panel"><h3 data-i18n="srv1.title">Mobile App Development</h3><p data-i18n="srv1.desc">Native iOS in Swift/SwiftUI or cross-platform with React Native and Flutter. From initial concept through App Store submission — including WatchKit, CoreBluetooth, and hardware integrations.</p></div>
+                <div class="panel"><h3 data-i18n="srv2.title">AI Integration</h3><p data-i18n="srv2.desc">Embedding AI into your product — on-device with CoreML/Vision, in the cloud with LLM APIs, or custom computer vision models. Proven experience fine-tuning and deploying real-time ML pipelines.</p></div>
+                <div class="panel"><h3 data-i18n="srv3.title">Web &amp; Frontend</h3><p data-i18n="srv3.desc">Modern, responsive web apps with Angular, TypeScript, and Node.js. Clean UI/UX grounded in Figma, with a keen eye on performance and accessibility.</p></div>
+                <div class="panel"><h3 data-i18n="srv4.title">Cloud &amp; DevOps</h3><p data-i18n="srv4.desc">Containerised, scalable infrastructure on GCP or Azure. Kubernetes orchestration, Docker pipelines, and GitLab CI/CD — building systems that are reliable and easy to maintain.</p></div>
+                <div class="panel"><h3 data-i18n="srv5.title">Hardware &amp; Connectivity</h3><p data-i18n="srv5.desc">NFC and Bluetooth LE integrations, IoT sensor systems, and industrial hardware interfaces. Experience connecting the physical world to apps — from medical devices to factory floors.</p></div>
+                <div class="panel"><h3 data-i18n="srv6.title">Tech Consulting</h3><p data-i18n="srv6.desc">Interdisciplinary background in Cognitive Science, AI, and engineering — great for architecture reviews, stack decisions, MVP scoping, code quality, and turning complex ideas into working prototypes fast.</p></div>
+        </div>
+    </section>
+
+    <section class="wrap section" id="tools" aria-labelledby="tools-label">
+        <h2 class="sec-head"><span id="tools-label" data-i18n="tools.label">Tools</span></h2>
+        <div class="panel"><dl class="tools">
+                <div><dt data-i18n="tools.ios">iOS &amp; Apple platforms</dt><dd>Swift, SwiftUI, UIKit, WatchKit, CoreML, ARKit, CoreBluetooth, SpriteKit, CoreMotion, AVFoundation, StoreKit, Objective-C</dd></div>
+                <div><dt data-i18n="tools.cross">Mobile &amp; cross-platform</dt><dd>React Native, Flutter, .NET MAUI, Xamarin, Ionic, Cordova, Dart, C#</dd></div>
+                <div><dt data-i18n="tools.web">Web &amp; backend</dt><dd>TypeScript, JavaScript, Angular, Node.js, HTML / CSS, REST APIs, Firebase</dd></div>
+                <div><dt data-i18n="tools.cloud">Cloud &amp; DevOps</dt><dd>Kubernetes, Docker, GCP, Microsoft Azure, GitLab CI, GitHub, Git</dd></div>
+                <div><dt data-i18n="tools.hw">Connectivity &amp; hardware</dt><dd>NFC, Bluetooth LE, Multipeer Connectivity, IoT, Tinkerforge, Game Center</dd></div>
+                <div><dt data-i18n="tools.ai">AI &amp; machine learning</dt><dd>CoreML, Vision Framework, LLM APIs, Prompt Engineering, Computer Vision, Python, Firebase ML</dd></div>
+                <div><dt data-i18n="tools.game">Game development &amp; 3D</dt><dd>Unity, Blender, C#, SpriteKit, ARKit, SceneKit, Aseprite</dd></div>
+                <div><dt data-i18n="tools.design">Design</dt><dd>Figma, Adobe Ps / Ai / Ae, Sketch, AutoCAD</dd></div>
+            </dl></div>
+    </section>
+
+    <section class="wrap section duo">
+        <div id="crew">
+            <h2 class="sec-head"><span data-i18n="crew.label">Crew</span></h2>
+            <div class="panel box crew">
+                <img src="dist/images/crew.webp" alt="Andrei Achziger in a space helmet" width="76" height="92">
+                <p data-i18n="about.text">I'm Andrei Achziger, a software engineer with a B.Sc. in Cognitive Science, based in Germany. I build my own apps and help teams ship theirs.</p>
+            </div>
+        </div>
+        <div id="contact" class="contact">
+            <h2 class="sec-head"><span data-i18n="contact.label">Contact</span></h2>
+            <div class="panel box">
+                <p data-i18n="contact.text">Questions about one of my apps, need support, or have a project in mind? Write to me.</p>
+                <div class="mail-line">
+                    <a class="email-btn" id="email-btn" href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact%20from%20Website">
+                        <svg class="rocket" viewBox="0 0 9 13" aria-hidden="true"><rect x="4" y="0" width="1" height="1"/><rect x="3" y="1" width="3" height="8"/><rect x="2" y="6" width="1" height="3"/><rect x="6" y="6" width="1" height="3"/><rect x="1" y="8" width="1" height="1"/><rect x="7" y="8" width="1" height="1"/><rect class="porthole" x="4" y="3" width="1" height="1"/><g class="flame"><rect x="3" y="9" width="3" height="1"/><rect x="4" y="10" width="1" height="2"/></g></svg>
+                        <span data-i18n="contact.btn">MAIL ME</span>
+                    </a>
+                    <span class="addr">andrei.zerodeathgames@gmail.com</span>
                 </div>
-
-                <!-- MergeKey -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <span class="app-act" aria-hidden="true">IV</span>
-                            <div class="app-card-visual">
-                                <div class="device phone"><video class="device-screen" src="dist/videos/merge.mp4" poster="dist/videos/merge.jpg" muted loop playsinline preload="none" aria-label="MergeKey typing demo"></video><span class="island"></span></div>
-                            </div>
-                            <span class="app-label" data-i18n="mk.label">Keyboard · Productivity</span>
-                            <h3 class="app-title">MergeKey</h3>
-                            <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
-                        </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <div class="device phone"><img class="device-screen" src="dist/videos/merge.jpg" alt="" decoding="async"><span class="island"></span></div>
-                            </div>
-                            <h3 class="app-back-title">MergeKey</h3>
-                            <p class="app-desc" data-i18n="mk.desc">The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="mk.perk1">Dynamic, adaptive word learning</span>
-                                <span class="app-perk" data-i18n="mk.perk2">Reduces typos in real time</span>
-                                <span class="app-perk" data-i18n="mk.perk3">Fully customizable personal dictionary</span>
-                            </div>
-                            <div class="badge-row">
-                                <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link" onclick="event.stopPropagation()">
-                                    <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Up Dino Up -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <span class="app-act" aria-hidden="true">V</span>
-                            <div class="app-card-visual">
-                                <div class="device phone landscape"><video class="device-screen" src="dist/videos/dino.mp4" poster="dist/videos/dino.jpg" muted loop playsinline preload="none" aria-label="Up Dino Up gameplay"></video><span class="island"></span></div>
-                            </div>
-                            <span class="app-label" data-i18n="ud.label">Arcade · Platformer</span>
-                            <h3 class="app-title">Up Dino Up</h3>
-                            <div class="badge-row">
-                                <a href="https://apps.apple.com/us/app/up-dino-up/id6766686500" class="badge-link" onclick="event.stopPropagation()">
-                                    <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Up Dino Up on the App Store">
-                                </a>
-                                <a href="https://play.google.com/store/apps/details?id=com.zerodeathgames.updinoup" class="badge-link" onclick="event.stopPropagation()">
-                                    <img src="src/images/GetItOnGooglePlay.svg" decoding="async" alt="Get Up Dino Up on Google Play">
-                                </a>
-                            </div>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
-                        </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <div class="device phone landscape"><img class="device-screen" src="dist/videos/dino.jpg" alt="" decoding="async"><span class="island"></span></div>
-                            </div>
-                            <h3 class="app-back-title">Up Dino Up</h3>
-                            <p class="app-desc" data-i18n="ud.desc">A little dino, an endless tower, and a novel take on jump-and-run controls: hold a side to run, swipe to jump, kick off the walls — fast, agile movement from two simple gestures. Every climb is freshly generated, from dark caves up into the open sky.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="ud.perk1">Novel hold-and-swipe movement controls</span>
-                                <span class="app-perk" data-i18n="ud.perk2">Wall-jumps, double jumps & crumbling blocks</span>
-                                <span class="app-perk" data-i18n="ud.perk3">4 dinos · 23 languages · kid-friendly</span>
-                            </div>
-                            <div class="badge-row">
-                                <a href="https://apps.apple.com/us/app/up-dino-up/id6766686500" class="badge-link" onclick="event.stopPropagation()">
-                                    <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Up Dino Up on the App Store">
-                                </a>
-                                <a href="https://play.google.com/store/apps/details?id=com.zerodeathgames.updinoup" class="badge-link" onclick="event.stopPropagation()">
-                                    <img src="src/images/GetItOnGooglePlay.svg" decoding="async" alt="Get Up Dino Up on Google Play">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Skaty Watch -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <span class="app-act" aria-hidden="true">VI</span>
-                            <div class="app-card-visual">
-                                <div class="device watch"><span class="band top"></span><span class="band bottom"></span><video class="device-screen" src="dist/videos/skaty.mp4" poster="dist/videos/skaty.jpg" muted loop playsinline preload="none" aria-label="Skaty Watch gameplay"></video><span class="crown"></span></div>
-                            </div>
-                            <span class="app-label" data-i18n="sk.label">Apple Watch · Game</span>
-                            <h3 class="app-title">Skaty Watch</h3>
-                            <a href="https://apps.apple.com/us/app/skaty-watch/id6449743798" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Skaty Watch on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
-                        </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <div class="device watch"><span class="band top"></span><span class="band bottom"></span><img class="device-screen" src="dist/videos/skaty.jpg" alt="" decoding="async"><span class="crown"></span></div>
-                            </div>
-                            <h3 class="app-back-title">Skaty Watch</h3>
-                            <p class="app-desc" data-i18n="sk.desc">A flip-trick game on your wrist — no riding around, just you and the board. Crouch, flick to pop and spin, tap to catch — land flat for a Perfect. Satisfying flick controls with real skate timing, from ollies to 360 flips.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="sk.perk1">Pure flip tricks — flick, spin, catch</span>
-                                <span class="app-perk" data-i18n="sk.perk2">Ollies to 360 flips, regular or goofy</span>
-                                <span class="app-perk" data-i18n="sk.perk3">Four modes, haptics, no ads</span>
-                            </div>
-                            <a href="https://apps.apple.com/us/app/skaty-watch/id6449743798" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Skaty Watch on the App Store">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                
-                
             </div>
         </div>
+    </section>
 
-    </div>
-</section>
+    <section class="wrap section privacy" id="privacy" aria-labelledby="privacy-label">
+        <h2 class="sec-head"><span id="privacy-label" data-i18n="privacy.heading">Privacy Policy</span></h2>
+        <div class="panel box">
+                <p data-i18n="privacy.p1">Apps provided by Andrei Achziger are intended for use as is. This page informs visitors about my policies regarding the collection, use, and disclosure of personal information. If you choose to use my services, your personal information will not be stored, distributed, or analyzed by me.</p>
+                <p data-i18n="privacy.p2">Andrei Achziger does not take responsibility for data processed by third-party platforms such as Google, as I have no access to or insight into their data collection and processing practices. Any data collection via those platforms is primarily used to serve relevant ads.</p>
+                <p data-i18n="privacy.p4">My apps are suitable for children. Since my apps collect no personal information at all, no data from children or any other users is collected, stored, or shared. Game progress and settings (such as high scores) are saved only locally on your device and are removed when the app is uninstalled.</p>
+                <p data-i18n="privacy.p5">Health data: Fishy Watch can read your heart rate to power in-game features such as the fish tank experience. All heart rate measurements are processed exclusively on your device and never leave it — they are not stored permanently, transmitted, or shared with me or any third party.</p>
+                <p data-i18n-html="privacy.mk">MergeKey has its own, more detailed policy: <a href="mergekey-privacy.html">MergeKey privacy policy</a>.</p>
+                <p data-i18n="privacy.p3">This policy may be updated when necessary — please check this page periodically for changes. Updates take effect immediately upon posting. — Andrei Achziger</p>
+            </div>
+    </section>
+</main>
 
-<div class="divider"></div>
-
-<section class="interlude">
+<footer class="site-foot">
     <div class="wrap">
-        <p class="interlude-line" data-i18n="int3.l1">Shipping my own apps taught me the whole journey.</p>
-        <p class="interlude-line interlude-line-strong" data-i18n="int3.l2">Now I walk it with others.</p>
-    </div>
-</section>
-
-<!-- ═══════════ SERVICES ══════════════════════════════════════════ -->
-<div class="dot-divider" aria-hidden="true"></div>
-
-<section class="section" id="services">
-    <div class="wrap">
-        <div class="services-head section-head">
-            <div class="eyebrow" data-i18n="srv.eyebrow">T+04 · Your Story</div>
-            <h2 class="sh" data-i18n-html="srv.heading">What I can <span class="accent">build</span> with you</h2>
-            <p class="sb"        data-i18n="srv.desc">Years across startups, industry, and indie development — here's where I add real value to your story.</p>
-        </div>
-        <div class="services-grid">
-            <div class="srv">
-                <div class="srv-cat">01</div>
-                <h3 class="srv-title" data-i18n="srv1.title">Mobile App Development</h3>
-                <p  class="srv-desc"  data-i18n="srv1.desc">Native iOS in Swift/SwiftUI or cross-platform with React Native and Flutter. From initial concept through App Store submission — including WatchKit, CoreBluetooth, and hardware integrations.</p>
-            </div>
-            <div class="srv">
-                <div class="srv-cat">02</div>
-                <h3 class="srv-title" data-i18n="srv2.title">AI Integration</h3>
-                <p  class="srv-desc"  data-i18n="srv2.desc">Embedding AI into your product — on-device with CoreML/Vision, in the cloud with LLM APIs, or custom computer vision models. Proven experience fine-tuning and deploying real-time ML pipelines.</p>
-            </div>
-            <div class="srv">
-                <div class="srv-cat">03</div>
-                <h3 class="srv-title" data-i18n="srv3.title">Web & Frontend</h3>
-                <p  class="srv-desc"  data-i18n="srv3.desc">Modern, responsive web apps with Angular, TypeScript, and Node.js. Clean UI/UX grounded in Figma, with a keen eye on performance and accessibility.</p>
-            </div>
-            <div class="srv">
-                <div class="srv-cat">04</div>
-                <h3 class="srv-title" data-i18n="srv4.title">Cloud & DevOps</h3>
-                <p  class="srv-desc"  data-i18n="srv4.desc">Containerised, scalable infrastructure on GCP or Azure. Kubernetes orchestration, Docker pipelines, and GitLab CI/CD — building systems that are reliable and easy to maintain.</p>
-            </div>
-            <div class="srv">
-                <div class="srv-cat">05</div>
-                <h3 class="srv-title" data-i18n="srv5.title">Hardware & Connectivity</h3>
-                <p  class="srv-desc"  data-i18n="srv5.desc">NFC and Bluetooth LE integrations, IoT sensor systems, and industrial hardware interfaces. Experience connecting the physical world to apps — from medical devices to factory floors.</p>
-            </div>
-            <div class="srv">
-                <div class="srv-cat">06</div>
-                <h3 class="srv-title" data-i18n="srv6.title">Tech Consulting</h3>
-                <p  class="srv-desc"  data-i18n="srv6.desc">Interdisciplinary background in Cognitive Science, AI, and engineering — great for architecture reviews, stack decisions, MVP scoping, code quality, and turning complex ideas into working prototypes fast.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ═══════════ CONTACT ═══════════════════════════════════════════ -->
-<div class="dot-divider" aria-hidden="true"></div>
-
-<section class="section" id="contact">
-    <div class="wrap">
-        <div class="contact-box">
-            <div class="eyebrow" data-i18n="contact.eyebrow">T+05 · Epilogue</div>
-            <h2 class="contact-title" data-i18n-html="contact.title">Every ending is a <span class="accent">beginning</span></h2>
-            <p  class="contact-sub"   data-i18n="contact.sub">Have an idea for the next chapter — or just want to say hi? I'm happy to hear from you.</p>
-            <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website" class="email-btn" id="email-btn">
-                <svg class="rocket" viewBox="0 0 9 13" aria-hidden="true">
-                    <rect x="4" y="0" width="1" height="1"/><rect x="3" y="1" width="3" height="8"/>
-                    <rect x="2" y="6" width="1" height="3"/><rect x="6" y="6" width="1" height="3"/>
-                    <rect x="1" y="8" width="1" height="1"/><rect x="7" y="8" width="1" height="1"/>
-                    <rect class="porthole" x="4" y="3" width="1" height="1"/>
-                    <g class="flame"><rect x="3" y="9" width="3" height="1"/><rect x="4" y="10" width="1" height="2"/></g>
-                </svg>
-                <span data-i18n="contact.btn">Mail me</span>
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- ═══════════ PRIVACY ═══════════════════════════════════════════ -->
-<section class="privacy" id="privacy">
-    <div class="wrap">
-        <div class="privacy-box">
-            <h3 data-i18n="privacy.heading">Privacy Policy</h3>
-            <p data-i18n="privacy.p1">Apps provided by Andrei Achziger are intended for use as is. This page informs visitors about my policies regarding the collection, use, and disclosure of personal information. If you choose to use my services, your personal information will not be stored, distributed, or analyzed by me.</p>
-            <p data-i18n="privacy.p2">Andrei Achziger does not take responsibility for data processed by third-party platforms such as Google, as I have no access to or insight into their data collection and processing practices. Any data collection via those platforms is primarily used to serve relevant ads.</p>
-            <p data-i18n="privacy.p4">My apps are suitable for children. Since my apps collect no personal information at all, no data from children or any other users is collected, stored, or shared. Game progress and settings (such as high scores) are saved only locally on your device and are removed when the app is uninstalled.</p>
-            <p data-i18n="privacy.p5">Health data: Fishy Watch can read your heart rate to power in-game features such as the fish tank experience. All heart rate measurements are processed exclusively on your device and never leave it — they are not stored permanently, transmitted, or shared with me or any third party.</p>
-            <p data-i18n-html="privacy.mk">MergeKey has its own, more detailed policy: <a href="mergekey-privacy.html">MergeKey privacy policy</a>.</p>
-            <p data-i18n="privacy.p3">This policy may be updated when necessary — please check this page periodically for changes. Updates take effect immediately upon posting. — Andrei Achziger</p>
-        </div>
-    </div>
-</section>
-
-<!-- ═══════════ IMPRESSUM MODAL ═══════════════════════════════════ -->
-<div class="imp-overlay" id="imp-overlay">
-    <div class="imp-modal" id="imp-modal">
-        <button class="imp-close" id="imp-close" aria-label="Close">&times;</button>
-        <div class="imp-modal-scroll">
-            <div class="page-eyebrow" data-i18n="imp.eyebrow">LEGAL</div>
-            <div class="page-title" data-i18n="imp.title">Impressum</div>
-
-            <div class="imp-card">
-                <h2 data-i18n="imp.contact.heading">Contact Information</h2>
-                <p data-i18n-html="imp.contact.body">
-                    Name: Andrei Achziger<br>
-                    Address: Gleiwitzer Stra&szlig;e 6, 49163 Bohmte, Germany<br>
-                    Email: <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website">andrei.zerodeathgames@gmail.com</a>
-                </p>
-            </div>
-
-            <div class="imp-card">
-                <h2 data-i18n="imp.legal.heading">Legal Notice</h2>
-                <p data-i18n="imp.legal.p1">This Impressum is provided in accordance with applicable legal requirements.</p>
-                <p data-i18n="imp.legal.p2">The content on this website and associated applications are provided for general information purposes. Andrei Achziger makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Any reliance you place on such information is therefore strictly at your own risk.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ═══════════ FOOTER ════════════════════════════════════════════ -->
-<footer class="site-footer">
-    <div class="wrap">
-        <div class="footer-row">
-            <span class="footer-copy" data-i18n="footer.copy">&copy; 2026 Andrei Achziger &middot; Some rights reserved</span>
-            <ul class="footer-links">
-                <li><a href="#impressum" id="imp-open" data-i18n="footer.impressum">Impressum</a></li>
-                <li><a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website" data-i18n="footer.email">Email</a></li>
-            </ul>
-        </div>
+        <span data-i18n="footer.copy">© 2026 Andrei Achziger · Some rights reserved</span>
+        <nav aria-label="Legal"><a href="#impressum" id="imp-open" data-i18n="footer.impressum">Impressum</a><a href="#privacy" data-i18n="footer.privacy">Privacy</a></nav>
     </div>
 </footer>
 
-<!-- ═══════════ Scripts ════════════════════════════════════════════ -->
+<div class="imp-overlay" id="imp-overlay">
+    <div class="imp-modal" role="dialog" aria-modal="true" aria-labelledby="imp-title">
+        <button class="imp-close" id="imp-close" type="button" aria-label="Close">×</button>
+        <h2 id="imp-title" data-i18n="imp.title">Impressum</h2>
+        <h3 data-i18n="imp.contact.heading">Contact information</h3>
+        <p data-i18n-html="imp.contact.body">Name: Andrei Achziger<br>Email: <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact%20from%20Website">andrei.zerodeathgames@gmail.com</a></p>
+        <h3 data-i18n="imp.legal.heading">Legal notice</h3>
+        <p data-i18n="imp.legal.p1">This Impressum is provided in accordance with applicable legal requirements.</p>
+        <p data-i18n="imp.legal.p2">The content on this website and associated applications are provided for general information purposes. Andrei Achziger makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Any reliance you place on such information is therefore strictly at your own risk.</p>
+    </div>
+</div>
+
 <script>
-// ── Theme ────────────────────────────────────────────────────────
-function getTheme() {
-    const stored = localStorage.getItem('aach_theme');
-    if (stored) return stored;
-    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-}
-
-function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    const btn = document.getElementById('theme-btn');
-    if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
-}
-
-function toggleTheme() {
-    const current = document.documentElement.getAttribute('data-theme');
-    const next = current === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('aach_theme', next);
-    applyTheme(next);
-}
-
-applyTheme(getTheme());
-document.getElementById('theme-btn').addEventListener('click', toggleTheme);
-
-// Listen for system preference changes (only if no manual override)
-window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function(e) {
-    if (!localStorage.getItem('aach_theme')) {
-        applyTheme(e.matches ? 'light' : 'dark');
-    }
-});
-
-// ── i18n ──────────────────────────────────────────────────────────
+// ── Texts (English is also in the HTML as a fallback) ───────────────
 const T = {
     en: {
-        'nav.apps':'APPS', 'nav.about':'ABOUT', 'nav.skills':'SKILLS',
-        'nav.services':'SERVICES', 'nav.contact':'CONTACT',
-
-        'hero.eyebrow':'T−00 · PROLOGUE',
-        'hero.greeting':"Hello, I'm",
-        'hero.sub':'This is the story of a curious mind that learned to code — and started shipping. Mobile apps, games, and tools that are useful, playful, and a little unexpected.',
-        'hero.type1':'I studied how minds work.',
-        'hero.type2':'Now I build things people touch.',
-        'hero.type3':'This is how it happened.',
-        'hero.scroll':'SCROLL TO BEGIN',
-        'hero.cta_apps':'START THE STORY', 'hero.cta_contact':'GET IN TOUCH',
-        'app.tap_hint':'Tap to learn more',
-
-        'int1.l1':'Questions are cheap.',
-        'int1.l2':'Building answers is the fun part.',
-        'int2.l1':'At some point, learning isn’t enough.',
-        'int2.l2':'You have to ship.',
-        'int3.l1':'Shipping my own apps taught me the whole journey.',
-        'int3.l2':'Now I walk it with others.',
-
-        'apps.eyebrow':'T+03 · THE ARTIFACTS', 'apps.heading':'What <span class="accent">escaped</span> the lab',
-        'apps.desc':'Each app began as one of those questions — about play, reflexes, attention, typing, and lately climbing and skating. In order of appearance:',
+        'hero.eyebrow':'LAUNCH CONTROL · SINCE 2020', 'hero.title':'Six launches.<br>All still in orbit.',
+        'hero.sub':'Games and tools for iPhone, Apple Watch and Android, built by Andrei Achziger.',
+        'hero.cta1':'VIEW LAUNCH LOG', 'hero.cta2':'OPEN A CHANNEL',
+        'tele.launches':'LAUNCHES', 'tele.first':'FIRST LAUNCH', 'tele.latest':'LATEST LAUNCH', 'tele.platforms':'PLATFORMS',
+        'log.title':'LAUNCH LOG', 'log.no':'NO.', 'log.vehicle':'PLATFORM', 'log.launch':'LAUNCH',
+        'crew.label':'Crew', 'contact.btn':'MAIL ME',
+        'hud.alt':'ALT', 'hud.pad':'ON PAD', 'hud.ascent':'ASCENT', 'hud.orbit':'ORBIT',
+        'nav.apps':'Apps', 'nav.services':'Services', 'nav.tools':'Tools', 'nav.about':'About', 'nav.contact':'Contact',
+        'apps.label':'Apps',
+        'apps.lead':'Games and tools for iPhone, Apple Watch and Android. Six released since 2020, all still on the stores.',
+        'apps.hint':'Hover or select a name to preview the app.',
 
         'mk.label':'KEYBOARD · PRODUCTIVITY',
         'mk.desc':'The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.',
         'mk.perk1':'Dynamic, adaptive word learning', 'mk.perk2':'Reduces typos in real time', 'mk.perk3':'Fully customizable personal dictionary',
-        'privacy.mk':'MergeKey has its own, more detailed policy: <a href="mergekey-privacy.html">MergeKey privacy policy</a>.',
-
         'fw.label':'APPLE WATCH · GAME',
         'fw.desc':'A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.',
         'fw.perk1':'Dozens of fish to catch & collect', 'fw.perk2':'Feed and interact with your catch', 'fw.perk3':'Designed natively for Apple Watch',
-
         'rd.label':'ARCADE · GAME',
         'rd.desc':'A fast-paced arcade game where balls drop in out of nowhere. Pure reflex, pure fun — pick it up anytime, anywhere, and see how long you last.',
         'rd.perk1':'Instant pick-up-and-play action', 'rd.perk2':'Unpredictable ball drops', 'rd.perk3':'Short rounds, endless replay',
-
         'wt.label':'MULTIPLAYER · STRATEGY',
         'wt.desc':'Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center.',
         'wt.perk1':'Real-time multiplayer via Bluetooth', 'wt.perk2':'Game Center integration', 'wt.perk3':'Unique orbit-based mechanics',
-
         'ud.label':'ARCADE · PLATFORMER',
         'ud.desc':'A little dino, an endless tower, and a novel take on jump-and-run controls: hold a side to run, swipe to jump, kick off the walls — fast, agile movement from two simple gestures. Every climb is freshly generated, from dark caves up into the open sky.',
         'ud.perk1':'Novel hold-and-swipe movement controls', 'ud.perk2':'Wall-jumps, double jumps & crumbling blocks', 'ud.perk3':'4 dinos · 23 languages · kid-friendly',
-
         'sk.label':'APPLE WATCH · GAME',
         'sk.desc':'A flip-trick game on your wrist — no riding around, just you and the board. Crouch, flick to pop and spin, tap to catch — land flat for a Perfect. Satisfying flick controls with real skate timing, from ollies to 360 flips.',
         'sk.perk1':'Pure flip tricks — flick, spin, catch', 'sk.perk2':'Ollies to 360 flips, regular or goofy', 'sk.perk3':'Four modes, haptics, no ads',
+        'video':'gameplay',
 
-        'about.eyebrow':'T+01 \u00b7 THE QUESTION', 'about.heading':'It began with a <span class="accent">question</span>',
-        'about.desc':'\u201cHow does a mind work?\u201d I chased that question into Cognitive Science \u2014 computer science, AI, psychology, philosophy, neuroscience. I came back with fewer answers and much better obsessions:',
-
-        'tag.philosophy':'PHILOSOPHY', 'tag.neuro':'NEUROSCIENCE', 'tag.psych':'PSYCHOLOGY', 'tag.dataviz':'DATA VIZ',
-        'tag.chess':'CHESS', 'tag.skate':'SKATEBOARDING', 'tag.ai':'AI', 'tag.running':'RUNNING',
-        'tag.guitar':'GUITAR', 'tag.animals':'ANIMALS', 'tag.langs':'LANGUAGES',
-        'tag.graphs':'GRAPH THEORY', 'tag.maths':'MATHEMATICS',        'tag.space':'SPACE', 'tag.games':'VIDEO GAMES',
-
-
-        'tech.eyebrow':'T+02 · THE CRAFT', 'tech.heading':'Tools, collected <span class="accent">one problem at a time</span>',
-        'tech.desc':'Startups, industry floors, long indie nights. Every project left a tool behind — from native iOS to cloud infrastructure.',
-        'tech.lbl.ios':'IOS & APPLE PLATFORMS', 'tech.lbl.cross':'MOBILE & CROSS-PLATFORM',
-        'tech.lbl.web':'WEB & BACKEND', 'tech.lbl.cloud':'CLOUD & DEVOPS',
-        'tech.lbl.hw':'CONNECTIVITY & HARDWARE', 'tech.lbl.ai':'AI & MACHINE LEARNING',
-        'tech.lbl.game':'GAME DEV & 3D', 'tech.lbl.design':'DESIGN & TOOLS',
-
-        'srv.eyebrow':'T+04 · YOUR STORY', 'srv.heading':'What I can <span class="accent">build</span> with you',
-        'srv.desc':"Years across startups, industry, and indie development — here's where I add real value to your story.",
+        'services.label':'Services',
         'srv1.title':'Mobile App Development',
         'srv1.desc':'Native iOS in Swift/SwiftUI or cross-platform with React Native and Flutter. From initial concept through App Store submission — including WatchKit, CoreBluetooth, and hardware integrations.',
         'srv2.title':'AI Integration',
@@ -1736,11 +556,15 @@ const T = {
         'srv6.title':'Tech Consulting',
         'srv6.desc':'Interdisciplinary background in Cognitive Science, AI, and engineering — great for architecture reviews, stack decisions, MVP scoping, code quality, and turning complex ideas into working prototypes fast.',
 
-        'contact.eyebrow':'T+05 · EPILOGUE',
-        'contact.title':'Every ending is a <span class="accent">beginning</span>',
-        'contact.sub':"Have an idea for the next chapter — or just want to say hi? I'm happy to hear from you.",
-        'contact.btn':'MAIL ME',
-        'hud.alt':'ALT', 'hud.pad':'ON PAD', 'hud.ascent':'ASCENT', 'hud.orbit':'ORBIT',
+        'tools.label':'Tools',
+        'tools.ios':'iOS & Apple platforms', 'tools.cross':'Mobile & cross-platform', 'tools.web':'Web & backend',
+        'tools.cloud':'Cloud & DevOps', 'tools.hw':'Connectivity & hardware', 'tools.ai':'AI & machine learning',
+        'tools.game':'Game development & 3D', 'tools.design':'Design',
+
+        'about.label':'About',
+        'about.text':"I'm Andrei Achziger, a software engineer with a B.Sc. in Cognitive Science, based in Germany. I build my own apps and help teams ship theirs.",
+        'contact.label':'Contact',
+        'contact.text':'Questions about one of my apps, need support, or have a project in mind? Write to me.',
 
         'privacy.heading':'Privacy Policy',
         'privacy.p1':'Apps provided by Andrei Achziger are intended for use as is. This page informs visitors about my policies regarding the collection, use, and disclosure of personal information. If you choose to use my services, your personal information will not be stored, distributed, or analyzed by me.',
@@ -1748,982 +572,293 @@ const T = {
         'privacy.p3':'This policy may be updated when necessary — please check this page periodically for changes. Updates take effect immediately upon posting. — Andrei Achziger',
         'privacy.p4':'My apps are suitable for children. Since my apps collect no personal information at all, no data from children or any other users is collected, stored, or shared. Game progress and settings (such as high scores) are saved only locally on your device and are removed when the app is uninstalled.',
         'privacy.p5':'Health data: Fishy Watch can read your heart rate to power in-game features such as the fish tank experience. All heart rate measurements are processed exclusively on your device and never leave it — they are not stored permanently, transmitted, or shared with me or any third party.',
+        'privacy.mk':'MergeKey has its own, more detailed policy: <a href="mergekey-privacy.html">MergeKey privacy policy</a>.',
 
-        'footer.copy':'\u00a9 2026 Andrei Achziger \u00b7 Some rights reserved',
-        'footer.impressum':'IMPRESSUM', 'footer.email':'EMAIL',
+        'footer.copy':'© 2026 Andrei Achziger · Some rights reserved',
+        'footer.impressum':'Impressum', 'footer.privacy':'Privacy',
 
-        'imp.eyebrow':'LEGAL',
         'imp.title':'Impressum',
-        'imp.contact.heading':'CONTACT INFORMATION',
-        'imp.contact.body':'Name: Andrei Achziger<br>Address: Gleiwitzer Stra\u00dfe 6, 49163 Bohmte, Germany<br>Email: <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website">andrei.zerodeathgames@gmail.com</a>',
-        'imp.legal.heading':'LEGAL NOTICE',
+        'imp.contact.heading':'Contact information',
+        'imp.contact.body':'Name: Andrei Achziger<br>Email: <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact%20from%20Website">andrei.zerodeathgames@gmail.com</a>',
+        'imp.legal.heading':'Legal notice',
         'imp.legal.p1':'This Impressum is provided in accordance with applicable legal requirements.',
         'imp.legal.p2':'The content on this website and associated applications are provided for general information purposes. Andrei Achziger makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Any reliance you place on such information is therefore strictly at your own risk.',
+
+        'ui.lang':'Deutsch', 'ui.dark':'Switch to dark mode', 'ui.light':'Switch to light mode', 'ui.close':'Close', 'ui.preview':'App preview'
     },
 
     de: {
-        'nav.apps':'APPS', 'nav.about':'\u00dcBER MICH', 'nav.skills':'F\u00c4HIGKEITEN',
-        'nav.services':'LEISTUNGEN', 'nav.contact':'KONTAKT',
+        'hero.eyebrow':'STARTKONTROLLE · SEIT 2020', 'hero.title':'Sechs Starts.<br>Alle noch im Orbit.',
+        'hero.sub':'Spiele und Tools für iPhone, Apple Watch und Android, entwickelt von Andrei Achziger.',
+        'hero.cta1':'STARTPROTOKOLL ANSEHEN', 'hero.cta2':'KANAL ÖFFNEN',
+        'tele.launches':'STARTS', 'tele.first':'ERSTER START', 'tele.latest':'LETZTER START', 'tele.platforms':'PLATTFORMEN',
+        'log.title':'STARTPROTOKOLL', 'log.no':'NR.', 'log.vehicle':'PLATTFORM', 'log.launch':'START',
+        'crew.label':'Crew', 'contact.btn':'SCHREIB MIR',
+        'hud.alt':'HÖHE', 'hud.pad':'STARTRAMPE', 'hud.ascent':'AUFSTIEG', 'hud.orbit':'ORBIT',
+        'nav.apps':'Apps', 'nav.services':'Leistungen', 'nav.tools':'Werkzeuge', 'nav.about':'Über mich', 'nav.contact':'Kontakt',
+        'apps.label':'Apps',
+        'apps.lead':'Spiele und Tools für iPhone, Apple Watch und Android. Sechs veröffentlicht seit 2020, alle weiterhin in den Stores.',
+        'apps.hint':'Fahre über einen Namen oder wähle ihn aus, um die App zu sehen.',
 
-        'hero.eyebrow':'T−00 · PROLOG',
-        'hero.greeting':'Hallo, ich bin',
-        'hero.sub':'Das ist die Geschichte eines neugierigen Kopfes, der programmieren lernte \u2013 und anfing zu ver\u00f6ffentlichen. Mobile Apps, Spiele und Tools: n\u00fctzlich, verspielt und manchmal \u00fcberraschend.',
-        'hero.type1':'Ich habe studiert, wie Denken funktioniert.',
-        'hero.type2':'Jetzt baue ich Dinge zum Anfassen.',
-        'hero.type3':'So ist es dazu gekommen.',
-        'hero.scroll':'SCROLLEN, UM ZU BEGINNEN',
-        'hero.cta_apps':'GESCHICHTE STARTEN', 'hero.cta_contact':'KONTAKT AUFNEHMEN',
-        'app.tap_hint':'Tippen f\u00fcr mehr',
-
-        'int1.l1':'Fragen sind billig.',
-        'int1.l2':'Antworten bauen \u2013 das ist der spa\u00dfige Teil.',
-        'int2.l1':'Irgendwann reicht Lernen nicht mehr.',
-        'int2.l2':'Man muss shippen.',
-        'int3.l1':'Eigene Apps haben mich die ganze Reise gelehrt.',
-        'int3.l2':'Jetzt gehe ich sie mit anderen.',
-
-        'apps.eyebrow':'T+03 \u00b7 DIE ARTEFAKTE', 'apps.heading':'Was dem Labor <span class="accent">entkommen</span> ist',
-        'apps.desc':'Jede App begann als eine dieser Fragen \u2013 \u00fcber Spiel, Reflexe, Aufmerksamkeit, Tippen \u2013 und zuletzt Klettern und Skaten. In der Reihenfolge ihres Erscheinens:',
-
-        'mk.label':'TASTATUR \u00b7 PRODUKTIVIT\u00c4T',
-        'mk.desc':'Die erste dynamische Tastatur, die dir hilft, sauberer und mit weniger Fehlern zu tippen. Bring MergeKey neue W\u00f6rter bei, und sie lernt dazu \u2013 jeder Tastendruck wird dadurch smarter.',
-        'mk.perk1':'Dynamisches, adaptives Wortlernen', 'mk.perk2':'Reduziert Tippfehler in Echtzeit', 'mk.perk3':'Vollst\u00e4ndig anpassbares pers\u00f6nliches W\u00f6rterbuch',
-        'privacy.mk':'MergeKey hat eine eigene, ausf\u00fchrlichere Erkl\u00e4rung: <a href="mergekey-privacy.html">Datenschutzerkl\u00e4rung von MergeKey</a>.',
-
-        'fw.label':'APPLE WATCH \u00b7 SPIEL',
-        'fw.desc':'Ein Angelspiel f\u00fcr dein Handgelenk. Fange Fische, f\u00fcttere sie und spiele mit ihnen \u2013 direkt von deiner Apple Watch. Viele Arten zu entdecken; der Ozean ist nur einen Tipp entfernt.',
-        'fw.perk1':'Dutzende Fische zum Fangen & Sammeln', 'fw.perk2':'F\u00fcttere und interagiere mit deinem Fang', 'fw.perk3':'Nativ f\u00fcr Apple Watch entwickelt',
-
-        'rd.label':'ARCADE \u00b7 SPIEL',
-        'rd.desc':'Ein rasantes Arcade-Spiel, bei dem B\u00e4lle aus dem Nichts auftauchen. Pure Reflexe, purer Spa\u00df \u2013 jederzeit, \u00fcberall spielbar. Mal sehen, wie lange du durchh\u00e4ltst.',
-        'rd.perk1':'Sofort losspielen \u2013 keine Einarbeitung', 'rd.perk2':'Unvorhersehbare Ball-Drops', 'rd.perk3':'Kurze Runden, endloser Wiederspielwert',
-
-        'wt.label':'MULTIPLAYER \u00b7 STRATEGIE',
-        'wt.desc':'Erstelle Umlaufbahnen, halte sie und fordere andere quer durch den Kosmos heraus. Sammle alle Sterne \u2013 am besten mit 2 Spielern per Bluetooth oder Game Center.',
+        'mk.label':'TASTATUR · PRODUKTIVITÄT',
+        'mk.desc':'Die erste dynamische Tastatur, die dir hilft, sauberer und mit weniger Fehlern zu tippen. Bring MergeKey neue Wörter bei, und sie lernt dazu – jeder Tastendruck wird dadurch smarter.',
+        'mk.perk1':'Dynamisches, adaptives Wortlernen', 'mk.perk2':'Reduziert Tippfehler in Echtzeit', 'mk.perk3':'Vollständig anpassbares persönliches Wörterbuch',
+        'fw.label':'APPLE WATCH · SPIEL',
+        'fw.desc':'Ein Angelspiel für dein Handgelenk. Fange Fische, füttere sie und spiele mit ihnen – direkt von deiner Apple Watch. Viele Arten zu entdecken; der Ozean ist nur einen Tipp entfernt.',
+        'fw.perk1':'Dutzende Fische zum Fangen & Sammeln', 'fw.perk2':'Füttere und interagiere mit deinem Fang', 'fw.perk3':'Nativ für Apple Watch entwickelt',
+        'rd.label':'ARCADE · SPIEL',
+        'rd.desc':'Ein rasantes Arcade-Spiel, bei dem Bälle aus dem Nichts auftauchen. Pure Reflexe, purer Spaß – jederzeit, überall spielbar. Mal sehen, wie lange du durchhältst.',
+        'rd.perk1':'Sofort losspielen – keine Einarbeitung', 'rd.perk2':'Unvorhersehbare Ball-Drops', 'rd.perk3':'Kurze Runden, endloser Wiederspielwert',
+        'wt.label':'MULTIPLAYER · STRATEGIE',
+        'wt.desc':'Erstelle Umlaufbahnen, halte sie und fordere andere quer durch den Kosmos heraus. Sammle alle Sterne – am besten mit 2 Spielern per Bluetooth oder Game Center.',
         'wt.perk1':'Echtzeit-Multiplayer per Bluetooth', 'wt.perk2':'Game Center-Integration', 'wt.perk3':'Einzigartige umlaufbahnbasierte Spielmechanik',
-
         'ud.label':'ARCADE · PLATTFORMER',
         'ud.desc':'Ein kleiner Dino, ein endloser Turm und eine neuartige Jump-’n’-Run-Steuerung: eine Seite halten zum Rennen, wischen zum Springen, von Wänden abspringen – schnelle, agile Bewegung aus zwei simplen Gesten. Jeder Aufstieg wird neu generiert, von dunklen Höhlen bis in den offenen Himmel.',
         'ud.perk1':'Neuartige Halten-und-Wischen-Steuerung', 'ud.perk2':'Wall-Jumps, Doppelsprünge & bröckelnde Blöcke', 'ud.perk3':'4 Dinos · 23 Sprachen · kinderfreundlich',
-
         'sk.label':'APPLE WATCH · SPIEL',
         'sk.desc':'Ein Flip-Trick-Spiel am Handgelenk – kein Herumfahren, nur du und das Board. Ducken, flicken für Pop und Spin, tippen zum Fangen – flach landen für ein Perfect. Herrlich direkte Flick-Steuerung mit echtem Skate-Timing, von Ollies bis 360 Flips.',
         'sk.perk1':'Pure Flip-Tricks – flicken, drehen, fangen', 'sk.perk2':'Von Ollies bis 360 Flips, regular oder goofy', 'sk.perk3':'Vier Modi, Haptik, keine Werbung',
+        'video':'Gameplay',
 
-        'about.eyebrow':'T+01 \u00b7 DIE FRAGE', 'about.heading':'Alles begann mit einer <span class="accent">Frage</span>',
-        'about.desc':'\u201eWie funktioniert ein Kopf?\u201c Diese Frage f\u00fchrte mich zur Kognitionswissenschaft \u2013 Informatik, KI, Psychologie, Philosophie, Neurowissenschaften. Zur\u00fcck kam ich mit weniger Antworten und deutlich besseren Obsessionen:',
-
-        'tag.philosophy':'PHILOSOPHIE', 'tag.neuro':'NEUROWISSENSCHAFTEN', 'tag.psych':'PSYCHOLOGIE', 'tag.dataviz':'DATENVISUALISIERUNG',
-        'tag.chess':'SCHACH', 'tag.skate':'SKATEBOARDING', 'tag.ai':'KI', 'tag.running':'LAUFEN',
-        'tag.guitar':'GITARRE', 'tag.animals':'TIERE', 'tag.langs':'SPRACHEN',
-        'tag.graphs':'GRAPHENTHEORIE', 'tag.maths':'MATHEMATIK',        'tag.space':'WELTRAUM', 'tag.games':'VIDEOSPIELE',
-
-
-        'tech.eyebrow':'T+02 \u00b7 DAS HANDWERK', 'tech.heading':'Werkzeuge, gesammelt <span class="accent">Problem f\u00fcr Problem</span>',
-        'tech.desc':'Startups, Industriehallen, lange Indie-N\u00e4chte. Jedes Projekt hat ein Werkzeug dagelassen \u2013 von nativem iOS bis zur Cloud-Infrastruktur.',
-        'tech.lbl.ios':'IOS & APPLE-PLATTFORMEN', 'tech.lbl.cross':'MOBIL & PLATTFORM\u00dcBERGREIFEND',
-        'tech.lbl.web':'WEB & BACKEND', 'tech.lbl.cloud':'CLOUD & DEVOPS',
-        'tech.lbl.hw':'KONNEKTIVIT\u00c4T & HARDWARE', 'tech.lbl.ai':'KI & MACHINE LEARNING',
-        'tech.lbl.game':'GAME DEV & 3D', 'tech.lbl.design':'DESIGN & TOOLS',
-
-        'srv.eyebrow':'T+04 · DEINE GESCHICHTE', 'srv.heading':'Was ich mit dir <span class="accent">bauen</span> kann',
-        'srv.desc':'Jahre in Startups, Industrie und Indie-Entwicklung – hier bringe ich echten Mehrwert in deine Geschichte.',
+        'services.label':'Leistungen',
         'srv1.title':'Mobile App-Entwicklung',
-        'srv1.desc':'Natives iOS in Swift/SwiftUI oder plattform\u00fcbergreifend mit React Native und Flutter. Vom ersten Konzept bis zur App Store-Ver\u00f6ffentlichung \u2013 inklusive WatchKit, CoreBluetooth und Hardware-Integrationen.',
+        'srv1.desc':'Natives iOS in Swift/SwiftUI oder plattformübergreifend mit React Native und Flutter. Vom ersten Konzept bis zur App Store-Veröffentlichung – inklusive WatchKit, CoreBluetooth und Hardware-Integrationen.',
         'srv2.title':'KI-Integration',
-        'srv2.desc':'KI in dein Produkt einbetten \u2013 auf dem Ger\u00e4t mit CoreML/Vision, in der Cloud mit LLM-APIs oder eigenen Computer-Vision-Modellen. Nachgewiesene Erfahrung beim Fine-Tuning und Deployment von Echtzeit-ML-Pipelines.',
+        'srv2.desc':'KI in dein Produkt einbetten – auf dem Gerät mit CoreML/Vision, in der Cloud mit LLM-APIs oder eigenen Computer-Vision-Modellen. Nachgewiesene Erfahrung beim Fine-Tuning und Deployment von Echtzeit-ML-Pipelines.',
         'srv3.title':'Web & Frontend',
         'srv3.desc':'Moderne, responsive Webanwendungen mit Angular, TypeScript und Node.js. Klare UI/UX auf Basis von Figma, mit Fokus auf Performance und Barrierefreiheit.',
         'srv4.title':'Cloud & DevOps',
-        'srv4.desc':'Containerisierte, skalierbare Infrastruktur auf GCP oder Azure. Kubernetes-Orchestrierung, Docker-Pipelines und GitLab CI/CD \u2013 f\u00fcr zuverl\u00e4ssige und wartbare Systeme.',
-        'srv5.title':'Hardware & Konnektivit\u00e4t',
-        'srv5.desc':'NFC- und Bluetooth-LE-Integrationen, IoT-Sensorsysteme und industrielle Hardware-Schnittstellen. Erfahrung in der Verbindung der physischen Welt mit Apps \u2013 von Medizinger\u00e4ten bis zu Fabrikhallen.',
+        'srv4.desc':'Containerisierte, skalierbare Infrastruktur auf GCP oder Azure. Kubernetes-Orchestrierung, Docker-Pipelines und GitLab CI/CD – für zuverlässige und wartbare Systeme.',
+        'srv5.title':'Hardware & Konnektivität',
+        'srv5.desc':'NFC- und Bluetooth-LE-Integrationen, IoT-Sensorsysteme und industrielle Hardware-Schnittstellen. Erfahrung in der Verbindung der physischen Welt mit Apps – von Medizingeräten bis zu Fabrikhallen.',
         'srv6.title':'Tech-Beratung',
-        'srv6.desc':'Interdisziplin\u00e4rer Hintergrund in Kognitionswissenschaft, KI und Engineering \u2013 ideal f\u00fcr Architektur-Reviews, Stack-Entscheidungen, MVP-Scoping, Code-Qualit\u00e4t und die schnelle Umsetzung komplexer Ideen in funktionierende Prototypen.',
+        'srv6.desc':'Interdisziplinärer Hintergrund in Kognitionswissenschaft, KI und Engineering – ideal für Architektur-Reviews, Stack-Entscheidungen, MVP-Scoping, Code-Qualität und die schnelle Umsetzung komplexer Ideen in funktionierende Prototypen.',
 
-        'contact.eyebrow':'T+05 · EPILOG',
-        'contact.title':'Jedes Ende ist ein <span class="accent">Anfang</span>',
-        'contact.sub':'Du hast eine Idee f\u00fcr das n\u00e4chste Kapitel \u2013 oder willst einfach Hallo sagen? Ich freue mich von dir zu h\u00f6ren.',
-        'contact.btn':'SCHREIB MIR',
-        'hud.alt':'HÖHE', 'hud.pad':'STARTRAMPE', 'hud.ascent':'AUFSTIEG', 'hud.orbit':'ORBIT',
+        'tools.label':'Werkzeuge',
+        'tools.ios':'iOS & Apple-Plattformen', 'tools.cross':'Mobil & plattformübergreifend', 'tools.web':'Web & Backend',
+        'tools.cloud':'Cloud & DevOps', 'tools.hw':'Konnektivität & Hardware', 'tools.ai':'KI & Machine Learning',
+        'tools.game':'Spieleentwicklung & 3D', 'tools.design':'Design',
+
+        'about.label':'Über mich',
+        'about.text':'Ich bin Andrei Achziger, Softwareentwickler mit einem B.Sc. in Kognitionswissenschaft, aus Deutschland. Ich entwickle eigene Apps und helfe Teams, ihre zu veröffentlichen.',
+        'contact.label':'Kontakt',
+        'contact.text':'Fragen zu einer meiner Apps, Support oder ein Projekt im Kopf? Schreib mir.',
 
         'privacy.heading':'Datenschutzrichtlinie',
-        'privacy.p1':'Die von Andrei Achziger bereitgestellten Apps sind zur Nutzung bestimmt wie sie sind. Diese Seite informiert Besucher \u00fcber meine Richtlinien bez\u00fcglich der Erhebung, Nutzung und Offenlegung personenbezogener Daten. Wenn du meine Dienste nutzt, werden deine personenbezogenen Daten von mir nicht gespeichert, verteilt oder analysiert.',
-        'privacy.p2':'Andrei Achziger \u00fcbernimmt keine Verantwortung f\u00fcr Daten, die von Drittanbietern wie Google verarbeitet werden, da ich keinen Zugang zu oder Einblick in deren Datenerfassungs- und Verarbeitungspraktiken habe. Jede Datenerfassung \u00fcber diese Plattformen dient in erster Linie der Anzeige relevanter Werbung.',
-        'privacy.p3':'Diese Richtlinie kann bei Bedarf aktualisiert werden \u2013 bitte \u00fcberpr\u00fcfe diese Seite regelm\u00e4\u00dfig auf \u00c4nderungen. \u00c4nderungen treten sofort nach der Ver\u00f6ffentlichung in Kraft. \u2014 Andrei Achziger',
-        'privacy.p4':'Meine Apps sind f\u00fcr Kinder geeignet. Da meine Apps keinerlei personenbezogene Daten erheben, werden weder von Kindern noch von anderen Nutzern Daten erfasst, gespeichert oder weitergegeben. Spielfortschritt und Einstellungen (z. B. Highscores) werden ausschlie\u00dflich lokal auf deinem Ger\u00e4t gespeichert und beim Deinstallieren der App entfernt.',
-        'privacy.p5':'Gesundheitsdaten: Fishy Watch kann deine Herzfrequenz auslesen, um Spielfunktionen wie das Aquarium-Erlebnis zu erm\u00f6glichen. Alle Herzfrequenzmessungen werden ausschlie\u00dflich auf deinem Ger\u00e4t verarbeitet und verlassen es niemals \u2013 sie werden weder dauerhaft gespeichert noch \u00fcbertragen oder mit mir oder Dritten geteilt.',
+        'privacy.p1':'Die von Andrei Achziger bereitgestellten Apps sind zur Nutzung bestimmt wie sie sind. Diese Seite informiert Besucher über meine Richtlinien bezüglich der Erhebung, Nutzung und Offenlegung personenbezogener Daten. Wenn du meine Dienste nutzt, werden deine personenbezogenen Daten von mir nicht gespeichert, verteilt oder analysiert.',
+        'privacy.p2':'Andrei Achziger übernimmt keine Verantwortung für Daten, die von Drittanbietern wie Google verarbeitet werden, da ich keinen Zugang zu oder Einblick in deren Datenerfassungs- und Verarbeitungspraktiken habe. Jede Datenerfassung über diese Plattformen dient in erster Linie der Anzeige relevanter Werbung.',
+        'privacy.p3':'Diese Richtlinie kann bei Bedarf aktualisiert werden – bitte überprüfe diese Seite regelmäßig auf Änderungen. Änderungen treten sofort nach der Veröffentlichung in Kraft. — Andrei Achziger',
+        'privacy.p4':'Meine Apps sind für Kinder geeignet. Da meine Apps keinerlei personenbezogene Daten erheben, werden weder von Kindern noch von anderen Nutzern Daten erfasst, gespeichert oder weitergegeben. Spielfortschritt und Einstellungen (z. B. Highscores) werden ausschließlich lokal auf deinem Gerät gespeichert und beim Deinstallieren der App entfernt.',
+        'privacy.p5':'Gesundheitsdaten: Fishy Watch kann deine Herzfrequenz auslesen, um Spielfunktionen wie das Aquarium-Erlebnis zu ermöglichen. Alle Herzfrequenzmessungen werden ausschließlich auf deinem Gerät verarbeitet und verlassen es niemals – sie werden weder dauerhaft gespeichert noch übertragen oder mit mir oder Dritten geteilt.',
+        'privacy.mk':'MergeKey hat eine eigene, ausführlichere Erklärung: <a href="mergekey-privacy.html">Datenschutzerklärung von MergeKey</a>.',
 
-        'footer.copy':'\u00a9 2026 Andrei Achziger \u00b7 Alle Rechte vorbehalten',
-        'footer.impressum':'IMPRESSUM', 'footer.email':'E-MAIL',
+        'footer.copy':'© 2026 Andrei Achziger · Alle Rechte vorbehalten',
+        'footer.impressum':'Impressum', 'footer.privacy':'Datenschutz',
 
-        'imp.eyebrow':'RECHTLICHES',
         'imp.title':'Impressum',
-        'imp.contact.heading':'KONTAKTINFORMATIONEN',
-        'imp.contact.body':'Name: Andrei Achziger<br>Adresse: Gleiwitzer Stra\u00dfe 6, 49163 Bohmte, Deutschland<br>E-Mail: <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Kontakt von der Website">andrei.zerodeathgames@gmail.com</a>',
-        'imp.legal.heading':'RECHTLICHER HINWEIS',
-        'imp.legal.p1':'Dieses Impressum wird gem\u00e4\u00df den geltenden gesetzlichen Anforderungen bereitgestellt.',
-        'imp.legal.p2':'Die Inhalte dieser Website und der zugeh\u00f6rigen Anwendungen dienen ausschlie\u00dflich allgemeinen Informationszwecken. Andrei Achziger \u00fcbernimmt keinerlei Gew\u00e4hr, weder ausdr\u00fccklich noch stillschweigend, hinsichtlich der Vollst\u00e4ndigkeit, Richtigkeit, Zuverl\u00e4ssigkeit, Eignung oder Verf\u00fcgbarkeit der Website oder der darin enthaltenen Informationen, Produkte, Dienstleistungen oder Grafiken f\u00fcr irgendwelche Zwecke. Jegliche Nutzung dieser Informationen erfolgt auf eigenes Risiko.',
+        'imp.contact.heading':'Kontaktinformationen',
+        'imp.contact.body':'Name: Andrei Achziger<br>E-Mail: <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Kontakt%20von%20der%20Website">andrei.zerodeathgames@gmail.com</a>',
+        'imp.legal.heading':'Rechtlicher Hinweis',
+        'imp.legal.p1':'Dieses Impressum wird gemäß den geltenden gesetzlichen Anforderungen bereitgestellt.',
+        'imp.legal.p2':'Die Inhalte dieser Website und der zugehörigen Anwendungen dienen ausschließlich allgemeinen Informationszwecken. Andrei Achziger übernimmt keinerlei Gewähr, weder ausdrücklich noch stillschweigend, hinsichtlich der Vollständigkeit, Richtigkeit, Zuverlässigkeit, Eignung oder Verfügbarkeit der Website oder der darin enthaltenen Informationen, Produkte, Dienstleistungen oder Grafiken für irgendwelche Zwecke. Jegliche Nutzung dieser Informationen erfolgt auf eigenes Risiko.',
+
+        'ui.lang':'English', 'ui.dark':'Dunkelmodus einschalten', 'ui.light':'Hellmodus einschalten', 'ui.close':'Schließen', 'ui.preview':'App-Vorschau'
     }
 };
 
+// Store links and media per app; the order matches the list.
+const APPS = {
+    sk: { name: 'Skaty Watch', year: '2026', plat: 'Apple Watch',      device: 'watch',     media: 'skaty',
+          stores: [['App Store', 'https://apps.apple.com/us/app/skaty-watch/id6449743798']] },
+    ud: { name: 'Up Dino Up',  year: '2026', plat: 'iPhone · Android', device: 'landscape', media: 'dino',
+          stores: [['App Store', 'https://apps.apple.com/us/app/up-dino-up/id6766686500'],
+                   ['Google Play', 'https://play.google.com/store/apps/details?id=com.zerodeathgames.updinoup']] },
+    mk: { name: 'MergeKey',    year: '2024', plat: 'iPhone',           device: 'phone',     media: 'merge',
+          stores: [['App Store', 'https://apps.apple.com/us/app/mergekey/id6478465716']] },
+    fw: { name: 'Fishy Watch', year: '2023', plat: 'Apple Watch',      device: 'watch',     media: 'fishy',
+          stores: [['App Store', 'https://apps.apple.com/us/app/fishy-watch/id6449793065']] },
+    rd: { name: 'Random Drop', year: '2020', plat: 'iPhone',           device: 'phone',     media: 'random',
+          stores: [['App Store', 'https://apps.apple.com/us/app/random-drop/id1513193929']] },
+    wt: { name: 'Weltraum',    year: '2020', plat: 'iPhone',           device: 'phone',     media: 'weltraum',
+          stores: [['App Store', 'https://apps.apple.com/app/py-k-py/id1501514378']] }
+};
+
+function store(key, value) { try { localStorage.setItem(key, value); } catch (e) {} }
+function stored(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+function t(key) { var d = T[document.documentElement.lang] || T.en; return d[key] !== undefined ? d[key] : T.en[key]; }
+
+// ── Language ───────────────────────────────────────────────────────
+var langBtn = document.getElementById('lang-btn');
+var current = 'sk';
 function applyLang(lang) {
-    const t = T[lang] || T.en;
-    document.querySelectorAll('[data-i18n]').forEach(function(el) {
-        var v = t[el.dataset.i18n];
-        if (v !== undefined) el.textContent = v;
-    });
-    document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
-        var v = t[el.dataset.i18nHtml];
-        if (v !== undefined) el.innerHTML = v;
-    });
+    var d = T[lang] || T.en;
     document.documentElement.lang = lang;
-    var btn = document.getElementById('lang-btn');
-    if (btn) btn.textContent = lang === 'de' ? '🇺🇸' : '🇩🇪';
-}
-
-function getLang() {
-    return localStorage.getItem('aach_lang') ||
-           ((navigator.language || '').toLowerCase().startsWith('de') ? 'de' : 'en');
-}
-
-function toggleLang() {
-    var next = document.documentElement.lang === 'de' ? 'en' : 'de';
-    localStorage.setItem('aach_lang', next);
-    applyLang(next);
-}
-
-applyLang(getLang());
-document.getElementById('lang-btn').addEventListener('click', toggleLang);
-
-// ── Sticky header ─────────────────────────────────────────────────
-var hdr = document.getElementById('hdr');
-window.addEventListener('scroll', function() {
-    hdr.classList.toggle('scrolled', window.scrollY > 48);
-}, { passive: true });
-
-// ── Scroll-reveal ─────────────────────────────────────────────────
-var io = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+        if (d[el.dataset.i18n] !== undefined) el.textContent = d[el.dataset.i18n];
     });
-}, { threshold: 0.12 });
-document.querySelectorAll('[data-reveal]').forEach(function(r) { io.observe(r); });
+    document.querySelectorAll('[data-i18n-html]').forEach(function (el) {
+        if (d[el.dataset.i18nHtml] !== undefined) el.innerHTML = d[el.dataset.i18nHtml];
+    });
+    langBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+    langBtn.setAttribute('aria-label', d['ui.lang']);
+    document.getElementById('imp-close').setAttribute('aria-label', d['ui.close']);
+    document.getElementById('app-pane').setAttribute('aria-label', d['ui.preview']);
+    renderPane(current, false);
+}
+langBtn.addEventListener('click', function () {
+    var next = document.documentElement.lang === 'de' ? 'en' : 'de';
+    store('aach_lang', next);
+    applyLang(next);
+});
 
-// ── Story progress bar ────────────────────────────────────────────
-(function() {
-    var bar = document.getElementById('story-progress');
-    if (!bar) return;
-    var altVal = document.getElementById('alt-val');
-    var altStatus = document.getElementById('alt-status');
-    var ticking = false;
+// ── App index: the preview pane follows the hovered or selected row ──
+var list = document.getElementById('app-list');
+var rows = Array.prototype.slice.call(list.querySelectorAll('.row'));
+var pane = document.getElementById('app-pane');
+var paneSlot = document.getElementById('pane-slot');
+var device = document.getElementById('device');
+var video = document.getElementById('app-video');
+var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+var narrow = window.matchMedia('(max-width: 860px)');
+var paneVisible = false;
+
+function playIfVisible() {
+    if (reduceMotion.matches || !paneVisible) { video.pause(); return; }
+    var p = video.play();
+    if (p && p.catch) p.catch(function () {}); // blocked autoplay leaves the poster up
+}
+
+function renderPane(k, swapMedia) {
+    var app = APPS[k];
+    if (!app) return;
+    current = k;
+    rows.forEach(function (r) { r.setAttribute('aria-pressed', r.dataset.k === k ? 'true' : 'false'); });
+    document.getElementById('pane-year').textContent = app.year;
+    document.getElementById('pane-plat').textContent = app.plat;
+    document.getElementById('pane-type').textContent = t(k + '.label');
+    document.getElementById('pane-name').textContent = app.name;
+    document.getElementById('pane-desc').textContent = t(k + '.desc');
+    var perks = document.getElementById('pane-perks');
+    perks.innerHTML = '';
+    ['1', '2', '3'].forEach(function (n) {
+        var li = document.createElement('li');
+        li.textContent = t(k + '.perk' + n);
+        perks.appendChild(li);
+    });
+    var stores = document.getElementById('pane-stores');
+    stores.innerHTML = '';
+    app.stores.forEach(function (s) {
+        var a = document.createElement('a');
+        a.href = s[1]; a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = s[0] + ' ↗';
+        stores.appendChild(a);
+    });
+    video.setAttribute('aria-label', app.name + ' ' + t('video'));
+    var row = rows.filter(function (r) { return r.dataset.k === k; })[0];
+    document.getElementById('cam-label').textContent = 'CAM ' + row.querySelector('.no').textContent + ' · ' + app.name.toUpperCase();
+    if (swapMedia) {
+        device.className = 'device ' + (app.device === 'landscape' ? 'phone landscape' : app.device);
+        var base = 'dist/videos/' + app.media;
+        video.poster = base + '.jpg';
+        video.src = base + '.mp4';
+        playIfVisible();
+    }
+    placePane();
+}
+
+// Wide screens keep the preview in its own column; narrow ones show it under the chosen row.
+function placePane() {
+    if (narrow.matches) {
+        var row = rows.filter(function (r) { return r.dataset.k === current; })[0];
+        if (row && row.nextElementSibling !== pane) row.after(pane);
+    } else if (pane.parentElement !== paneSlot) {
+        paneSlot.appendChild(pane);
+    }
+}
+
+function select(k) {
+    if (k === current) return;
+    renderPane(k, true);
+    // Moving the preview shifts the rows on narrow screens; keep the chosen one in view.
+    if (narrow.matches) {
+        var row = rows.filter(function (r) { return r.dataset.k === k; })[0];
+        row.scrollIntoView({ block: 'start', behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+    }
+}
+rows.forEach(function (r) {
+    r.addEventListener('click', function () { select(r.dataset.k); });
+    r.addEventListener('focus', function () { select(r.dataset.k); });
+    r.addEventListener('mouseenter', function () {
+        if (window.matchMedia('(hover: hover)').matches && !narrow.matches) select(r.dataset.k);
+    });
+});
+narrow.addEventListener('change', placePane);
+
+if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+        paneVisible = entries[0].isIntersecting;
+        playIfVisible();
+    }, { threshold: 0.3 }).observe(video);
+}
+
+// ── Impressum dialog (also opens from a #impressum link) ────────────
+(function () {
+    var overlay = document.getElementById('imp-overlay');
+    var openBtn = document.getElementById('imp-open');
+    var closeBtn = document.getElementById('imp-close');
+    var lastFocus = null;
+    function open(e) {
+        if (e) e.preventDefault();
+        lastFocus = document.activeElement;
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        closeBtn.focus();
+    }
+    function close() {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+        if (lastFocus) lastFocus.focus();
+    }
+    openBtn.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && overlay.classList.contains('open')) close();
+    });
+    if (window.location.hash === '#impressum') open();
+})();
+
+applyLang(stored('aach_lang') || ((navigator.language || '').toLowerCase().indexOf('de') === 0 ? 'de' : 'en'));
+
+// ── Altitude readout: climbs to the ISS's 408 km as the page scrolls ──
+(function () {
+    var val = document.getElementById('alt-val'), status = document.getElementById('alt-status'), ticking = false;
     function update() {
-        var d = document.documentElement;
-        var max = d.scrollHeight - window.innerHeight;
+        var max = document.documentElement.scrollHeight - window.innerHeight;
         var p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
-        bar.style.transform = 'scaleX(' + p + ')';
-        if (altVal) {
-            // Accelerates like a launch; 408 km is the ISS's orbit.
-            altVal.textContent = String(Math.round(408 * Math.pow(p, 1.5))).padStart(3, '0');
-            var key = p < 0.03 ? 'hud.pad' : p >= 0.97 ? 'hud.orbit' : 'hud.ascent';
-            if (altStatus.dataset.i18n !== key) {
-                // Keeping the key on the element lets a language switch re-translate it.
-                altStatus.dataset.i18n = key;
-                var t = T[document.documentElement.lang] || T.en;
-                altStatus.textContent = t[key];
-            }
-        }
+        val.textContent = String(Math.round(408 * Math.pow(p, 1.5))).padStart(3, '0');
+        var key = p < 0.03 ? 'hud.pad' : p >= 0.97 ? 'hud.orbit' : 'hud.ascent';
+        if (status.dataset.i18n !== key) { status.dataset.i18n = key; status.textContent = t(key); }
         ticking = false;
     }
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', function () {
         if (!ticking) { ticking = true; requestAnimationFrame(update); }
     }, { passive: true });
     update();
 })();
 
 // ── Contact rocket: touch screens have no hover, so a tap launches it ─
-(function() {
+(function () {
     var btn = document.getElementById('email-btn');
-    if (!btn) return;
-    btn.addEventListener('click', function() {
+    btn.addEventListener('click', function () {
         btn.classList.remove('launching');
         void btn.offsetWidth; // restart the animation on repeated taps
         btn.classList.add('launching');
     });
-    btn.addEventListener('animationend', function(e) {
+    btn.addEventListener('animationend', function (e) {
         if (e.animationName === 'rocket-launch') btn.classList.remove('launching');
     });
 })();
-
-// ── Chapter rail: highlight the chapter in view ───────────────────
-(function() {
-    var rail = document.getElementById('chapter-rail');
-    if (!rail) return;
-    var links = Array.from(rail.querySelectorAll('a'));
-    var byId = {};
-    links.forEach(function(l) { byId[l.getAttribute('href').slice(1)] = l; });
-    var ioRail = new IntersectionObserver(function(entries) {
-        entries.forEach(function(e) {
-            if (!e.isIntersecting) return;
-            links.forEach(function(l) { l.classList.remove('active'); });
-            var link = byId[e.target.id];
-            if (link) link.classList.add('active');
-        });
-    }, { rootMargin: '-45% 0px -45% 0px' });
-    Object.keys(byId).forEach(function(id) {
-        var sec = document.getElementById(id);
-        if (sec) ioRail.observe(sec);
-    });
-})();
-
-// ── Interlude reveal ──────────────────────────────────────────────
-(function() {
-    var ioInt = new IntersectionObserver(function(entries) {
-        entries.forEach(function(e) {
-            if (e.isIntersecting) { e.target.classList.add('visible'); ioInt.unobserve(e.target); }
-        });
-    }, { threshold: 0.5 });
-    document.querySelectorAll('.interlude').forEach(function(s) { ioInt.observe(s); });
-})();
-
-// ── Hero typewriter — cycles narrative lines, language-aware ──────
-(function() {
-    var el = document.getElementById('type-text');
-    if (!el) return;
-    function phrases() {
-        var t = T[document.documentElement.lang] || T.en;
-        return [t['hero.type1'], t['hero.type2'], t['hero.type3']].filter(Boolean);
-    }
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        el.textContent = phrases()[0] || '';
-        return;
-    }
-    var pi = 0, ci = 0, deleting = false;
-    function step() {
-        var ph = phrases();
-        var cur = ph[pi % ph.length] || '';
-        if (!deleting) {
-            ci++;
-            el.textContent = cur.slice(0, ci);
-            if (ci >= cur.length) { deleting = true; return setTimeout(step, 2000); }
-            setTimeout(step, 48);
-        } else {
-            ci--;
-            el.textContent = cur.slice(0, ci);
-            if (ci <= 0) { deleting = false; pi++; return setTimeout(step, 400); }
-            setTimeout(step, 24);
-        }
-    }
-    setTimeout(step, 600);
-})();
-
-// ── App cards: staggered reveal + infinite carousel ───────────────
-var trackWrap = document.querySelector('.app-track-wrap');
-var track = document.querySelector('.app-track');
-if (trackWrap && track) {
-
-    // Clone all cards FOUR times so we have 5 sets total. The track is only
-    // ever translated within [0, setWidth), so the extra sets exist purely to
-    // fill the viewport to the right of the current offset — 5 sets covers any
-    // viewport even when a single set is narrower than the screen.
-    var originalCards = Array.from(track.children);
-    for (var _k = 0; _k < 4; _k++) {
-        originalCards.forEach(function(node) {
-            var clone = node.cloneNode(true);
-            clone.setAttribute('data-clone', 'true');
-            // Re-bind flip handler (cloneNode copies inline onclick, but be safe)
-            clone.onclick = function() { clone.classList.toggle('flipped'); };
-            track.appendChild(clone);
-        });
-    }
-
-    // Card videos play only while on screen: the clones make 25 of them, and
-    // decoding all at once would burn battery. Reduced motion keeps the posters.
-    // A rejected play() (e.g. iOS Low Power Mode) simply leaves the poster up.
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        var ioVideo = new IntersectionObserver(function(entries) {
-            entries.forEach(function(e) {
-                var v = e.target;
-                if (e.isIntersecting) {
-                    v.muted = true; // clones don't reliably keep the muted state autoplay needs
-                    var p = v.play();
-                    if (p && p.catch) p.catch(function() {});
-                } else {
-                    v.pause();
-                }
-            });
-        }, { threshold: 0.25 });
-        track.querySelectorAll('video.device-screen').forEach(function(v) { ioVideo.observe(v); });
-    }
-
-    // Staggered reveal for originals; clones fade in with the last original
-    var ioTrack = new IntersectionObserver(function(entries) {
-        entries.forEach(function(e) {
-            if (e.isIntersecting) {
-                var origs = e.target.querySelectorAll('.app-card-wrapper:not([data-clone])');
-                origs.forEach(function(card, i) {
-                    setTimeout(function() { card.classList.add('visible'); }, i * 130);
-                });
-                // Reveal clones once originals have finished staggering in
-                var cloneDelay = origs.length * 130;
-                e.target.querySelectorAll('.app-card-wrapper[data-clone]').forEach(function(card) {
-                    setTimeout(function() { card.classList.add('visible'); }, cloneDelay);
-                });
-                ioTrack.unobserve(e.target);
-            }
-        });
-    }, { threshold: 0.15 });
-    ioTrack.observe(trackWrap);
-
-    // ── Transform-driven infinite loop ───────────────────────────
-    // We DON'T use native scroll. The track is translated by a single
-    // JS-owned `offset` and wrapped with a pure modulo, so there is no
-    // native momentum to fight — the loop seam is always invisible.
-    var setWidth = 0;            // width of one full set of cards (px)
-    var offset = 0;              // current translate (px); kept in [0, setWidth)
-    var SPEED = 0.35;            // auto-scroll px per frame (~21 px/s at 60fps)
-    var FRICTION = 0.95;         // inertia decay per ~16.7ms after a fling
-    var MIN_VEL = 0.003;         // px/ms below which inertia stops
-    var DRAG_THRESHOLD = 6;      // px of movement before a press counts as a drag
-
-    function render() {
-        track.style.transform = 'translate3d(' + (-offset) + 'px,0,0)';
-    }
-    function wrap() {
-        if (setWidth > 0) offset = ((offset % setWidth) + setWidth) % setWidth;
-    }
-    function measureSet() {
-        // Width of one set = offsetLeft of the first clone (layout value,
-        // unaffected by the transform we apply to the track).
-        var firstClone = track.querySelector('.app-card-wrapper[data-clone]');
-        setWidth = firstClone ? firstClone.offsetLeft : Math.floor(track.scrollWidth / 5);
-        wrap();
-        render();
-    }
-    measureSet();
-    window.addEventListener('resize', measureSet);
-    window.addEventListener('load', measureSet);
-    setTimeout(measureSet, 600);
-
-    // ── Shared input / motion state ──────────────────────────────
-    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var canHover = window.matchMedia('(hover: hover)').matches;
-    var isHovering = false;
-    var pageVisible = !document.hidden;
-    var lastUserInput = 0;
-    var USER_COOLDOWN = 2500;    // ms of idle before auto-scroll resumes
-    var velocity = 0;            // offset velocity (px/ms); drives inertia
-    var dragging = false, moved = false;
-    var startX = 0, startOffset = 0, lastX = 0, lastT = 0;
-
-    function markInput() { lastUserInput = Date.now(); velocity = 0; }
-
-    if (canHover) {
-        trackWrap.addEventListener('mouseenter', function() { isHovering = true; });
-        trackWrap.addEventListener('mouseleave', function() { isHovering = false; });
-    }
-    document.addEventListener('visibilitychange', function() { pageVisible = !document.hidden; });
-    trackWrap.addEventListener('dragstart', function(e) { e.preventDefault(); });
-
-    // ── Pointer drag (mouse + touch, unified) ────────────────────
-    // touch-action:pan-y (CSS) lets vertical page-scroll through while
-    // horizontal gestures arrive here as pointermove events.
-    trackWrap.addEventListener('pointerdown', function(e) {
-        dragging = true; moved = false;
-        startX = lastX = e.clientX;
-        startOffset = offset;
-        lastT = e.timeStamp || Date.now();
-        markInput();
-        // NOTE: do NOT capture here — capturing on press retargets the
-        // follow-up click to this element and bypasses the card's inline
-        // onclick (the flip). Capture only once a real drag begins (below).
-    });
-    trackWrap.addEventListener('pointermove', function(e) {
-        if (!dragging) return;
-        var dx = e.clientX - startX;
-        if (Math.abs(dx) > DRAG_THRESHOLD) {
-            if (!moved) { try { trackWrap.setPointerCapture(e.pointerId); } catch (_) {} }
-            moved = true;
-        }
-        offset = startOffset - dx;
-        wrap(); render();
-        var now = e.timeStamp || Date.now();
-        var dt = now - lastT;
-        if (dt > 0) velocity = -(e.clientX - lastX) / dt;   // offset vel = -finger vel
-        lastX = e.clientX; lastT = now;
-        lastUserInput = Date.now();
-    });
-    function endDrag(e) {
-        if (!dragging) return;
-        dragging = false;
-        try { trackWrap.releasePointerCapture(e.pointerId); } catch (_) {}
-        lastUserInput = Date.now();   // inertia plays out; cooldown counts from release
-    }
-    trackWrap.addEventListener('pointerup', endDrag);
-    trackWrap.addEventListener('pointercancel', endDrag);
-
-    // Swallow the flip-click that fires at the end of a drag
-    trackWrap.addEventListener('click', function(e) {
-        if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; }
-    }, true);
-
-    // ── Wheel / trackpad: horizontal intent only, never hijack page ──
-    trackWrap.addEventListener('wheel', function(e) {
-        var dx = (Math.abs(e.deltaX) > Math.abs(e.deltaY)) ? e.deltaX
-               : (e.shiftKey ? e.deltaY : 0);
-        if (!dx) return;
-        e.preventDefault();
-        offset += dx;
-        wrap(); render();
-        markInput();
-    }, { passive: false });
-
-    // ── Unified RAF loop: inertia first, else gentle auto-scroll ──
-    var lastFrame = 0;
-    function frame(now) {
-        requestAnimationFrame(frame);
-        if (!setWidth || !pageVisible) { lastFrame = now; return; }
-        var dt = lastFrame ? (now - lastFrame) : 16.7;
-        lastFrame = now;
-
-        // Fling inertia (decoupled from native momentum entirely)
-        if (!dragging && Math.abs(velocity) > MIN_VEL) {
-            offset += velocity * dt;
-            velocity *= Math.pow(FRICTION, dt / 16.7);
-            if (Math.abs(velocity) <= MIN_VEL) velocity = 0;
-            wrap(); render();
-            return;
-        }
-
-        // Gentle auto-scroll when idle
-        if (reduceMotion || dragging || isHovering) return;
-        if (Date.now() - lastUserInput < USER_COOLDOWN) return;
-        if (track.querySelector('.app-card-wrapper.flipped')) return;  // freeze to read
-
-        offset += SPEED * (dt / 16.7);
-        wrap(); render();
-    }
-    requestAnimationFrame(frame);
-}
-
-
-// ── Pixel fluid overlay on cards ─────────────────────────────────
-(function() {
-    var PIX = 3;          // pixel size
-    var GAP = 2;          // gap between pixels
-    var STEP = PIX + GAP; // grid step
-    var R = 255, G = 107, B = 0; // orange
-
-    // Simple hash-based noise (fast, no library needed)
-    function noise(x, y, t) {
-        var a = Math.sin(x * 0.8 + t * 0.7) + Math.sin(y * 0.6 - t * 0.5);
-        var b = Math.sin((x + y) * 0.5 + t * 0.9) + Math.sin(x * 0.3 - y * 0.4 + t * 1.1);
-        var c = Math.sin(x * 1.2 - t * 0.3) * Math.cos(y * 0.9 + t * 0.6);
-        return (a + b + c) / 6; // range roughly -1..1
-    }
-
-    function initFluid(card) {
-        var canvas = document.createElement('canvas');
-        canvas.className = 'pixel-fluid';
-        // Insert as first child so it sits behind content
-        card.insertBefore(canvas, card.firstChild);
-
-        var ctx = canvas.getContext('2d');
-        var cols, rows, raf = null, time = 0, active = false;
-
-        function resize() {
-            var w = card.offsetWidth;
-            var h = card.offsetHeight;
-            canvas.width = w;
-            canvas.height = h;
-            cols = Math.ceil(w / STEP);
-            rows = Math.ceil(h / STEP);
-        }
-
-        function draw() {
-            if (!active) { raf = null; return; }
-            time += 0.016; // ~60fps timestep
-            var w = canvas.width, h = canvas.height;
-            ctx.clearRect(0, 0, w, h);
-
-            for (var r = 0; r < rows; r++) {
-                for (var c = 0; c < cols; c++) {
-                    // Normalised grid coords for smoother noise
-                    var nx = c / (cols || 1);
-                    var ny = r / (rows || 1);
-                    var n = noise(nx * 6, ny * 6, time);
-
-                    // Only show pixels above a threshold — creates organic blobs
-                    if (n > 0.05) {
-                        // Opacity ramps from 0 at threshold to peak at 1
-                        var alpha = Math.min((n - 0.05) * 1.0, 0.16);
-                        ctx.fillStyle = 'rgba(' + R + ',' + G + ',' + B + ',' + alpha.toFixed(3) + ')';
-                        ctx.fillRect(c * STEP, r * STEP, PIX, PIX);
-                    }
-                }
-            }
-            raf = requestAnimationFrame(draw);
-        }
-
-        function start() {
-            if (active) return;
-            active = true;
-            resize();
-            if (!raf) raf = requestAnimationFrame(draw);
-        }
-
-        function stop() {
-            active = false;
-        }
-
-        // For app-card-wrapper, hover is on the wrapper but canvas is in front/back
-        var hoverTarget = card.closest('.app-card-wrapper') || card;
-        hoverTarget.addEventListener('mouseenter', start);
-        hoverTarget.addEventListener('mouseleave', stop);
-        // Touch support
-        hoverTarget.addEventListener('touchstart', function() { start(); setTimeout(stop, 3000); }, { passive: true });
-
-        // Handle resize
-        window.addEventListener('resize', function() { if (active) resize(); });
-    }
-
-    // Attach to all card faces
-    document.querySelectorAll('.app-card-front, .app-card-back, .tech-card, .srv, .contact-box, .imp-modal').forEach(initFluid);
-})();
-
-// ── Impressum modal ──────────────────────────────────────────────
-(function() {
-    var overlay = document.getElementById('imp-overlay');
-    var openBtn = document.getElementById('imp-open');
-    var closeBtn = document.getElementById('imp-close');
-    if (!overlay || !openBtn) return;
-
-    function open(e) {
-        e.preventDefault();
-        overlay.classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
-    function close() {
-        overlay.classList.remove('open');
-        document.body.style.overflow = '';
-    }
-
-    openBtn.addEventListener('click', open);
-    if (closeBtn) closeBtn.addEventListener('click', close);
-    overlay.addEventListener('click', function(e) {
-        if (e.target === overlay) close();
-    });
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && overlay.classList.contains('open')) close();
-    });
-
-    // Open if URL has #impressum
-    if (window.location.hash === '#impressum') {
-        overlay.classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
-})();
-
-// ── Emoji pixel canvas — always-on fluid, morphs into color emoji ─
-(function() {
-    var card = document.getElementById('emoji-card');
-    var canvas = document.getElementById('emoji-canvas');
-    if (!card || !canvas) return;
-
-    var ctx = canvas.getContext('2d');
-    var PIX = 3, GAP = 1, STEP = PIX + GAP;
-    var OR = 255, OG = 107, OB = 0; // orange for free-flow
-
-    // mask[r][c] = { r, g, b, a } or null (no emoji pixel)
-    var mask = null;
-    var maskBlend = 0;     // 0 = free fluid, 1 = emoji
-    var maskTarget = 0;
-    var cols = 0, rows = 0;
-    var time = 0, raf = null;
-    var running = false, inView = false, lastFrame = 0;
-    var FRAME_MS = 33; // ~30fps
-    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function resize() {
-        canvas.width = card.offsetWidth;
-        canvas.height = card.offsetHeight;
-        cols = Math.ceil(canvas.width / STEP);
-        rows = Math.ceil(canvas.height / STEP);
-    }
-
-    function sampleMask(off) {
-        var w = canvas.width, h = canvas.height;
-        var imgData = off.getContext('2d').getImageData(0, 0, w, h);
-        var data = imgData.data;
-        mask = [];
-        for (var r = 0; r < rows; r++) {
-            mask[r] = [];
-            for (var c = 0; c < cols; c++) {
-                var px = c * STEP + Math.floor(PIX / 2);
-                var py = r * STEP + Math.floor(PIX / 2);
-                if (px >= w || py >= h) { mask[r][c] = null; continue; }
-                var idx = (py * w + px) * 4;
-                if (data[idx + 3] > 30) {
-                    mask[r][c] = {
-                        r: data[idx],
-                        g: data[idx + 1],
-                        b: data[idx + 2],
-                        a: data[idx + 3] / 255
-                    };
-                } else {
-                    mask[r][c] = null;
-                }
-            }
-        }
-    }
-
-    function buildMaskFromEmoji(emoji) {
-        var w = canvas.width, h = canvas.height;
-        if (!w || !h) return;
-        var fontSize = Math.floor(h * 0.65);
-        var off = document.createElement('canvas');
-        off.width = w; off.height = h;
-        var ox = off.getContext('2d');
-        ox.font = fontSize + 'px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
-        ox.textAlign = 'center';
-        ox.textBaseline = 'middle';
-        ox.fillText(emoji, w / 2, h / 2);
-        sampleMask(off);
-    }
-
-    // Pre-load images, build mask from image when ready
-    var imgCache = {};
-    function buildMaskFromImg(src) {
-        var w = canvas.width, h = canvas.height;
-        if (!w || !h) return;
-
-        function drawImg(img) {
-            var off = document.createElement('canvas');
-            off.width = w; off.height = h;
-            var ox = off.getContext('2d');
-            var size = Math.floor(h * 0.65);
-            var x = (w - size) / 2, y = (h - size) / 2;
-            ox.drawImage(img, x, y, size, size);
-            sampleMask(off);
-        }
-
-        if (imgCache[src]) {
-            drawImg(imgCache[src]);
-        } else {
-            var img = new Image();
-            img.onload = function() {
-                imgCache[src] = img;
-                drawImg(img);
-            };
-            img.src = src;
-        }
-    }
-
-    function buildMask(tag) {
-        var imgSrc = tag.getAttribute('data-img');
-        if (imgSrc) {
-            buildMaskFromImg(imgSrc);
-        } else {
-            buildMaskFromEmoji(tag.getAttribute('data-emoji'));
-        }
-    }
-
-    function noise(x, y, t) {
-        var a = Math.sin(x * 0.8 + t * 0.7) + Math.sin(y * 0.6 - t * 0.5);
-        var b = Math.sin((x + y) * 0.5 + t * 0.9) + Math.sin(x * 0.3 - y * 0.4 + t * 1.1);
-        var c = Math.sin(x * 1.2 - t * 0.3) * Math.cos(y * 0.9 + t * 0.6);
-        return (a + b + c) / 6;
-    }
-
-    // Second noise with different frequencies for the emoji layer
-    function noise2(x, y, t) {
-        var a = Math.sin(x * 1.1 + t * 0.9) + Math.sin(y * 0.8 - t * 0.6);
-        var b = Math.sin((x - y) * 0.7 + t * 1.2) + Math.sin(x * 0.5 + y * 0.3 + t * 0.8);
-        var c = Math.cos(x * 0.9 + t * 0.4) * Math.sin(y * 1.1 - t * 0.7);
-        return (a + b + c) / 6;
-    }
-
-    function drawFrame() {
-        var w = canvas.width, h = canvas.height;
-        ctx.clearRect(0, 0, w, h);
-        var mb = maskBlend;
-
-        // Layer 1: always-on orange fluid
-        for (var r = 0; r < rows; r++) {
-            for (var c = 0; c < cols; c++) {
-                var nx = c / (cols || 1);
-                var ny = r / (rows || 1);
-                var n = noise(nx * 5, ny * 5, time);
-
-                if (n > 0.0) {
-                    var fa = Math.min(n * 0.8, 0.22);
-                    ctx.fillStyle = 'rgba(' + OR + ',' + OG + ',' + OB + ',' + fa.toFixed(3) + ')';
-                    ctx.fillRect(c * STEP, r * STEP, PIX, PIX);
-                }
-            }
-        }
-
-        // Layer 2: emoji overlay (own noise, fades in/out with maskBlend)
-        if (mb > 0.01 && mask) {
-            for (var r2 = 0; r2 < rows; r2++) {
-                for (var c2 = 0; c2 < cols; c2++) {
-                    var pixel = mask[r2] ? mask[r2][c2] : null;
-                    if (!pixel) continue;
-
-                    var nx2 = c2 / (cols || 1);
-                    var ny2 = r2 / (rows || 1);
-                    var n2 = noise2(nx2 * 5, ny2 * 5, time);
-
-                    var ea = Math.min((n2 + 0.5) * 0.7, 0.80) * pixel.a * mb;
-                    if (ea < 0.01) continue;
-
-                    ctx.fillStyle = 'rgba(' + pixel.r + ',' + pixel.g + ',' + pixel.b + ',' + ea.toFixed(3) + ')';
-                    ctx.fillRect(c2 * STEP, r2 * STEP, PIX, PIX);
-                }
-            }
-        }
-
-    }
-
-    function loop(now) {
-        if (!running) { raf = null; return; }
-        raf = requestAnimationFrame(loop);
-        if (now - lastFrame < FRAME_MS) return;
-        lastFrame = now;
-        time += 0.06; // ~30fps timestep (matches old 0.03 @ 60fps)
-        // Blend towards target
-        var speed = 0.12;
-        if (maskTarget > maskBlend) maskBlend = Math.min(maskTarget, maskBlend + speed);
-        else if (maskTarget < maskBlend) maskBlend = Math.max(maskTarget, maskBlend - speed);
-        drawFrame();
-    }
-
-    function start() {
-        if (running || reduceMotion) return;
-        running = true;
-        if (!raf) raf = requestAnimationFrame(loop);
-    }
-    function stop() { running = false; }
-
-    // Init — gate on viewport + tab visibility
-    resize();
-
-    var pageVisible = !document.hidden;
-    document.addEventListener('visibilitychange', function() {
-        pageVisible = !document.hidden;
-        if (pageVisible && inView) start(); else stop();
-    });
-    var io = new IntersectionObserver(function(entries) {
-        inView = entries[0].isIntersecting;
-        if (inView && pageVisible) start(); else stop();
-    }, { threshold: 0 });
-    io.observe(card);
-
-    if (reduceMotion) drawFrame();
-
-    // Wire up tag hovers — morph into emoji/image with actual colors
-    document.querySelectorAll('.tag[data-emoji]').forEach(function(tag) {
-        tag.addEventListener('mouseenter', function() {
-            buildMask(tag);
-            maskTarget = 1;
-        });
-        tag.addEventListener('mouseleave', function() {
-            maskTarget = 0;
-        });
-        tag.addEventListener('touchstart', function() {
-            buildMask(tag);
-            maskTarget = 1;
-            setTimeout(function() { maskTarget = 0; }, 2500);
-        }, { passive: true });
-    });
-
-    window.addEventListener('resize', function() {
-        resize();
-        if (maskTarget > 0) {
-            var tags = document.querySelectorAll('.tag[data-emoji]:hover');
-            if (tags.length) buildMask(tags[0]);
-        }
-    });
-})();
-
-// ── Hero face — always-on pixelated portrait ─────────────────────
-(function() {
-    var card = document.getElementById('hero-face');
-    var canvas = document.getElementById('hero-face-canvas');
-    if (!card || !canvas) return;
-
-    var ctx = canvas.getContext('2d');
-    var PIX = 2, GAP = 1, STEP = PIX + GAP;
-    var OR = 255, OG = 107, OB = 0;
-
-    var mask = null;
-    var cols = 0, rows = 0;
-    var time = 0, raf = null;
-    var loaded = false;
-    var running = false, inView = false, lastFrame = 0;
-    var FRAME_MS = 33; // ~30fps — the noise drift doesn't need 60
-    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function resize() {
-        canvas.width = card.offsetWidth;
-        canvas.height = card.offsetHeight;
-        cols = Math.ceil(canvas.width / STEP);
-        rows = Math.ceil(canvas.height / STEP);
-    }
-
-    function buildMask(img) {
-        var w = canvas.width, h = canvas.height;
-        if (!w || !h) return;
-
-        var off = document.createElement('canvas');
-        off.width = w; off.height = h;
-        var ox = off.getContext('2d');
-
-        // Cover the card, centered
-        var scale = Math.max(w / img.naturalWidth, h / img.naturalHeight);
-        var iw = img.naturalWidth * scale;
-        var ih = img.naturalHeight * scale;
-        ox.drawImage(img, (w - iw) / 2, (h - ih) / 2, iw, ih);
-
-        var imgData = ox.getImageData(0, 0, w, h);
-        var data = imgData.data;
-        mask = [];
-        for (var r = 0; r < rows; r++) {
-            mask[r] = [];
-            for (var c = 0; c < cols; c++) {
-                var px = c * STEP + Math.floor(PIX / 2);
-                var py = r * STEP + Math.floor(PIX / 2);
-                if (px >= w || py >= h) { mask[r][c] = null; continue; }
-                var idx = (py * w + px) * 4;
-                if (data[idx + 3] > 30) {
-                    mask[r][c] = {
-                        r: data[idx],
-                        g: data[idx + 1],
-                        b: data[idx + 2],
-                        a: data[idx + 3] / 255
-                    };
-                } else {
-                    mask[r][c] = null;
-                }
-            }
-        }
-        loaded = true;
-    }
-
-    function noise(x, y, t) {
-        var a = Math.sin(x * 0.8 + t * 0.7) + Math.sin(y * 0.6 - t * 0.5);
-        var b = Math.sin((x + y) * 0.5 + t * 0.9) + Math.sin(x * 0.3 - y * 0.4 + t * 1.1);
-        var c = Math.sin(x * 1.2 - t * 0.3) * Math.cos(y * 0.9 + t * 0.6);
-        return (a + b + c) / 6;
-    }
-
-    function drawFrame() {
-        var w = canvas.width, h = canvas.height;
-        ctx.clearRect(0, 0, w, h);
-
-        for (var r = 0; r < rows; r++) {
-            for (var c = 0; c < cols; c++) {
-                var nx = c / (cols || 1);
-                var ny = r / (rows || 1);
-                var n = noise(nx * 5, ny * 5, time);
-
-                if (loaded && mask && mask[r] && mask[r][c]) {
-                    // Photo pixel — use actual image color with fluid animation
-                    var p = mask[r][c];
-                    var alpha = Math.min((n + 0.5) * 0.7, 0.85) * p.a;
-                    if (alpha > 0.01) {
-                        ctx.fillStyle = 'rgba(' + p.r + ',' + p.g + ',' + p.b + ',' + alpha.toFixed(3) + ')';
-                        ctx.fillRect(c * STEP, r * STEP, PIX, PIX);
-                    }
-                } else {
-                    // Free-flow orange fluid in empty areas
-                    if (n > 0.05) {
-                        var fa = Math.min(n * 0.6, 0.12);
-                        ctx.fillStyle = 'rgba(' + OR + ',' + OG + ',' + OB + ',' + fa.toFixed(3) + ')';
-                        ctx.fillRect(c * STEP, r * STEP, PIX, PIX);
-                    }
-                }
-            }
-        }
-    }
-
-    function loop(now) {
-        if (!running) { raf = null; return; }
-        raf = requestAnimationFrame(loop);
-        if (now - lastFrame < FRAME_MS) return;
-        lastFrame = now;
-        time += 0.05; // ~30fps timestep (matches old 0.025 @ 60fps)
-        drawFrame();
-    }
-
-    function start() {
-        if (running || reduceMotion) return;
-        running = true;
-        if (!raf) raf = requestAnimationFrame(loop);
-    }
-    function stop() { running = false; }
-
-    // Load portrait image
-    var img = new Image();
-    img.decoding = 'async';
-    img.onload = function() {
-        resize();
-        buildMask(img);
-        // Also init the logo face canvas with this same image
-        if (typeof window.__initLogoFace === 'function') window.__initLogoFace(img);
-        // Reduced-motion users get a single static frame, no loop
-        if (reduceMotion) drawFrame();
-    };
-    img.src = "dist/images/Andrei-portrait.png";
-
-    resize();
-
-    var pageVisible = !document.hidden;
-    document.addEventListener('visibilitychange', function() {
-        pageVisible = !document.hidden;
-        if (pageVisible && inView) start(); else stop();
-    });
-    var io = new IntersectionObserver(function(entries) {
-        inView = entries[0].isIntersecting;
-        if (inView && pageVisible) start(); else stop();
-    }, { threshold: 0 });
-    io.observe(card);
-
-    window.addEventListener('resize', function() {
-        resize();
-        if (img.complete && img.naturalWidth) buildMask(img);
-    });
-})();
-
-// ── Logo face — tiny pixelated portrait in header ────────────────
-window.__initLogoFace = function(img) {
-    var canvas = document.getElementById('logo-face-canvas');
-    if (!canvas) return;
-    canvas.width = 64; canvas.height = 64;
-    var ctx = canvas.getContext('2d');
-    var PIX = 2, GAP = 1, STEP = PIX + GAP;
-    var cols = Math.ceil(64 / STEP), rows = Math.ceil(64 / STEP);
-
-    var off = document.createElement('canvas');
-    off.width = 64; off.height = 64;
-    var ox = off.getContext('2d');
-    ox.drawImage(img, 0, 0, 64, 64);
-    var data = ox.getImageData(0, 0, 64, 64).data;
-
-    // Static one-time render — pixelated face, no animation
-    for (var r = 0; r < rows; r++) {
-        for (var c = 0; c < cols; c++) {
-            var px = c * STEP + 1, py = r * STEP + 1;
-            if (px >= 64 || py >= 64) continue;
-            var idx = (py * 64 + px) * 4;
-            if (data[idx + 3] > 30) {
-                ctx.fillStyle = 'rgba(' + data[idx] + ',' + data[idx+1] + ',' + data[idx+2] + ',' + (data[idx+3]/255).toFixed(2) + ')';
-                ctx.fillRect(c * STEP, r * STEP, PIX, PIX);
-            }
-        }
-    }
-};
-
 
 // ── Space background — 3D parallax stars & comets ────────────────
 (function() {
@@ -2904,9 +1039,6 @@ window.__initLogoFace = function(img) {
     }
     var cityP = CITIES.map(function(c) { return ll3(c[0], c[1]); });
 
-    // Home — Bohmte, Germany. Where the story is written.
-    var HOME = ll3(52.36, 8.31);
-    var HOME_ORANGE = 'rgba(255,107,0,';
 
     // Rotation around Y (vertical axis → globe spins east-to-west)
     function rotY(p, c, s) {
@@ -3114,36 +1246,6 @@ window.__initLogoFace = function(img) {
         }
     }
 
-    function drawHome(now, c, s) {
-        var p = rotY(HOME, c, s);
-        if (p[2] <= 0.02) return;
-        var x = cx + p[0]*R, y = cy + p[1]*R;
-        var a = Math.min(1, p[2] * 1.4);
-        // Core dot
-        ctx.fillStyle = HOME_ORANGE + (0.6 + 0.4 * a).toFixed(3) + ')';
-        ctx.beginPath();
-        ctx.arc(x, y, 2.2, 0, Math.PI * 2);
-        ctx.fill();
-        // Pulsing ring (held static mid-pulse when reduced motion is on)
-        var t = reduceMotion ? 0.45 : (now % 2400) / 2400;
-        ctx.strokeStyle = HOME_ORANGE + (0.55 * (1 - t) * a).toFixed(3) + ')';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.arc(x, y, 3 + t * 11, 0, Math.PI * 2);
-        ctx.stroke();
-        // Label — bilingual, centred above the dot. Up there is the North Sea;
-        // below and beside sit the London/Paris/Berlin labels.
-        if (p[2] > 0.18) {
-            ctx.font = '9px -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif';
-            ctx.textBaseline = 'bottom';
-            ctx.textAlign = 'center';
-            ctx.fillStyle = HOME_ORANGE + (0.9 * a).toFixed(3) + ')';
-            ctx.fillText(document.documentElement.lang === 'de' ? 'ZUHAUSE' : 'HOME', x, y - 7);
-            ctx.textAlign = 'left';
-            ctx.textBaseline = 'middle';
-        }
-    }
-
     // ── Routes (permanent trails) + pulses (dots that shoot along them) ─
     var routes = [];   // { a: unit-vec, b: unit-vec }
     var pulses = [];   // { a, b, start, duration }
@@ -3151,17 +1253,10 @@ window.__initLogoFace = function(img) {
 
     var ROUTE_SEG = 32;
     function newRoute() {
-        // Nearly half of all routes radiate out from home
-        var a, b;
-        if (Math.random() < 0.45) {
-            a = HOME;
-            b = cityP[(Math.random() * cityP.length) | 0];
-        } else {
-            var ai = (Math.random() * cityP.length) | 0;
-            var bi = ai;
-            while (bi === ai) bi = (Math.random() * cityP.length) | 0;
-            a = cityP[ai]; b = cityP[bi];
-        }
+        var ai = (Math.random() * cityP.length) | 0;
+        var bi = ai;
+        while (bi === ai) bi = (Math.random() * cityP.length) | 0;
+        var a = cityP[ai], b = cityP[bi];
         // Precompute arc vertices (pre-rotation) so drawRoutes only needs to
         // rotate-and-project each frame, not re-slerp.
         var pts = new Array(ROUTE_SEG + 1);
@@ -3289,11 +1384,9 @@ window.__initLogoFace = function(img) {
         }
 
         drawCityLabels(c, s);
-        drawHome(now, c, s);
     }
     requestAnimationFrame(frame);
 })();
 </script>
-
 </body>
 </html>
