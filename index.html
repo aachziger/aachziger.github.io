@@ -210,7 +210,7 @@
         .site-head { position: sticky; top: 0; z-index: 20; background: rgba(7, 11, 20, 0.86); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
         .site-head .wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: var(--head-h); }
         .mark { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-decoration: none; white-space: nowrap; }
-        .mark b { font-family: var(--dots); font-size: 24px; font-weight: 700; color: var(--orange); letter-spacing: 0; }
+        .mark canvas { width: 32px; height: 32px; border-radius: 8px; flex: none; }
         .head-right { display: flex; align-items: center; gap: 26px; }
         .site-nav { display: flex; gap: 22px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
         .site-nav a { text-decoration: none; }
@@ -266,9 +266,10 @@
         .pane .desc { font-size: 15px; color: var(--soft); }
         .perks { list-style: none; display: grid; gap: 3px; margin: 12px 0 14px; font-family: var(--mono); font-size: 11.5px; color: var(--soft); }
         .perks li::before { content: '› '; color: var(--orange); }
-        .stores { display: flex; flex-wrap: wrap; gap: 8px; }
-        .stores a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-decoration: none; padding: 8px 14px; border: 1px solid #2E3A4E; border-radius: 999px; }
-        .stores a:hover { border-color: var(--orange); color: var(--orange); }
+        .stores { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; }
+        .stores a { display: inline-flex; }
+        .stores img { height: 36px; width: auto; display: block; transition: opacity 200ms var(--ease); }
+        .stores img:hover { opacity: 0.7; }
 
         .svc { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
         .svc > div { padding: 22px; }
@@ -361,7 +362,7 @@
 
 <header class="site-head">
     <div class="wrap">
-        <a class="mark" href="#top"><b>AA</b><span>ACHZIGER / MISSION CONTROL</span></a>
+        <a class="mark" href="#top" aria-label="Andrei Achziger"><canvas id="logo-face-canvas" width="64" height="64" aria-hidden="true"></canvas><span>ACHZIGER / MISSION CONTROL</span></a>
         <div class="head-right">
             <nav class="site-nav" aria-label="Sections">
                 <a href="#apps" data-i18n="nav.apps">Apps</a>
@@ -418,7 +419,7 @@
                         <h2 id="pane-name">Skaty Watch</h2>
                         <p class="desc" id="pane-desc"></p>
                         <ul class="perks" id="pane-perks"></ul>
-                        <div class="stores" id="pane-stores"><a href="https://apps.apple.com/us/app/skaty-watch/id6449743798" target="_blank" rel="noopener">App Store ↗</a></div>
+                        <div class="stores" id="pane-stores"><a href="https://apps.apple.com/us/app/skaty-watch/id6449743798" target="_blank" rel="noopener"><img src="src/images/DownloadAppStore.svg" alt="Download Skaty Watch on the App Store"></a></div>
                     </div>
                 </div>
             </div>
@@ -750,7 +751,11 @@ function renderPane(k, swapMedia) {
     app.stores.forEach(function (s) {
         var a = document.createElement('a');
         a.href = s[1]; a.target = '_blank'; a.rel = 'noopener';
-        a.textContent = s[0] + ' ↗';
+        var play = s[0] === 'Google Play';
+        var badge = document.createElement('img');
+        badge.src = play ? 'src/images/GetItOnGooglePlay.svg' : 'src/images/DownloadAppStore.svg';
+        badge.alt = play ? 'Get ' + app.name + ' on Google Play' : 'Download ' + app.name + ' on the App Store';
+        a.appendChild(badge);
         stores.appendChild(a);
     });
     video.setAttribute('aria-label', app.name + ' ' + t('video'));
@@ -829,6 +834,34 @@ if ('IntersectionObserver' in window) {
 })();
 
 applyLang(stored('aach_lang') || ((navigator.language || '').toLowerCase().indexOf('de') === 0 ? 'de' : 'en'));
+
+// ── Logo face: tiny pixelated portrait in the header ────────────────
+(function () {
+    var canvas = document.getElementById('logo-face-canvas');
+    var ctx = canvas.getContext('2d');
+    var img = new Image();
+    img.onload = function () {
+        var PIX = 2, STEP = 3, SIZE = 64;
+        var off = document.createElement('canvas');
+        off.width = SIZE; off.height = SIZE;
+        var ox = off.getContext('2d');
+        ox.drawImage(img, 0, 0, SIZE, SIZE);
+        var data;
+        // Reading pixels is refused on file:// pages; show the plain portrait there.
+        try { data = ox.getImageData(0, 0, SIZE, SIZE).data; }
+        catch (e) { ctx.drawImage(img, 0, 0, SIZE, SIZE); return; }
+        for (var y = 1; y < SIZE; y += STEP) {
+            for (var x = 1; x < SIZE; x += STEP) {
+                var i = (y * SIZE + x) * 4;
+                if (data[i + 3] > 30) {
+                    ctx.fillStyle = 'rgba(' + data[i] + ',' + data[i + 1] + ',' + data[i + 2] + ',' + (data[i + 3] / 255).toFixed(2) + ')';
+                    ctx.fillRect(x - 1, y - 1, PIX, PIX);
+                }
+            }
+        }
+    };
+    img.src = 'dist/images/crew.webp';
+})();
 
 // ── Altitude readout: climbs to the ISS's 408 km as the page scrolls ──
 (function () {
