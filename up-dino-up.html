@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Up Dino Up: A jump-and-run with no on-screen buttons. A little dino climbs an endless tower using two gestures, and every climb is generated fresh. Case study by Andrei Achziger.">
+    <title>Up Dino Up — Andrei Achziger</title>
+
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500&family=Space+Mono:wght@400;700&family=Doto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dist/case-study.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="wrap header-row">
+        <a href="index.html" class="logo">
+            <img src="dist/images/Andrei-portrait.png" alt="">
+            <span class="logo-name">Andrei Achziger</span>
+        </a>
+        <div class="header-controls">
+            <a href="index.html#apps" class="back" data-i18n="cs.back">← ALL APPS</a>
+            <button class="ctrl-btn" id="theme-btn" aria-label="Toggle theme">☀️</button>
+            <button class="ctrl-btn" id="lang-btn" aria-label="Switch language">🇩🇪</button>
+        </div>
+    </div>
+</header>
+
+<main>
+<section class="hero">
+    <div class="wrap">
+        <div class="eyebrow" data-i18n="p.eyebrow">CASE STUDY · LAUNCH V</div>
+        <h1 class="hero-title">Up Dino Up</h1>
+        <p class="hero-sub" data-i18n="p.sub">A jump-and-run with no on-screen buttons. A little dino climbs an endless tower using two gestures, and every climb is generated fresh.</p>
+        <div class="badge-row">
+            <a href="https://apps.apple.com/us/app/up-dino-up/id6766686500"><img src="src/images/DownloadAppStore.svg" alt="Download Up Dino Up on the App Store"></a>
+            <a href="https://play.google.com/store/apps/details?id=com.zerodeathgames.updinoup"><img src="src/images/GetItOnGooglePlay.svg" alt="Get Up Dino Up on Google Play"></a>
+        </div>
+        <dl class="facts">
+            <div class="fact"><dt data-i18n="cs.f.launched">LAUNCHED</dt><dd>2026-08-24</dd></div>
+            <div class="fact"><dt data-i18n="cs.f.platforms">PLATFORMS</dt><dd>iPhone · Android</dd></div>
+            <div class="fact"><dt data-i18n="cs.f.dinos">PLAYABLE DINOS</dt><dd>4</dd></div>
+            <div class="fact"><dt data-i18n="cs.f.langs">LANGUAGES</dt><dd>23</dd></div>
+        </dl>
+        <figure>
+            <div class="stage">
+                <div class="device phone landscape"><video src="dist/videos/dino.mp4" poster="dist/videos/dino.jpg" muted loop playsinline autoplay aria-label="Up Dino Up gameplay"></video><span class="island"></span></div>
+            </div>
+            <figcaption data-i18n="cs.fig">FIG. 1 · GAMEPLAY ON IPHONE</figcaption>
+        </figure>
+    </div>
+</section>
+
+<section class="section">
+    <div class="wrap">
+        <div class="split">
+            <div>
+                <div class="eyebrow" data-i18n="p.q.eyebrow">01 · THE QUESTION</div>
+                <h2 class="sh" data-i18n-html="p.q.title">Can a platformer feel fast <span class="accent">without virtual buttons?</span></h2>
+            </div>
+            <p class="body-copy" data-i18n="p.q.body">Touch platformers usually copy a gamepad onto the glass. Up Dino Up uses two gestures that cover the whole screen instead: hold a side to run, swipe to jump. Combined, they give fast, agile movement, including wall-jumps and double jumps, without the thumb ever hunting for a button.</p>
+        </div>
+        <ol class="cards">
+            <li class="card">
+                <div class="pad" aria-hidden="true"><span class="pad-half on">HOLD ◀</span><span class="pad-half off">▶ HOLD</span></div>
+                <div><span class="c-k" data-i18n="p.c1.k">GESTURE 1</span><h3 class="c-t" data-i18n="p.c1.t">Hold a side to run</h3><p class="c-d" data-i18n="p.c1.d">The left or right half of the screen is the whole control. Let go to stop.</p></div>
+            </li>
+            <li class="card">
+                <div class="pad pad-swipe" aria-hidden="true"><span>↑</span><i></i><span>SWIPE</span></div>
+                <div><span class="c-k" data-i18n="p.c2.k">GESTURE 2</span><h3 class="c-t" data-i18n="p.c2.t">Swipe to jump</h3><p class="c-d" data-i18n="p.c2.d">Swipe while running to leap, then swipe again in the air for a double jump.</p></div>
+            </li>
+            <li class="card">
+                <div class="pad pad-walls" aria-hidden="true"><i></i><span>↗ KICK ↖</span><i></i></div>
+                <div><span class="c-k" data-i18n="p.c3.k">COMBINED</span><h3 class="c-t" data-i18n="p.c3.t">Kick off the walls</h3><p class="c-d" data-i18n="p.c3.d">Run into a wall and swipe to wall-jump, so the tower climbs fast while crumbling blocks keep you moving.</p></div>
+            </li>
+        </ol>
+    </div>
+</section>
+
+<section class="section">
+    <div class="wrap">
+        <div class="gallery-head">
+            <div>
+                <div class="eyebrow" data-i18n="cs.shots.eyebrow">02 · SCREENSHOTS</div>
+                <h2 class="sh" data-i18n-html="cs.shots.title">From the <span class="accent">App Store</span></h2>
+            </div>
+            <span class="gallery-hint" aria-hidden="true" data-i18n="cs.shots.hint">SCROLL →</span>
+        </div>
+        <ul class="gallery wide-shots">
+            <li><img src="dist/images/shots/ud/01.jpg" alt="Up Dino Up App Store screenshot 1" loading="lazy" decoding="async"></li>
+            <li><img src="dist/images/shots/ud/02.jpg" alt="Up Dino Up App Store screenshot 2" loading="lazy" decoding="async"></li>
+            <li><img src="dist/images/shots/ud/03.jpg" alt="Up Dino Up App Store screenshot 3" loading="lazy" decoding="async"></li>
+        </ul>
+    </div>
+</section>
+
+<div class="dot-divider" aria-hidden="true"></div>
+
+<section class="section">
+    <div class="wrap split">
+        <div>
+            <div class="eyebrow" data-i18n="p.d.eyebrow">03 · THE TOWER</div>
+            <h2 class="sh" data-i18n-html="p.d.title">From dark caves to open sky, <span class="accent">never the same climb twice</span></h2>
+            <p class="body-copy" style="margin-top: var(--space-lg)" data-i18n="p.d.body">Every run is generated fresh, so players learn the movement rather than memorising a level.</p>
+        </div>
+        <div class="tiles">
+            <div class="tile"><b>4</b><span data-i18n="p.t1">Playable dinos</span></div>
+            <div class="tile"><b>23</b><span data-i18n="p.t2">Languages</span></div>
+            <div class="tile"><b>∞</b><span data-i18n="p.t3">Generated tower</span></div>
+            <div class="tile"><b>0</b><span data-i18n="p.t4">Personal data collected</span></div>
+        </div>
+    </div>
+</section>
+
+<div class="wrap">
+    <nav class="pager" aria-label="More apps">
+        <a href="mergekey.html"><small><span data-i18n="cs.prev">← PREVIOUS</span> · IV</small><strong>MergeKey</strong></a>
+        <a href="skaty-watch.html" class="next"><small><span data-i18n="cs.next">NEXT →</span> · VI</small><strong>Skaty Watch</strong></a>
+    </nav>
+</div>
+</main>
+
+<footer class="site-footer">
+    <div class="wrap footer-row">
+        <span data-i18n="cs.copy">© 2026 Andrei Achziger · Some rights reserved</span>
+        <a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website">andrei.zerodeathgames@gmail.com</a>
+    </div>
+</footer>
+
+<script>
+window.CS_T = {
+ "en": {
+  "p.eyebrow": "CASE STUDY · LAUNCH V",
+  "p.sub": "A jump-and-run with no on-screen buttons. A little dino climbs an endless tower using two gestures, and every climb is generated fresh.",
+  "p.q.eyebrow": "01 · THE QUESTION",
+  "p.q.title": "Can a platformer feel fast <span class=\"accent\">without virtual buttons?</span>",
+  "p.q.body": "Touch platformers usually copy a gamepad onto the glass. Up Dino Up uses two gestures that cover the whole screen instead: hold a side to run, swipe to jump. Combined, they give fast, agile movement, including wall-jumps and double jumps, without the thumb ever hunting for a button.",
+  "p.c1.k": "GESTURE 1",
+  "p.c1.t": "Hold a side to run",
+  "p.c1.d": "The left or right half of the screen is the whole control. Let go to stop.",
+  "p.c2.k": "GESTURE 2",
+  "p.c2.t": "Swipe to jump",
+  "p.c2.d": "Swipe while running to leap, then swipe again in the air for a double jump.",
+  "p.c3.k": "COMBINED",
+  "p.c3.t": "Kick off the walls",
+  "p.c3.d": "Run into a wall and swipe to wall-jump, so the tower climbs fast while crumbling blocks keep you moving.",
+  "p.d.eyebrow": "03 · THE TOWER",
+  "p.d.title": "From dark caves to open sky, <span class=\"accent\">never the same climb twice</span>",
+  "p.d.body": "Every run is generated fresh, so players learn the movement rather than memorising a level.",
+  "p.t1": "Playable dinos",
+  "p.t2": "Languages",
+  "p.t3": "Generated tower",
+  "p.t4": "Personal data collected",
+  "cs.f.dinos": "PLAYABLE DINOS",
+  "cs.fig": "FIG. 1 · GAMEPLAY ON IPHONE"
+ },
+ "de": {
+  "p.eyebrow": "FALLSTUDIE · START V",
+  "p.sub": "Ein Jump’n’Run ohne Bildschirmtasten. Ein kleiner Dino klettert mit zwei Gesten einen endlosen Turm hinauf, und jeder Aufstieg wird neu erzeugt.",
+  "p.q.eyebrow": "01 · DIE FRAGE",
+  "p.q.title": "Fühlt sich ein Plattformer schnell an <span class=\"accent\">ohne virtuelle Tasten?</span>",
+  "p.q.body": "Touch-Plattformer kopieren meist ein Gamepad auf das Glas. Up Dino Up nutzt stattdessen zwei Gesten, die den ganzen Bildschirm abdecken: eine Seite halten zum Laufen, wischen zum Springen. Zusammen ergeben sie schnelle, wendige Bewegung, inklusive Wall-Jumps und Doppelsprüngen, ohne dass der Daumen je nach einer Taste suchen muss.",
+  "p.c1.k": "GESTE 1",
+  "p.c1.t": "Eine Seite halten zum Laufen",
+  "p.c1.d": "Die linke oder rechte Bildschirmhälfte ist die ganze Steuerung. Loslassen zum Anhalten.",
+  "p.c2.k": "GESTE 2",
+  "p.c2.t": "Wischen zum Springen",
+  "p.c2.d": "Im Laufen wischen für einen Sprung, in der Luft noch einmal wischen für einen Doppelsprung.",
+  "p.c3.k": "KOMBINIERT",
+  "p.c3.t": "Von den Wänden abstoßen",
+  "p.c3.d": "Gegen eine Wand laufen und wischen für einen Wall-Jump: So geht es schnell nach oben, während bröckelnde Blöcke dich in Bewegung halten.",
+  "p.d.eyebrow": "03 · DER TURM",
+  "p.d.title": "Von dunklen Höhlen bis zum offenen Himmel, <span class=\"accent\">nie zweimal derselbe Aufstieg</span>",
+  "p.d.body": "Jeder Lauf wird neu erzeugt, also lernen Spieler die Bewegung statt ein Level auswendig.",
+  "p.t1": "Spielbare Dinos",
+  "p.t2": "Sprachen",
+  "p.t3": "Erzeugter Turm",
+  "p.t4": "Erhobene Personendaten",
+  "cs.f.dinos": "SPIELBARE DINOS",
+  "cs.fig": "ABB. 1 · GAMEPLAY AUF DEM IPHONE"
+ }
+};
+</script>
+<script src="dist/case-study.js"></script>
+</body>
+</html>

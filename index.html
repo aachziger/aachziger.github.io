@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Andrei Achziger — iOS Developer &amp; Indie Game Creator. Apps: MergeKey, Fishy Watch, Weltraum.">
+    <meta name="description" content="Andrei Achziger — independent developer for iPhone, Apple Watch and Android. Six apps since 2020: Weltraum, Random Drop, Fishy Watch, MergeKey, Up Dino Up and Skaty Watch.">
     <title>Andrei Achziger</title>
 
     <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -266,17 +266,6 @@
         .apps-head { text-align: center; margin-bottom: var(--space-2xl); }
         .apps-head .sb { margin: 0 auto; }
 
-        .app-track-wrap {
-            overflow: hidden;
-            touch-action: pan-y;             /* let vertical page-scroll through; we own horizontal */
-            user-select: none; -webkit-user-select: none;
-            margin: 0 calc(-1 * var(--space-lg)); padding: var(--space-sm) var(--space-lg) var(--space-xl);
-            cursor: grab;
-        }
-        .app-track-wrap:active { cursor: grabbing; }
-        .app-track { display: flex; gap: var(--space-md); padding-right: var(--space-lg); will-change: transform; }
-        .app-track img { -webkit-user-drag: none; user-drag: none; }
-
         /* ─── Pixel fluid overlay (canvas) ─────────────────────── */
         .pixel-fluid {
             position: absolute; inset: 0;
@@ -286,57 +275,11 @@
             opacity: 0;
             transition: opacity 0.5s var(--ease);
         }
-        .app-card-wrapper:hover .pixel-fluid,
+        .app-card:hover .pixel-fluid,
         .tech-card:hover .pixel-fluid,
         .srv:hover .pixel-fluid,
         .stat:hover .pixel-fluid,
         .contact-box:hover .pixel-fluid { opacity: 1; }
-
-        /* ─── App card flip container ───────────────────────────── */
-        .app-card-wrapper {
-            flex: 0 0 340px; scroll-snap-align: start;
-            perspective: 900px;
-            opacity: 0;
-            cursor: pointer;
-        }
-        .app-card-wrapper.visible { opacity: 1; transition: opacity 300ms var(--ease); }
-
-        /* Both faces share one grid cell, so the card is as tall as its taller
-           face — a long back never clips, and the track keeps cards uniform. */
-        .app-card-inner {
-            display: grid;
-            position: relative; width: 100%; height: 100%;
-            transition: transform 0.6s var(--ease);
-            transform-style: preserve-3d;
-            -webkit-transform-style: preserve-3d;
-        }
-        .app-card-wrapper.flipped .app-card-inner { transform: rotateY(180deg); }
-
-        .app-card-front,
-        .app-card-back {
-            grid-area: 1 / 1;
-            position: relative;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 16px; padding: var(--space-lg) var(--space-lg) var(--space-xl);
-            display: flex; flex-direction: column;
-            transition: border-color 200ms var(--ease);
-        }
-
-        /* (pixel fluid canvas replaces old shimmer ::before) */
-        .app-card-front {
-            transform: rotateY(0deg) translateZ(1px);
-            -webkit-transform: rotateY(0deg) translateZ(1px);
-        }
-        .app-card-front:hover { border-color: var(--border-visible); }
-
-        .app-card-back {
-            transform: rotateY(180deg) translateZ(1px);
-            -webkit-transform: rotateY(180deg) translateZ(1px);
-            padding-bottom: var(--space-lg);
-        }
-        .app-card-back:hover { border-color: var(--border-visible); }
 
         /* ─── Front face ────────────────────────────────────────── */
         .app-card-visual {
@@ -438,11 +381,6 @@
             border-radius: calc(var(--u) * 0.01); background: #48484a;
         }
 
-        /* Miniatures on the card backs */
-        .app-back-visual .phone           { --u: 28px; }
-        .app-back-visual .phone.landscape { --u: 52px; }
-        .app-back-visual .watch           { --u: 36px; }
-
         .app-label {
             font-family: var(--font-mono); font-size: 11px; font-weight: 400;
             letter-spacing: 0.08em; text-transform: uppercase;
@@ -450,32 +388,6 @@
             border: 1px solid var(--border-visible);
             border-radius: 999px; padding: 4px 12px;
             margin-bottom: var(--space-md); align-self: flex-start;
-            position: relative; z-index: 1;
-        }
-        .app-banner-img { max-width: 200px; height: auto; margin-bottom: var(--space-sm); }
-        .app-title {
-            font-family: var(--font-display); font-size: 24px; font-weight: 400;
-            letter-spacing: -0.01em; line-height: 1.2;
-            color: var(--text-display); margin-bottom: var(--space-sm);
-            position: relative; z-index: 1;
-        }
-        .app-flip-hint {
-            font-family: var(--font-mono); font-size: 11px;
-            color: var(--text-disabled); letter-spacing: 0.04em;
-            margin-top: auto; padding-top: var(--space-md);
-            position: relative; z-index: 1;
-        }
-
-        /* ─── Back face ─────────────────────────────────────────── */
-        .app-back-visual {
-            display: flex; justify-content: center; align-items: center;
-            height: 68px; margin-bottom: 12px;
-            position: relative; z-index: 1;
-        }
-        .app-back-title {
-            font-family: var(--font-display); font-size: 20px; font-weight: 400;
-            letter-spacing: -0.01em; line-height: 1.2;
-            color: var(--text-display); margin-bottom: var(--space-sm);
             position: relative; z-index: 1;
         }
         .app-desc {
@@ -889,7 +801,6 @@
             nav ul { display: none; }
             .hero-inner { flex-direction: column; }
             .hero-face { flex: none; width: 100%; height: 260px; }
-            .app-card-wrapper { flex: 0 0 300px; }
             .about-grid { grid-template-columns: 1fr; }
             .contact-box { padding: var(--space-xl) var(--space-lg); }
             .footer-row { flex-direction: column; text-align: center; }
@@ -898,9 +809,6 @@
             .hero-actions { flex-direction: column; width: 100%; }
             .btn { justify-content: center; }
             .privacy-box { padding: var(--space-lg) var(--space-md); }
-            .app-card-wrapper { flex: 0 0 280px; }
-            .app-back-visual { height: 70px; margin-bottom: var(--space-sm); }
-            .app-card-back { padding: var(--space-md) var(--space-md) var(--space-lg); }
             .app-desc { font-size: 13px; margin-bottom: var(--space-sm); }
             .app-perks { gap: 4px; margin-bottom: var(--space-md); }
             .app-perk { font-size: 11px; }
@@ -1039,6 +947,278 @@
             padding: 3px 8px;
             background: var(--surface);
         }
+        /* ─── Hero: what I do, in numbers ───────────────────────── */
+        .hero-sub-2 {
+            font-size: 16px; line-height: 1.6; color: var(--text-secondary);
+            max-width: 520px; margin: calc(-1 * var(--space-xl)) 0 var(--space-2xl);
+        }
+        .hero-face-cap {
+            position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 1;
+            display: flex; justify-content: space-between;
+            font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+            color: var(--text-primary);
+            background: color-mix(in srgb, var(--black) 80%, transparent);
+            border: 1px solid var(--border-visible); border-radius: 999px;
+            padding: 6px 12px; pointer-events: none;
+        }
+        .hero-face-cap b { font-weight: 400; color: var(--orange); }
+        .stats {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md);
+            margin-top: var(--space-3xl);
+        }
+        .stat {
+            position: relative; overflow: hidden;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: var(--space-lg);
+            display: flex; flex-direction: column-reverse; gap: var(--space-sm);
+            transition: border-color 200ms var(--ease);
+        }
+        .stat:hover { border-color: var(--border-visible); }
+        .stat dt {
+            position: relative; z-index: 1;
+            font-family: var(--font-mono); font-size: 11px;
+            letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary);
+        }
+        .stat dd {
+            position: relative; z-index: 1;
+            font-family: var(--font-display); font-size: 48px; line-height: 1;
+            color: var(--text-display);
+        }
+        .stat dd.accent { color: var(--orange); }
+        /* The scroll cue would collide with the stats, so it sits below them */
+        .hero .scroll-cue { position: static; transform: none; margin-top: var(--space-2xl); }
+        .hero { flex-direction: column; justify-content: center; }
+        .hero > .wrap { width: 100%; }
+
+        /* ─── About: crew file under the emoji card ─────────────── */
+        .about-side { display: flex; flex-direction: column; gap: var(--space-md); }
+        .about-side .emoji-card { flex: 1; min-height: 220px; }
+        .crew {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 16px; padding: var(--space-lg);
+            font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.02em;
+        }
+        .crew-title {
+            font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+            color: var(--orange); margin-bottom: var(--space-sm);
+        }
+        .crew dl > div {
+            display: flex; justify-content: space-between; gap: var(--space-md);
+            padding: 10px 0; border-top: 1px solid var(--border);
+        }
+        .crew dl > div:last-child { padding-bottom: 0; }
+        .crew dt { color: var(--text-disabled); }
+        .crew dd { color: var(--text-primary); text-align: right; }
+        .crew dd.live { color: var(--success); }
+
+        /* ─── Tech: where each group actually shipped ───────────── */
+        .tech-card { display: flex; flex-direction: column; }
+        .tech-proof {
+            position: relative; z-index: 1;
+            margin-top: auto; padding-top: var(--space-md);
+            display: flex; flex-direction: column; gap: 4px;
+            font-family: var(--font-mono); font-size: 10px; line-height: 1.5;
+            letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-primary);
+        }
+        .tech-pills + .tech-proof { margin-top: auto; }
+        .tech-proof::before {
+            content: ''; display: block; margin: var(--space-md) 0 var(--space-sm);
+            border-top: 1px dashed var(--border-visible);
+        }
+        .tech-proof-k { color: var(--text-disabled); }
+
+        /* ─── Apps: every launch visible, filterable ────────────── */
+        .app-filters {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-sm);
+            margin: calc(-1 * var(--space-lg)) 0 var(--space-xl);
+        }
+        .app-filter {
+            min-height: 44px; padding: 0 16px; border-radius: 999px;
+            border: 1px solid var(--border-visible); background: transparent;
+            font-family: var(--font-mono); font-size: 11px;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--text-secondary); cursor: pointer;
+            transition: color 200ms var(--ease), border-color 200ms var(--ease), background 200ms var(--ease);
+        }
+        .app-filter:hover { color: var(--text-display); border-color: var(--text-display); }
+        .app-filter.active { background: var(--text-display); border-color: var(--text-display); color: var(--black); }
+        .app-filter .n { opacity: 0.6; }
+
+        .app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md); }
+        .app-card {
+            position: relative; overflow: hidden;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 16px; padding: var(--space-lg) var(--space-lg) var(--space-xl);
+            display: flex; flex-direction: column;
+            transition: border-color 200ms var(--ease);
+        }
+        .app-card:hover { border-color: var(--border-visible); }
+        .app-card[hidden] { display: none; }
+        .app-card-visual { height: 260px; }
+        .app-card .phone { --u: 112px; }
+        .app-card .watch { --u: 128px; }
+        .app-meta {
+            position: relative; z-index: 1;
+            font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+            color: var(--text-disabled); margin-bottom: var(--space-md);
+        }
+        .app-card .badge-row { justify-content: flex-start; margin-top: auto; }
+        .app-play {
+            position: absolute; left: 0; bottom: 0; z-index: 2;
+            width: 44px; height: 44px; border-radius: 50%;
+            border: 1px solid var(--border-visible); background: var(--black);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: border-color 200ms var(--ease);
+        }
+        .app-play:hover { border-color: var(--text-display); }
+        .app-play svg { width: 11px; height: 11px; fill: var(--orange); }
+        .app-play .i-pause, .app-play[aria-pressed="true"] .i-play { display: none; }
+        .app-play[aria-pressed="true"] .i-pause { display: block; }
+
+        /* Featured launch: full row, device beside the story */
+        .app-feature { grid-column: 1 / -1; flex-direction: row; padding: 0; }
+        .app-feature .app-card-visual {
+            flex: 1.3 1 0; height: auto; min-height: 380px; margin: 0;
+            padding: var(--space-2xl) var(--space-lg);
+        }
+        .app-feature .app-card-visual::before {
+            content: ''; position: absolute; inset: 0; z-index: -1;
+            background-image: radial-gradient(circle, var(--border) 0.6px, transparent 0.6px);
+            background-size: 12px 12px;
+        }
+        .app-feature .app-play { left: var(--space-md); bottom: var(--space-md); }
+        .app-feature .phone.landscape { --u: 230px; }
+        .app-feature .app-body {
+            flex: 1 1 0; padding: var(--space-2xl) var(--space-xl);
+            display: flex; flex-direction: column; align-items: flex-start;
+        }
+        .app-feature .app-title { font-size: 40px; }
+        .app-feature .app-desc { font-size: 15px; flex: none; }
+        .app-feature .badge-row { margin-top: 0; }
+        .app-body { display: contents; }
+        .app-feature .app-body { display: flex; }
+        .app-case {
+            position: relative; z-index: 1; margin-top: var(--space-md);
+            display: inline-flex; align-items: center; min-height: 44px;
+            padding: 0 20px; border-radius: 999px;
+            background: var(--text-display); color: var(--black);
+            font-family: var(--font-mono); font-size: 12px;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            transition: opacity 200ms var(--ease);
+        }
+        .app-case:hover { opacity: 0.85; }
+        .app-link {
+            position: relative; z-index: 1; align-self: flex-start;
+            margin-top: var(--space-md); min-height: 44px; display: inline-flex; align-items: center;
+            font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em;
+            text-transform: uppercase; color: var(--orange);
+        }
+        .app-link:hover { color: var(--text-display); }
+
+        /* Closing card: an open slot for the next launch */
+        .app-next {
+            background: transparent; border-style: dashed; border-color: var(--border-visible);
+            justify-content: center; gap: var(--space-md); min-height: 360px;
+        }
+        .app-next:hover { border-color: var(--text-display); }
+        .app-next .app-act { position: relative; top: auto; right: auto; align-self: flex-start; }
+        .app-next > span { position: relative; z-index: 1; }
+        .app-next-title {
+            font-family: var(--font-display); font-size: 30px; line-height: 1.15;
+            color: var(--text-display);
+        }
+        .app-next-sub { font-size: 14px; line-height: 1.55; color: var(--text-secondary); }
+        .app-next-cta {
+            font-family: var(--font-mono); font-size: 12px;
+            letter-spacing: 0.06em; text-transform: uppercase; color: var(--orange);
+        }
+
+        @media (max-width: 1000px) {
+            .app-grid { grid-template-columns: repeat(2, 1fr); }
+            .app-feature .phone.landscape { --u: 170px; }
+        }
+        /* Phones: one swipeable row, in order of appearance */
+        @media (max-width: 800px) {
+            .app-filters { justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--space-lg)) var(--space-lg); padding: 0 var(--space-lg); }
+            .app-filters::-webkit-scrollbar { display: none; }
+            .app-filter { flex: none; }
+            .app-grid {
+                display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+                scroll-padding: 0 var(--space-lg); scrollbar-width: none;
+                margin: 0 calc(-1 * var(--space-lg)); padding: var(--space-sm) var(--space-lg) var(--space-md);
+            }
+            .app-grid::-webkit-scrollbar { display: none; }
+            .app-card { flex: 0 0 290px; scroll-snap-align: start; padding: var(--space-lg); order: var(--o, 7); }
+            .app-card-visual { height: 230px; }
+            .app-card .phone { --u: 100px; }
+            .app-card .watch { --u: 110px; }
+            .app-feature { flex-direction: column; padding: var(--space-lg); }
+            .app-feature .app-card-visual { min-height: 0; height: 230px; padding: 0; margin-bottom: var(--space-lg); }
+            .app-feature .app-card-visual::before { display: none; }
+            .app-feature .app-play { left: 0; bottom: 0; }
+            .app-feature .phone.landscape { --u: 100px; }
+            .app-feature .app-body { padding: 0; }
+            .app-feature .app-title { font-size: 24px; }
+            .app-feature .app-desc { font-size: 13px; }
+            .app-next { min-height: 0; }
+            .app-swipe {
+                display: block; margin-top: var(--space-sm);
+                font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+                color: var(--text-disabled);
+            }
+        }
+        .app-swipe { display: none; }
+
+        /* ─── Contact + footer additions ────────────────────────── */
+        .contact-email {
+            position: relative; z-index: 1; margin-top: var(--space-md);
+            font-family: var(--font-mono); font-size: 12px; color: var(--text-disabled);
+            overflow-wrap: anywhere;
+        }
+        .footer-note {
+            font-family: var(--font-mono); font-size: 11px;
+            letter-spacing: 0.06em; color: var(--text-secondary);
+        }
+
+        /* ─── Phone menu (the nav list is hidden under 800px) ──── */
+        .menu-btn { display: none; width: 44px; height: 44px; padding: 0; align-items: center; justify-content: center; }
+        .menu-btn svg { width: 18px; height: 18px; stroke: currentColor; }
+        .menu-btn .i-close, .menu-btn[aria-expanded="true"] .i-open { display: none; }
+        .menu-btn[aria-expanded="true"] .i-close { display: block; }
+        .mobile-menu {
+            border-top: 1px solid var(--border); background: var(--black);
+            margin-top: var(--space-md); padding: var(--space-sm) var(--space-lg) var(--space-lg);
+        }
+        .mobile-menu[hidden] { display: none; }
+        .mobile-menu a {
+            display: flex; justify-content: space-between; align-items: center;
+            min-height: 56px; border-bottom: 1px solid var(--border);
+            font-family: var(--font-display); font-size: 26px; color: var(--text-display);
+        }
+        .mobile-menu a span {
+            font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; color: var(--text-disabled);
+        }
+        .mobile-menu a.btn {
+            margin-top: var(--space-lg); width: 100%; min-height: 48px; justify-content: center;
+            border-bottom: none; font-family: var(--font-mono); font-size: 13px; color: var(--black);
+        }
+
+        @media (max-width: 800px) {
+            .menu-btn { display: inline-flex; }
+            .site-header.menu-open { background: var(--black); border-bottom-color: var(--border); }
+            .stats { grid-template-columns: repeat(2, 1fr); gap: var(--space-sm); margin-top: var(--space-2xl); }
+            .stat { padding: var(--space-md); }
+            .stat dd { font-size: 36px; }
+            .stat dt { font-size: 10px; }
+            .hero-sub-2 { font-size: 15px; }
+        }
+        @media (min-width: 801px) { .mobile-menu { display: none; } }
+        /* Small phones: keep the name on one line next to three controls */
+        @media (max-width: 480px) {
+            .logo-name { font-size: 15px; white-space: nowrap; }
+            .header-controls { gap: 6px; }
+            .header-controls .ctrl-btn:not(.menu-btn) { padding: 6px 10px; }
+        }
     </style>
 </head>
 <body>
@@ -1083,9 +1263,20 @@
                 <div class="header-controls">
                     <button class="ctrl-btn" id="theme-btn" aria-label="Toggle theme">☀️</button>
                     <button class="ctrl-btn" id="lang-btn" aria-label="Switch language">🇩🇪</button>
+                    <button class="ctrl-btn menu-btn" id="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+                        <svg class="i-open" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg>
+                        <svg class="i-close" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                    </button>
                 </div>
             </nav>
         </div>
+    </div>
+    <div class="mobile-menu" id="mobile-menu" hidden>
+        <a href="#about"><b data-i18n="nav.about">About</b><span>01</span></a>
+        <a href="#tech"><b data-i18n="nav.skills">Skills</b><span>02</span></a>
+        <a href="#apps"><b data-i18n="nav.apps">Apps</b><span>03</span></a>
+        <a href="#services"><b data-i18n="nav.services">Services</b><span>04</span></a>
+        <a href="#contact" class="btn btn-primary" data-i18n="nav.contact">Contact</a>
     </div>
 </header>
 
@@ -1098,19 +1289,25 @@
                 <h1 class="hero-title">
                     <span data-i18n="hero.greeting">Hello, I'm</span><br>Andrei
                 </h1>
-                <p class="hero-sub" data-i18n="hero.sub">
-                    This is the story of a curious mind that learned to code — and started shipping. Mobile apps, games, and tools that are useful, playful, and a little unexpected.
-                </p>
+                <p class="hero-sub" data-i18n="hero.sub">I design, build and ship mobile apps, games and tools. Six are live on the App Store and Google Play, the first since 2020.</p>
+                <p class="hero-sub-2" data-i18n="hero.sub2">I also help teams build theirs: native iOS and Apple Watch, AI features, web and cloud. This page is the story of how that happened.</p>
                 <p class="hero-type" aria-hidden="true"><span id="type-text"></span></p>
                 <div class="hero-actions">
                     <a href="#about"   class="btn btn-primary" data-i18n="hero.cta_apps">Start the Story</a>
-                    <a href="#contact" class="btn btn-secondary" data-i18n="hero.cta_contact">Get in Touch</a>
+                    <a href="#apps"    class="btn btn-secondary" data-i18n="hero.cta_see">See the apps</a>
                 </div>
             </div>
             <div class="hero-face" id="hero-face">
                 <canvas id="hero-face-canvas"></canvas>
+                <span class="hero-face-cap" aria-hidden="true">CREW-01 <b>A. ACHZIGER</b></span>
             </div>
         </div>
+        <dl class="stats">
+            <div class="stat"><dt data-i18n="stat.apps">Apps still in orbit</dt><dd>06</dd></div>
+            <div class="stat"><dt data-i18n="stat.first">First launch</dt><dd>2020</dd></div>
+            <div class="stat"><dt data-i18n="stat.plat">iPhone · Watch · Android</dt><dd>03</dd></div>
+            <div class="stat"><dt data-i18n="stat.langs">Languages · Up Dino Up</dt><dd class="accent">23</dd></div>
+        </dl>
     </div>
     <div class="scroll-cue" data-i18n="hero.scroll">Scroll to begin</div>
 </section>
@@ -1146,8 +1343,21 @@
                     <span class="tag" data-emoji="🎮" data-i18n="tag.games">Video Games</span>
                 </div>
             </div>
-            <div class="emoji-card" id="emoji-card">
-                <canvas class="emoji-canvas" id="emoji-canvas"></canvas>
+            <div class="about-side">
+                <div class="emoji-card" id="emoji-card">
+                    <canvas class="emoji-canvas" id="emoji-canvas"></canvas>
+                </div>
+                <div class="crew">
+                    <div class="crew-title" data-i18n="crew.title">CREW FILE</div>
+                    <dl>
+                        <div><dt data-i18n="crew.name">NAME</dt><dd>Andrei Achziger</dd></div>
+                        <div><dt data-i18n="crew.training">TRAINING</dt><dd data-i18n="crew.training.v">Cognitive Science</dd></div>
+                        <div><dt data-i18n="crew.flown">FLOWN WITH</dt><dd data-i18n="crew.flown.v">Startups · Industry · Indie</dd></div>
+                        <div><dt data-i18n="crew.spec">SPECIALTY</dt><dd>iOS · watchOS · AI</dd></div>
+                        <div><dt data-i18n="crew.launches">LAUNCHES</dt><dd data-i18n="crew.launches.v">6 since 2020</dd></div>
+                        <div><dt data-i18n="crew.channel">CHANNEL</dt><dd class="live" data-i18n="crew.channel.v">● Open</dd></div>
+                    </dl>
+                </div>
             </div>
         </div>
     </div>
@@ -1183,6 +1393,7 @@
                     <span class="tech-pill">CoreMotion</span><span class="tech-pill">AVFoundation</span>
                     <span class="tech-pill">StoreKit</span><span class="tech-pill">Objective-C</span>
                 </div>
+                <div class="tech-proof"><span class="tech-proof-k" data-i18n="tp.k.shipped">SHIPPED IN</span><span data-i18n="tp.ios">All six apps · two on Apple Watch</span></div>
             </div>
             <div class="tech-card">
                 <div class="tech-card-label" data-i18n="tech.lbl.cross">Mobile & Cross-Platform</div>
@@ -1192,6 +1403,7 @@
                     <span class="tech-pill">Ionic</span><span class="tech-pill">Cordova</span>
                     <span class="tech-pill">Dart</span><span class="tech-pill">C#</span>
                 </div>
+                <div class="tech-proof"><span class="tech-proof-k" data-i18n="tp.k.android">ON GOOGLE PLAY</span><span data-i18n="tp.cross">Up Dino Up · MergeKey</span></div>
             </div>
             <div class="tech-card">
                 <div class="tech-card-label" data-i18n="tech.lbl.web">Web & Backend</div>
@@ -1201,6 +1413,7 @@
                     <span class="tech-pill">HTML / CSS</span><span class="tech-pill">REST APIs</span>
                     <span class="tech-pill">Firebase</span>
                 </div>
+                <div class="tech-proof"><span class="tech-proof-k" data-i18n="tp.k.built">BUILT</span><span data-i18n="tp.web">Responsive client web apps</span></div>
             </div>
             <div class="tech-card">
                 <div class="tech-card-label" data-i18n="tech.lbl.cloud">Cloud & DevOps</div>
@@ -1210,6 +1423,7 @@
                     <span class="tech-pill">GitLab CI</span><span class="tech-pill">GitHub</span>
                     <span class="tech-pill">Git</span>
                 </div>
+                <div class="tech-proof"><span class="tech-proof-k" data-i18n="tp.k.run">RUN</span><span data-i18n="tp.cloud">Containerised production systems</span></div>
             </div>
             <div class="tech-card">
                 <div class="tech-card-label" data-i18n="tech.lbl.hw">Connectivity & Hardware</div>
@@ -1218,6 +1432,7 @@
                     <span class="tech-pill">Multipeer Connectivity</span><span class="tech-pill">IoT</span>
                     <span class="tech-pill">Tinkerforge</span><span class="tech-pill">Game Center</span>
                 </div>
+                <div class="tech-proof"><span class="tech-proof-k" data-i18n="tp.k.shipped">SHIPPED IN</span><span data-i18n="tp.hw">Weltraum · medical &amp; factory devices</span></div>
             </div>
             <div class="tech-card">
                 <div class="tech-card-label" data-i18n="tech.lbl.ai">AI & Machine Learning</div>
@@ -1227,6 +1442,7 @@
                     <span class="tech-pill">Computer Vision</span><span class="tech-pill">Python</span>
                     <span class="tech-pill">Firebase ML</span>
                 </div>
+                <div class="tech-proof"><span class="tech-proof-k" data-i18n="tp.k.prod">IN PRODUCTION</span><span data-i18n="tp.ai">Real-time ML pipelines</span></div>
             </div>
             <div class="tech-card">
                 <div class="tech-card-label" data-i18n="tech.lbl.game">Game Dev & 3D</div>
@@ -1236,6 +1452,7 @@
                     <span class="tech-pill">ARKit</span><span class="tech-pill">SceneKit</span>
                     <span class="tech-pill">Aseprite</span>
                 </div>
+                <div class="tech-proof"><span class="tech-proof-k" data-i18n="tp.k.shipped">SHIPPED IN</span><span data-i18n="tp.game">Five games since 2020</span></div>
             </div>
             <div class="tech-card">
                 <div class="tech-card-label" data-i18n="tech.lbl.design">Design & Tools</div>
@@ -1269,230 +1486,183 @@
             <p class="sb"       data-i18n="apps.desc">Each app began as one of those questions — about play, reflexes, attention, typing, and lately climbing and skating. In order of appearance:</p>
         </div>
 
-        <div class="app-track-wrap">
-            <div class="app-track">
-
-<!-- Weltraum -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <span class="app-act" aria-hidden="true">I</span>
-                            <div class="app-card-visual">
-                                <div class="device phone"><video class="device-screen" src="dist/videos/weltraum.mp4" poster="dist/videos/weltraum.jpg" muted loop playsinline preload="none" aria-label="Weltraum gameplay"></video><span class="island"></span></div>
-                            </div>
-                            <span class="app-label" data-i18n="wt.label">Multiplayer · Strategy</span>
-                            <h3 class="app-title">Weltraum</h3>
-                            <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Weltraum on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
-                        </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <div class="device phone"><img class="device-screen" src="dist/videos/weltraum.jpg" alt="" decoding="async"><span class="island"></span></div>
-                            </div>
-                            <h3 class="app-back-title">Weltraum</h3>
-                            <p class="app-desc" data-i18n="wt.desc">Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="wt.perk1">Real-time multiplayer via Bluetooth</span>
-                                <span class="app-perk" data-i18n="wt.perk2">Game Center integration</span>
-                                <span class="app-perk" data-i18n="wt.perk3">Unique orbit-based mechanics</span>
-                            </div>
-                            <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Weltraum on the App Store">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-<!-- Random Drop -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <span class="app-act" aria-hidden="true">II</span>
-                            <div class="app-card-visual">
-                                <div class="device phone"><video class="device-screen" src="dist/videos/random.mp4" poster="dist/videos/random.jpg" muted loop playsinline preload="none" aria-label="Random Drop gameplay"></video><span class="island"></span></div>
-                            </div>
-                            <span class="app-label" data-i18n="rd.label">Arcade · Game</span>
-                            <h3 class="app-title">Random Drop</h3>
-                            <a href="https://apps.apple.com/us/app/random-drop/id1513193929" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Random Drop on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
-                        </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <div class="device phone"><img class="device-screen" src="dist/videos/random.jpg" alt="" decoding="async"><span class="island"></span></div>
-                            </div>
-                            <h3 class="app-back-title">Random Drop</h3>
-                            <p class="app-desc" data-i18n="rd.desc">A fast-paced arcade game where balls drop in out of nowhere. Pure reflex, pure fun — pick it up anytime, anywhere, and see how long you last.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="rd.perk1">Instant pick-up-and-play action</span>
-                                <span class="app-perk" data-i18n="rd.perk2">Unpredictable ball drops</span>
-                                <span class="app-perk" data-i18n="rd.perk3">Short rounds, endless replay</span>
-                            </div>
-                            <a href="https://apps.apple.com/us/app/random-drop/id1513193929" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Random Drop on the App Store">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Fishy Watch -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <span class="app-act" aria-hidden="true">III</span>
-                            <div class="app-card-visual">
-                                <div class="device watch"><span class="band top"></span><span class="band bottom"></span><video class="device-screen" src="dist/videos/fishy.mp4" poster="dist/videos/fishy.jpg" muted loop playsinline preload="none" aria-label="Fishy Watch gameplay"></video><span class="crown"></span></div>
-                            </div>
-                            <span class="app-label" data-i18n="fw.label">Apple Watch · Game</span>
-                            <h3 class="app-title">Fishy Watch</h3>
-                            <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Fishy Watch on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
-                        </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <div class="device watch"><span class="band top"></span><span class="band bottom"></span><img class="device-screen" src="dist/videos/fishy.jpg" alt="" decoding="async"><span class="crown"></span></div>
-                            </div>
-                            <h3 class="app-back-title">Fishy Watch</h3>
-                            <p class="app-desc" data-i18n="fw.desc">A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="fw.perk1">Dozens of fish to catch & collect</span>
-                                <span class="app-perk" data-i18n="fw.perk2">Feed and interact with your catch</span>
-                                <span class="app-perk" data-i18n="fw.perk3">Designed natively for Apple Watch</span>
-                            </div>
-                            <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Fishy Watch on the App Store">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- MergeKey -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <span class="app-act" aria-hidden="true">IV</span>
-                            <div class="app-card-visual">
-                                <div class="device phone"><video class="device-screen" src="dist/videos/merge.mp4" poster="dist/videos/merge.jpg" muted loop playsinline preload="none" aria-label="MergeKey typing demo"></video><span class="island"></span></div>
-                            </div>
-                            <span class="app-label" data-i18n="mk.label">Keyboard · Productivity</span>
-                            <h3 class="app-title">MergeKey</h3>
-                            <div class="badge-row">
-                                <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link" onclick="event.stopPropagation()">
-                                    <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store">
-                                </a>
-                                <a href="https://play.google.com/store/apps/details?id=com.andreiachziger.mergekey" class="badge-link" onclick="event.stopPropagation()">
-                                    <img src="src/images/GetItOnGooglePlay.svg" decoding="async" alt="Get MergeKey on Google Play">
-                                </a>
-                            </div>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
-                        </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <div class="device phone"><img class="device-screen" src="dist/videos/merge.jpg" alt="" decoding="async"><span class="island"></span></div>
-                            </div>
-                            <h3 class="app-back-title">MergeKey</h3>
-                            <p class="app-desc" data-i18n="mk.desc">The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="mk.perk1">Dynamic, adaptive word learning</span>
-                                <span class="app-perk" data-i18n="mk.perk2">Reduces typos in real time</span>
-                                <span class="app-perk" data-i18n="mk.perk3">Fully customizable personal dictionary</span>
-                            </div>
-                            <div class="badge-row">
-                                <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link" onclick="event.stopPropagation()">
-                                    <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store">
-                                </a>
-                                <a href="https://play.google.com/store/apps/details?id=com.andreiachziger.mergekey" class="badge-link" onclick="event.stopPropagation()">
-                                    <img src="src/images/GetItOnGooglePlay.svg" decoding="async" alt="Get MergeKey on Google Play">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Up Dino Up -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <span class="app-act" aria-hidden="true">V</span>
-                            <div class="app-card-visual">
-                                <div class="device phone landscape"><video class="device-screen" src="dist/videos/dino.mp4" poster="dist/videos/dino.jpg" muted loop playsinline preload="none" aria-label="Up Dino Up gameplay"></video><span class="island"></span></div>
-                            </div>
-                            <span class="app-label" data-i18n="ud.label">Arcade · Platformer</span>
-                            <h3 class="app-title">Up Dino Up</h3>
-                            <div class="badge-row">
-                                <a href="https://apps.apple.com/us/app/up-dino-up/id6766686500" class="badge-link" onclick="event.stopPropagation()">
-                                    <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Up Dino Up on the App Store">
-                                </a>
-                                <a href="https://play.google.com/store/apps/details?id=com.zerodeathgames.updinoup" class="badge-link" onclick="event.stopPropagation()">
-                                    <img src="src/images/GetItOnGooglePlay.svg" decoding="async" alt="Get Up Dino Up on Google Play">
-                                </a>
-                            </div>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
-                        </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <div class="device phone landscape"><img class="device-screen" src="dist/videos/dino.jpg" alt="" decoding="async"><span class="island"></span></div>
-                            </div>
-                            <h3 class="app-back-title">Up Dino Up</h3>
-                            <p class="app-desc" data-i18n="ud.desc">A little dino, an endless tower, and a novel take on jump-and-run controls: hold a side to run, swipe to jump, kick off the walls — fast, agile movement from two simple gestures. Every climb is freshly generated, from dark caves up into the open sky.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="ud.perk1">Novel hold-and-swipe movement controls</span>
-                                <span class="app-perk" data-i18n="ud.perk2">Wall-jumps, double jumps & crumbling blocks</span>
-                                <span class="app-perk" data-i18n="ud.perk3">4 dinos · 23 languages · kid-friendly</span>
-                            </div>
-                            <div class="badge-row">
-                                <a href="https://apps.apple.com/us/app/up-dino-up/id6766686500" class="badge-link" onclick="event.stopPropagation()">
-                                    <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Up Dino Up on the App Store">
-                                </a>
-                                <a href="https://play.google.com/store/apps/details?id=com.zerodeathgames.updinoup" class="badge-link" onclick="event.stopPropagation()">
-                                    <img src="src/images/GetItOnGooglePlay.svg" decoding="async" alt="Get Up Dino Up on Google Play">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Skaty Watch -->
-                <div class="app-card-wrapper" onclick="this.classList.toggle('flipped')">
-                    <div class="app-card-inner">
-                        <div class="app-card-front">
-                            <span class="app-act" aria-hidden="true">VI</span>
-                            <div class="app-card-visual">
-                                <div class="device watch"><span class="band top"></span><span class="band bottom"></span><video class="device-screen" src="dist/videos/skaty.mp4" poster="dist/videos/skaty.jpg" muted loop playsinline preload="none" aria-label="Skaty Watch gameplay"></video><span class="crown"></span></div>
-                            </div>
-                            <span class="app-label" data-i18n="sk.label">Apple Watch · Game</span>
-                            <h3 class="app-title">Skaty Watch</h3>
-                            <a href="https://apps.apple.com/us/app/skaty-watch/id6449743798" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Skaty Watch on the App Store">
-                            </a>
-                            <span class="app-flip-hint" data-i18n="app.tap_hint">Tap to learn more</span>
-                        </div>
-                        <div class="app-card-back">
-                            <div class="app-back-visual">
-                                <div class="device watch"><span class="band top"></span><span class="band bottom"></span><img class="device-screen" src="dist/videos/skaty.jpg" alt="" decoding="async"><span class="crown"></span></div>
-                            </div>
-                            <h3 class="app-back-title">Skaty Watch</h3>
-                            <p class="app-desc" data-i18n="sk.desc">A flip-trick game on your wrist — no riding around, just you and the board. Crouch, flick to pop and spin, tap to catch — land flat for a Perfect. Satisfying flick controls with real skate timing, from ollies to 360 flips.</p>
-                            <div class="app-perks">
-                                <span class="app-perk" data-i18n="sk.perk1">Pure flip tricks — flick, spin, catch</span>
-                                <span class="app-perk" data-i18n="sk.perk2">Ollies to 360 flips, regular or goofy</span>
-                                <span class="app-perk" data-i18n="sk.perk3">Four modes, haptics, no ads</span>
-                            </div>
-                            <a href="https://apps.apple.com/us/app/skaty-watch/id6449743798" class="badge-link" onclick="event.stopPropagation()">
-                                <img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Skaty Watch on the App Store">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                
-                
-            </div>
+        <div class="app-filters" role="group" aria-label="Filter apps">
+            <button class="app-filter active" type="button" data-filter="all" aria-pressed="true"><span data-i18n="apps.f.all">ALL</span> <span class="n">6</span></button>
+            <button class="app-filter" type="button" data-filter="games" aria-pressed="false"><span data-i18n="apps.f.games">GAMES</span> <span class="n">5</span></button>
+            <button class="app-filter" type="button" data-filter="watch" aria-pressed="false"><span data-i18n="apps.f.watch">WATCH</span> <span class="n">2</span></button>
+            <button class="app-filter" type="button" data-filter="tools" aria-pressed="false"><span data-i18n="apps.f.tools">TOOLS</span> <span class="n">1</span></button>
+            <button class="app-filter" type="button" data-filter="android" aria-pressed="false"><span data-i18n="apps.f.android">ANDROID</span> <span class="n">2</span></button>
         </div>
+
+        <div class="app-grid" id="app-grid">
+                <!-- Up Dino Up -->
+                <article class="app-card app-feature" data-cats="games android" style="--o: 5">
+                    <span class="app-act" aria-hidden="true">V</span>
+                    <div class="app-card-visual">
+                        <div class="device phone landscape"><video class="device-screen" src="dist/videos/dino.mp4" poster="dist/videos/dino.jpg" muted loop playsinline preload="none" aria-label="Up Dino Up gameplay"></video><span class="island"></span></div>
+                        <button class="app-play" type="button" aria-pressed="false" data-i18n-aria="app.play" data-aria-suffix="Up Dino Up" aria-label="Play preview: Up Dino Up">
+                            <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3l15 9-15 9z"/></svg>
+                            <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+                        </button>
+                    </div>
+                    <div class="app-body">
+                        <span class="app-label" data-i18n="ud.label">ARCADE · PLATFORMER</span>
+                        <h3 class="app-title">Up Dino Up</h3>
+                        <span class="app-meta"><span data-i18n="app.featured">FEATURED</span> · 2026-08 · IPHONE · ANDROID</span>
+                        <p class="app-desc" data-i18n="ud.desc">A little dino, an endless tower, and a novel take on jump-and-run controls: hold a side to run, swipe to jump, kick off the walls — fast, agile movement from two simple gestures. Every climb is freshly generated, from dark caves up into the open sky.</p>
+                        <div class="app-perks">
+                            <span class="app-perk" data-i18n="ud.perk1">Novel hold-and-swipe movement controls</span>
+                            <span class="app-perk" data-i18n="ud.perk2">Wall-jumps, double jumps &amp; crumbling blocks</span>
+                            <span class="app-perk" data-i18n="ud.perk3">4 dinos · 23 languages · kid-friendly</span>
+                        </div>
+                        <div class="badge-row">
+                            <a href="https://apps.apple.com/us/app/up-dino-up/id6766686500" class="badge-link"><img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Up Dino Up on the App Store"></a>
+                            <a href="https://play.google.com/store/apps/details?id=com.zerodeathgames.updinoup" class="badge-link"><img src="src/images/GetItOnGooglePlay.svg" decoding="async" alt="Get Up Dino Up on Google Play"></a>
+                        </div>
+                        <a href="up-dino-up.html" class="app-case" data-i18n="app.case">Read the case study →</a>
+                    </div>
+                </article>
+                <!-- Weltraum -->
+                <article class="app-card" data-cats="games" style="--o: 1">
+                    <span class="app-act" aria-hidden="true">I</span>
+                    <div class="app-card-visual">
+                        <div class="device phone"><video class="device-screen" src="dist/videos/weltraum.mp4" poster="dist/videos/weltraum.jpg" muted loop playsinline preload="none" aria-label="Weltraum gameplay"></video><span class="island"></span></div>
+                        <button class="app-play" type="button" aria-pressed="false" data-i18n-aria="app.play" data-aria-suffix="Weltraum" aria-label="Play preview: Weltraum">
+                            <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3l15 9-15 9z"/></svg>
+                            <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+                        </button>
+                    </div>
+                    <div class="app-body">
+                        <span class="app-label" data-i18n="wt.label">ARCADE · MULTIPLAYER</span>
+                        <h3 class="app-title">Weltraum</h3>
+                        <span class="app-meta">2020-03 · IPHONE</span>
+                        <p class="app-desc" data-i18n="wt.desc">A minimalist space arcade about timing and orbits. Swipe to launch your moons; space is round, so whatever leaves one edge comes back from the other. Catch them before they turn hot.</p>
+                        <div class="app-perks">
+                            <span class="app-perk" data-i18n="wt.perk1">Solo, Bluetooth Versus or online via Game Center</span>
+                            <span class="app-perk" data-i18n="wt.perk2">Every 10 stars adds another moon</span>
+                            <span class="app-perk" data-i18n="wt.perk3">No ads, no tracking · 10 languages</span>
+                        </div>
+                        <div class="badge-row">
+                            <a href="https://apps.apple.com/app/py-k-py/id1501514378" class="badge-link"><img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Weltraum on the App Store"></a>
+                        </div>
+                        <a href="weltraum.html" class="app-link" data-i18n="app.case_short">Case study →</a>
+                    </div>
+                </article>
+                <!-- Random Drop -->
+                <article class="app-card" data-cats="games" style="--o: 2">
+                    <span class="app-act" aria-hidden="true">II</span>
+                    <div class="app-card-visual">
+                        <div class="device phone"><video class="device-screen" src="dist/videos/random.mp4" poster="dist/videos/random.jpg" muted loop playsinline preload="none" aria-label="Random Drop gameplay"></video><span class="island"></span></div>
+                        <button class="app-play" type="button" aria-pressed="false" data-i18n-aria="app.play" data-aria-suffix="Random Drop" aria-label="Play preview: Random Drop">
+                            <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3l15 9-15 9z"/></svg>
+                            <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+                        </button>
+                    </div>
+                    <div class="app-body">
+                        <span class="app-label" data-i18n="rd.label">REFLEX · MULTIPLAYER</span>
+                        <h3 class="app-title">Random Drop</h3>
+                        <span class="app-meta">2020-05 · IPHONE</span>
+                        <p class="app-desc" data-i18n="rd.desc">A one-thumb reflex game about matching colours. Tap left or right to drop each ball into the bin of the same colour, faster and faster, until your thumb can't keep up.</p>
+                        <div class="app-perks">
+                            <span class="app-perk" data-i18n="rd.perk1">Every input is one tap, left or right</span>
+                            <span class="app-perk" data-i18n="rd.perk2">Versus like table tennis: best of 3, 5 or 11</span>
+                            <span class="app-perk" data-i18n="rd.perk3">Free forever, no ads · 23 languages</span>
+                        </div>
+                        <div class="badge-row">
+                            <a href="https://apps.apple.com/us/app/random-drop/id1513193929" class="badge-link"><img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Random Drop on the App Store"></a>
+                        </div>
+                        <a href="random-drop.html" class="app-link" data-i18n="app.case_short">Case study →</a>
+                    </div>
+                </article>
+                <!-- Fishy Watch -->
+                <article class="app-card" data-cats="games watch" style="--o: 3">
+                    <span class="app-act" aria-hidden="true">III</span>
+                    <div class="app-card-visual">
+                        <div class="device watch"><span class="band top"></span><span class="band bottom"></span><video class="device-screen" src="dist/videos/fishy.mp4" poster="dist/videos/fishy.jpg" muted loop playsinline preload="none" aria-label="Fishy Watch gameplay"></video><span class="crown"></span></div>
+                        <button class="app-play" type="button" aria-pressed="false" data-i18n-aria="app.play" data-aria-suffix="Fishy Watch" aria-label="Play preview: Fishy Watch">
+                            <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3l15 9-15 9z"/></svg>
+                            <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+                        </button>
+                    </div>
+                    <div class="app-body">
+                        <span class="app-label" data-i18n="fw.label">APPLE WATCH · GAME</span>
+                        <h3 class="app-title">Fishy Watch</h3>
+                        <span class="app-meta">2023-06 · APPLE WATCH</span>
+                        <p class="app-desc" data-i18n="fw.desc">A fishing game built for Apple Watch. Cast with your arm, dive with the Digital Crown, and raise every catch in your own aquarium, from tiny fry to full-size elder.</p>
+                        <div class="app-perks">
+                            <span class="app-perk" data-i18n="fw.perk1">36 fish across 9 fishing areas</span>
+                            <span class="app-perk" data-i18n="fw.perk2">Five mini-games, a walk buddy and widgets</span>
+                            <span class="app-perk" data-i18n="fw.perk3">No ads, no in-app purchases · 24 languages</span>
+                        </div>
+                        <div class="badge-row">
+                            <a href="https://apps.apple.com/us/app/fishy-watch/id6449793065" class="badge-link"><img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Fishy Watch on the App Store"></a>
+                        </div>
+                        <a href="fishy-watch.html" class="app-link" data-i18n="app.case_short">Case study →</a>
+                    </div>
+                </article>
+                <!-- MergeKey -->
+                <article class="app-card" data-cats="tools android" style="--o: 4">
+                    <span class="app-act" aria-hidden="true">IV</span>
+                    <div class="app-card-visual">
+                        <div class="device phone"><video class="device-screen" src="dist/videos/merge.mp4" poster="dist/videos/merge.jpg" muted loop playsinline preload="none" aria-label="MergeKey typing demo"></video><span class="island"></span></div>
+                        <button class="app-play" type="button" aria-pressed="false" data-i18n-aria="app.play" data-aria-suffix="MergeKey" aria-label="Play preview: MergeKey">
+                            <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3l15 9-15 9z"/></svg>
+                            <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+                        </button>
+                    </div>
+                    <div class="app-body">
+                        <span class="app-label" data-i18n="mk.label">KEYBOARD · PRODUCTIVITY</span>
+                        <h3 class="app-title">MergeKey</h3>
+                        <span class="app-meta">2024-08 · IPHONE · ANDROID</span>
+                        <p class="app-desc" data-i18n="mk.desc">The first keyboard that hides the keys you don't need. Impossible letters disappear as you type and the rest grow, so every tap has a bigger target.</p>
+                        <div class="app-perks">
+                            <span class="app-perk" data-i18n="mk.perk1">31 languages with native prediction</span>
+                            <span class="app-perk" data-i18n="mk.perk2">14 styles, split keyboard and trackpad on iPad</span>
+                            <span class="app-perk" data-i18n="mk.perk3">Never connects to the internet</span>
+                        </div>
+                        <div class="badge-row">
+                            <a href="https://apps.apple.com/us/app/mergekey/id6478465716" class="badge-link"><img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download MergeKey on the App Store"></a>
+                            <a href="https://play.google.com/store/apps/details?id=com.andreiachziger.mergekey" class="badge-link"><img src="src/images/GetItOnGooglePlay.svg" decoding="async" alt="Get MergeKey on Google Play"></a>
+                        </div>
+                        <a href="mergekey.html" class="app-link" data-i18n="app.case_short">Case study →</a>
+                    </div>
+                </article>
+                <!-- Skaty Watch -->
+                <article class="app-card" data-cats="games watch" style="--o: 6">
+                    <span class="app-act" aria-hidden="true">VI</span>
+                    <div class="app-card-visual">
+                        <div class="device watch"><span class="band top"></span><span class="band bottom"></span><video class="device-screen" src="dist/videos/skaty.mp4" poster="dist/videos/skaty.jpg" muted loop playsinline preload="none" aria-label="Skaty Watch gameplay"></video><span class="crown"></span></div>
+                        <button class="app-play" type="button" aria-pressed="false" data-i18n-aria="app.play" data-aria-suffix="Skaty Watch" aria-label="Play preview: Skaty Watch">
+                            <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3l15 9-15 9z"/></svg>
+                            <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+                        </button>
+                    </div>
+                    <div class="app-body">
+                        <span class="app-label" data-i18n="sk.label">APPLE WATCH · GAME</span>
+                        <h3 class="app-title">Skaty Watch</h3>
+                        <span class="app-meta">2026-09 · APPLE WATCH</span>
+                        <p class="app-desc" data-i18n="sk.desc">Flip tricks on your wrist. Pull down to crouch, flick to pop and spin the board, tap to catch it, and land flat for a Perfect.</p>
+                        <div class="app-perks">
+                            <span class="app-perk" data-i18n="sk.perk1">Ollies to 360 flips, regular or goofy</span>
+                            <span class="app-perk" data-i18n="sk.perk2">Four modes and combos up to ×10</span>
+                            <span class="app-perk" data-i18n="sk.perk3">Free, no ads · 23 languages</span>
+                        </div>
+                        <div class="badge-row">
+                            <a href="https://apps.apple.com/us/app/skaty-watch/id6449743798" class="badge-link"><img src="src/images/DownloadAppStore.svg" decoding="async" alt="Download Skaty Watch on the App Store"></a>
+                        </div>
+                        <a href="skaty-watch.html" class="app-link" data-i18n="app.case_short">Case study →</a>
+                    </div>
+                </article>
+
+                <!-- Next launch -->
+                <a href="#contact" class="app-card app-next">
+                    <span class="app-act" aria-hidden="true">VII</span>
+                    <span class="app-next-title" data-i18n="app.next.title">Your app could be the next launch</span>
+                    <span class="app-next-sub" data-i18n="app.next.sub">I take on client projects from first prototype to store release.</span>
+                    <span class="app-next-cta" data-i18n="app.next.cta">Tell me about it →</span>
+                </a>
+        </div>
+        <p class="app-swipe" aria-hidden="true" data-i18n="app.swipe">← SWIPE →</p>
 
     </div>
 </section>
@@ -1521,31 +1691,37 @@
                 <div class="srv-cat">01</div>
                 <h3 class="srv-title" data-i18n="srv1.title">Mobile App Development</h3>
                 <p  class="srv-desc"  data-i18n="srv1.desc">Native iOS in Swift/SwiftUI or cross-platform with React Native and Flutter. From initial concept through App Store submission — including WatchKit, CoreBluetooth, and hardware integrations.</p>
+                <div class="srv-tags"><span class="srv-tag">Swift</span><span class="srv-tag">SwiftUI</span><span class="srv-tag">React Native</span><span class="srv-tag">Flutter</span></div>
             </div>
             <div class="srv">
                 <div class="srv-cat">02</div>
                 <h3 class="srv-title" data-i18n="srv2.title">AI Integration</h3>
                 <p  class="srv-desc"  data-i18n="srv2.desc">Embedding AI into your product — on-device with CoreML/Vision, in the cloud with LLM APIs, or custom computer vision models. Proven experience fine-tuning and deploying real-time ML pipelines.</p>
+                <div class="srv-tags"><span class="srv-tag">CoreML</span><span class="srv-tag">Vision</span><span class="srv-tag">LLM APIs</span><span class="srv-tag">Python</span></div>
             </div>
             <div class="srv">
                 <div class="srv-cat">03</div>
                 <h3 class="srv-title" data-i18n="srv3.title">Web & Frontend</h3>
                 <p  class="srv-desc"  data-i18n="srv3.desc">Modern, responsive web apps with Angular, TypeScript, and Node.js. Clean UI/UX grounded in Figma, with a keen eye on performance and accessibility.</p>
+                <div class="srv-tags"><span class="srv-tag">TypeScript</span><span class="srv-tag">Angular</span><span class="srv-tag">Node.js</span><span class="srv-tag">Figma</span></div>
             </div>
             <div class="srv">
                 <div class="srv-cat">04</div>
                 <h3 class="srv-title" data-i18n="srv4.title">Cloud & DevOps</h3>
                 <p  class="srv-desc"  data-i18n="srv4.desc">Containerised, scalable infrastructure on GCP or Azure. Kubernetes orchestration, Docker pipelines, and GitLab CI/CD — building systems that are reliable and easy to maintain.</p>
+                <div class="srv-tags"><span class="srv-tag">Kubernetes</span><span class="srv-tag">Docker</span><span class="srv-tag">GCP</span><span class="srv-tag">Azure</span></div>
             </div>
             <div class="srv">
                 <div class="srv-cat">05</div>
                 <h3 class="srv-title" data-i18n="srv5.title">Hardware & Connectivity</h3>
                 <p  class="srv-desc"  data-i18n="srv5.desc">NFC and Bluetooth LE integrations, IoT sensor systems, and industrial hardware interfaces. Experience connecting the physical world to apps — from medical devices to factory floors.</p>
+                <div class="srv-tags"><span class="srv-tag">BLE</span><span class="srv-tag">NFC</span><span class="srv-tag">IoT</span><span class="srv-tag">Tinkerforge</span></div>
             </div>
             <div class="srv">
                 <div class="srv-cat">06</div>
                 <h3 class="srv-title" data-i18n="srv6.title">Tech Consulting</h3>
                 <p  class="srv-desc"  data-i18n="srv6.desc">Interdisciplinary background in Cognitive Science, AI, and engineering — great for architecture reviews, stack decisions, MVP scoping, code quality, and turning complex ideas into working prototypes fast.</p>
+                <div class="srv-tags"><span class="srv-tag" data-i18n="srv.t.arch">Architecture</span><span class="srv-tag" data-i18n="srv.t.mvp">MVP scoping</span><span class="srv-tag" data-i18n="srv.t.review">Code review</span></div>
             </div>
         </div>
     </div>
@@ -1572,6 +1748,7 @@
                 </svg>
                 <span data-i18n="contact.btn">Mail me</span>
             </a>
+            <p class="contact-email">andrei.zerodeathgames@gmail.com</p>
         </div>
     </div>
 </section>
@@ -1621,6 +1798,7 @@
     <div class="wrap">
         <div class="footer-row">
             <span class="footer-copy" data-i18n="footer.copy">&copy; 2026 Andrei Achziger &middot; Some rights reserved</span>
+            <span class="footer-note" data-i18n="footer.note">MY APPS COLLECT NO PERSONAL DATA</span>
             <ul class="footer-links">
                 <li><a href="#impressum" id="imp-open" data-i18n="footer.impressum">Impressum</a></li>
                 <li><a href="mailto:andrei.zerodeathgames@gmail.com?subject=Contact from Website" data-i18n="footer.email">Email</a></li>
@@ -1669,7 +1847,7 @@ const T = {
 
         'hero.eyebrow':'T−00 · PROLOGUE',
         'hero.greeting':"Hello, I'm",
-        'hero.sub':'This is the story of a curious mind that learned to code — and started shipping. Mobile apps, games, and tools that are useful, playful, and a little unexpected.',
+        'hero.sub':'I design, build and ship mobile apps, games and tools. Six are live on the App Store and Google Play, the first since 2020.',
         'hero.type1':'I studied how minds work.',
         'hero.type2':'Now I build things people touch.',
         'hero.type3':'This is how it happened.',
@@ -1685,32 +1863,32 @@ const T = {
         'int3.l2':'Now I walk it with others.',
 
         'apps.eyebrow':'T+03 · THE ARTIFACTS', 'apps.heading':'What <span class="accent">escaped</span> the lab',
-        'apps.desc':'Each app began as one of those questions — about play, reflexes, attention, typing, and lately climbing and skating. In order of appearance:',
+        'apps.desc':'Each app began as one of those questions — about play, reflexes, attention, typing, and lately climbing and skating. Hover a device, or press play, to watch it run.',
 
         'mk.label':'KEYBOARD · PRODUCTIVITY',
-        'mk.desc':'The first-ever dynamic keyboard that helps you type cleaner and with fewer errors. Teach MergeKey new words and it learns — making every keystroke smarter over time.',
-        'mk.perk1':'Dynamic, adaptive word learning', 'mk.perk2':'Reduces typos in real time', 'mk.perk3':'Fully customizable personal dictionary',
+        'mk.desc':"The first keyboard that hides the keys you don't need. Impossible letters disappear as you type and the rest grow, so every tap has a bigger target.",
+        'mk.perk1':"31 languages with native prediction", 'mk.perk2':"14 styles, split keyboard and trackpad on iPad", 'mk.perk3':"Never connects to the internet",
         'privacy.mk':'MergeKey has its own, more detailed policy: <a href="mergekey-privacy.html">MergeKey privacy policy</a>.',
 
         'fw.label':'APPLE WATCH · GAME',
-        'fw.desc':'A fishing game built for your wrist. Catch fish, feed them, and play with them — right from your Apple Watch. Many species to discover; the ocean is just a tap away.',
-        'fw.perk1':'Dozens of fish to catch & collect', 'fw.perk2':'Feed and interact with your catch', 'fw.perk3':'Designed natively for Apple Watch',
+        'fw.desc':"A fishing game built for Apple Watch. Cast with your arm, dive with the Digital Crown, and raise every catch in your own aquarium, from tiny fry to full-size elder.",
+        'fw.perk1':"36 fish across 9 fishing areas", 'fw.perk2':"Five mini-games, a walk buddy and widgets", 'fw.perk3':"No ads, no in-app purchases · 24 languages",
 
-        'rd.label':'ARCADE · GAME',
-        'rd.desc':'A fast-paced arcade game where balls drop in out of nowhere. Pure reflex, pure fun — pick it up anytime, anywhere, and see how long you last.',
-        'rd.perk1':'Instant pick-up-and-play action', 'rd.perk2':'Unpredictable ball drops', 'rd.perk3':'Short rounds, endless replay',
+        'rd.label':"REFLEX · MULTIPLAYER",
+        'rd.desc':"A one-thumb reflex game about matching colours. Tap left or right to drop each ball into the bin of the same colour, faster and faster, until your thumb can't keep up.",
+        'rd.perk1':"Every input is one tap, left or right", 'rd.perk2':"Versus like table tennis: best of 3, 5 or 11", 'rd.perk3':"Free forever, no ads · 23 languages",
 
-        'wt.label':'MULTIPLAYER · STRATEGY',
-        'wt.desc':'Create orbits, hold them, and challenge others across the cosmos. Collect all the stars — best played with 2 players via Bluetooth or Game Center.',
-        'wt.perk1':'Real-time multiplayer via Bluetooth', 'wt.perk2':'Game Center integration', 'wt.perk3':'Unique orbit-based mechanics',
+        'wt.label':"ARCADE · MULTIPLAYER",
+        'wt.desc':"A minimalist space arcade about timing and orbits. Swipe to launch your moons; space is round, so whatever leaves one edge comes back from the other. Catch them before they turn hot.",
+        'wt.perk1':"Solo, Bluetooth Versus or online via Game Center", 'wt.perk2':"Every 10 stars adds another moon", 'wt.perk3':"No ads, no tracking · 10 languages",
 
         'ud.label':'ARCADE · PLATFORMER',
         'ud.desc':'A little dino, an endless tower, and a novel take on jump-and-run controls: hold a side to run, swipe to jump, kick off the walls — fast, agile movement from two simple gestures. Every climb is freshly generated, from dark caves up into the open sky.',
         'ud.perk1':'Novel hold-and-swipe movement controls', 'ud.perk2':'Wall-jumps, double jumps & crumbling blocks', 'ud.perk3':'4 dinos · 23 languages · kid-friendly',
 
         'sk.label':'APPLE WATCH · GAME',
-        'sk.desc':'A flip-trick game on your wrist — no riding around, just you and the board. Crouch, flick to pop and spin, tap to catch — land flat for a Perfect. Satisfying flick controls with real skate timing, from ollies to 360 flips.',
-        'sk.perk1':'Pure flip tricks — flick, spin, catch', 'sk.perk2':'Ollies to 360 flips, regular or goofy', 'sk.perk3':'Four modes, haptics, no ads',
+        'sk.desc':"Flip tricks on your wrist. Pull down to crouch, flick to pop and spin the board, tap to catch it, and land flat for a Perfect.",
+        'sk.perk1':"Ollies to 360 flips, regular or goofy", 'sk.perk2':"Four modes and combos up to ×10", 'sk.perk3':"Free, no ads · 23 languages",
 
         'about.eyebrow':'T+01 \u00b7 THE QUESTION', 'about.heading':'It began with a <span class="accent">question</span>',
         'about.desc':'\u201cHow does a mind work?\u201d I chased that question into Cognitive Science \u2014 computer science, AI, psychology, philosophy, neuroscience. I came back with fewer answers and much better obsessions:',
@@ -1722,7 +1900,7 @@ const T = {
 
 
         'tech.eyebrow':'T+02 · THE CRAFT', 'tech.heading':'Tools, collected <span class="accent">one problem at a time</span>',
-        'tech.desc':'Startups, industry floors, long indie nights. Every project left a tool behind — from native iOS to cloud infrastructure.',
+        'tech.desc':'Startups, industry floors, long indie nights. Every project left a tool behind, and each group names where it actually shipped.',
         'tech.lbl.ios':'IOS & APPLE PLATFORMS', 'tech.lbl.cross':'MOBILE & CROSS-PLATFORM',
         'tech.lbl.web':'WEB & BACKEND', 'tech.lbl.cloud':'CLOUD & DEVOPS',
         'tech.lbl.hw':'CONNECTIVITY & HARDWARE', 'tech.lbl.ai':'AI & MACHINE LEARNING',
@@ -1766,6 +1944,22 @@ const T = {
         'imp.legal.heading':'LEGAL NOTICE',
         'imp.legal.p1':'This Impressum is provided in accordance with applicable legal requirements.',
         'imp.legal.p2':'The content on this website and associated applications are provided for general information purposes. Andrei Achziger makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability with respect to the website or the information, products, services, or related graphics contained on the website for any purpose. Any reliance you place on such information is therefore strictly at your own risk.',
+        'hero.sub2':'I also help teams build theirs: native iOS and Apple Watch, AI features, web and cloud. This page is the story of how that happened.',
+        'hero.cta_see':'SEE THE APPS',
+        'stat.apps':'APPS STILL IN ORBIT', 'stat.first':'FIRST LAUNCH', 'stat.plat':'IPHONE · WATCH · ANDROID', 'stat.langs':'LANGUAGES · UP DINO UP',
+        'crew.title':'CREW FILE', 'crew.name':'NAME', 'crew.training':'TRAINING', 'crew.training.v':'Cognitive Science',
+        'crew.flown':'FLOWN WITH', 'crew.flown.v':'Startups · Industry · Indie', 'crew.spec':'SPECIALTY',
+        'crew.launches':'LAUNCHES', 'crew.launches.v':'6 since 2020', 'crew.channel':'CHANNEL', 'crew.channel.v':'● Open',
+        'tp.k.shipped':'SHIPPED IN', 'tp.k.android':'ON GOOGLE PLAY', 'tp.k.built':'BUILT', 'tp.k.run':'RUN', 'tp.k.prod':'IN PRODUCTION',
+        'tp.ios':'All six apps · two on Apple Watch', 'tp.cross':'Up Dino Up · MergeKey', 'tp.web':'Responsive client web apps',
+        'tp.cloud':'Containerised production systems', 'tp.hw':'Weltraum · medical & factory devices',
+        'tp.ai':'Real-time ML pipelines', 'tp.game':'Five games since 2020',
+        'apps.f.all':'ALL', 'apps.f.games':'GAMES', 'apps.f.watch':'WATCH', 'apps.f.tools':'TOOLS', 'apps.f.android':'ANDROID',
+        'app.featured':'FEATURED', 'app.case':'READ THE CASE STUDY →', 'app.case_short':'CASE STUDY →', 'app.play':'Play preview', 'app.swipe':'← SWIPE · IN ORDER OF APPEARANCE →',
+        'app.next.title':'Your app could be the next launch', 'app.next.sub':'I take on client projects from first prototype to store release.',
+        'app.next.cta':'TELL ME ABOUT IT →',
+        'srv.t.arch':'Architecture', 'srv.t.mvp':'MVP scoping', 'srv.t.review':'Code review',
+        'footer.note':'MY APPS COLLECT NO PERSONAL DATA',
     },
 
     de: {
@@ -1774,7 +1968,7 @@ const T = {
 
         'hero.eyebrow':'T−00 · PROLOG',
         'hero.greeting':'Hallo, ich bin',
-        'hero.sub':'Das ist die Geschichte eines neugierigen Kopfes, der programmieren lernte \u2013 und anfing zu ver\u00f6ffentlichen. Mobile Apps, Spiele und Tools: n\u00fctzlich, verspielt und manchmal \u00fcberraschend.',
+        'hero.sub':'Ich entwerfe, baue und ver\u00f6ffentliche mobile Apps, Spiele und Tools. Sechs sind im App Store und bei Google Play erh\u00e4ltlich, die erste seit 2020.',
         'hero.type1':'Ich habe studiert, wie Denken funktioniert.',
         'hero.type2':'Jetzt baue ich Dinge zum Anfassen.',
         'hero.type3':'So ist es dazu gekommen.',
@@ -1790,32 +1984,32 @@ const T = {
         'int3.l2':'Jetzt gehe ich sie mit anderen.',
 
         'apps.eyebrow':'T+03 \u00b7 DIE ARTEFAKTE', 'apps.heading':'Was dem Labor <span class="accent">entkommen</span> ist',
-        'apps.desc':'Jede App begann als eine dieser Fragen \u2013 \u00fcber Spiel, Reflexe, Aufmerksamkeit, Tippen \u2013 und zuletzt Klettern und Skaten. In der Reihenfolge ihres Erscheinens:',
+        'apps.desc':'Jede App begann als eine dieser Fragen \u2013 \u00fcber Spiel, Reflexe, Aufmerksamkeit, Tippen \u2013 und zuletzt Klettern und Skaten. Fahr \u00fcber ein Ger\u00e4t oder dr\u00fcck Play, um sie laufen zu sehen.',
 
         'mk.label':'TASTATUR \u00b7 PRODUKTIVIT\u00c4T',
-        'mk.desc':'Die erste dynamische Tastatur, die dir hilft, sauberer und mit weniger Fehlern zu tippen. Bring MergeKey neue W\u00f6rter bei, und sie lernt dazu \u2013 jeder Tastendruck wird dadurch smarter.',
-        'mk.perk1':'Dynamisches, adaptives Wortlernen', 'mk.perk2':'Reduziert Tippfehler in Echtzeit', 'mk.perk3':'Vollst\u00e4ndig anpassbares pers\u00f6nliches W\u00f6rterbuch',
+        'mk.desc':"Die erste Tastatur, die Tasten ausblendet, die du nicht brauchst. Unmögliche Buchstaben verschwinden beim Tippen und der Rest wächst, sodass jeder Tipp ein größeres Ziel hat.",
+        'mk.perk1':"31 Sprachen mit eigener Vorhersage", 'mk.perk2':"14 Stile, geteilte Tastatur und Trackpad auf dem iPad", 'mk.perk3':"Verbindet sich nie mit dem Internet",
         'privacy.mk':'MergeKey hat eine eigene, ausf\u00fchrlichere Erkl\u00e4rung: <a href="mergekey-privacy.html">Datenschutzerkl\u00e4rung von MergeKey</a>.',
 
         'fw.label':'APPLE WATCH \u00b7 SPIEL',
-        'fw.desc':'Ein Angelspiel f\u00fcr dein Handgelenk. Fange Fische, f\u00fcttere sie und spiele mit ihnen \u2013 direkt von deiner Apple Watch. Viele Arten zu entdecken; der Ozean ist nur einen Tipp entfernt.',
-        'fw.perk1':'Dutzende Fische zum Fangen & Sammeln', 'fw.perk2':'F\u00fcttere und interagiere mit deinem Fang', 'fw.perk3':'Nativ f\u00fcr Apple Watch entwickelt',
+        'fw.desc':"Ein Angelspiel für die Apple Watch. Wirf mit dem Arm aus, tauche mit der Digital Crown ab und zieh jeden Fang in deinem Aquarium groß, vom Jungfisch bis zum Altfisch.",
+        'fw.perk1':"36 Fische in 9 Angelgebieten", 'fw.perk2':"Fünf Minispiele, Lauf-Buddy und Widgets", 'fw.perk3':"Keine Werbung, keine In-App-Käufe · 24 Sprachen",
 
-        'rd.label':'ARCADE \u00b7 SPIEL',
-        'rd.desc':'Ein rasantes Arcade-Spiel, bei dem B\u00e4lle aus dem Nichts auftauchen. Pure Reflexe, purer Spa\u00df \u2013 jederzeit, \u00fcberall spielbar. Mal sehen, wie lange du durchh\u00e4ltst.',
-        'rd.perk1':'Sofort losspielen \u2013 keine Einarbeitung', 'rd.perk2':'Unvorhersehbare Ball-Drops', 'rd.perk3':'Kurze Runden, endloser Wiederspielwert',
+        'rd.label':"REAKTION · MULTIPLAYER",
+        'rd.desc':"Ein Reaktionsspiel für einen Daumen: Farben zuordnen. Tippe links oder rechts, um jeden Ball in den Behälter gleicher Farbe zu schicken, immer schneller, bis dein Daumen nicht mehr mitkommt.",
+        'rd.perk1':"Jede Eingabe ist ein Tippen, links oder rechts", 'rd.perk2':"Versus wie Tischtennis: Best of 3, 5 oder 11", 'rd.perk3':"Für immer kostenlos, ohne Werbung · 23 Sprachen",
 
-        'wt.label':'MULTIPLAYER \u00b7 STRATEGIE',
-        'wt.desc':'Erstelle Umlaufbahnen, halte sie und fordere andere quer durch den Kosmos heraus. Sammle alle Sterne \u2013 am besten mit 2 Spielern per Bluetooth oder Game Center.',
-        'wt.perk1':'Echtzeit-Multiplayer per Bluetooth', 'wt.perk2':'Game Center-Integration', 'wt.perk3':'Einzigartige umlaufbahnbasierte Spielmechanik',
+        'wt.label':"ARCADE · MULTIPLAYER",
+        'wt.desc':"Ein minimalistisches Weltraum-Arcade über Timing und Umlaufbahnen. Wische, um deine Monde zu starten; der Weltraum ist rund, was an einem Rand verschwindet, kommt am anderen zurück. Fang sie, bevor sie heiß werden.",
+        'wt.perk1':"Solo, Versus per Bluetooth oder online über Game Center", 'wt.perk2':"Alle 10 Sterne ein weiterer Mond", 'wt.perk3':"Keine Werbung, kein Tracking · 10 Sprachen",
 
         'ud.label':'ARCADE · PLATTFORMER',
         'ud.desc':'Ein kleiner Dino, ein endloser Turm und eine neuartige Jump-’n’-Run-Steuerung: eine Seite halten zum Rennen, wischen zum Springen, von Wänden abspringen – schnelle, agile Bewegung aus zwei simplen Gesten. Jeder Aufstieg wird neu generiert, von dunklen Höhlen bis in den offenen Himmel.',
         'ud.perk1':'Neuartige Halten-und-Wischen-Steuerung', 'ud.perk2':'Wall-Jumps, Doppelsprünge & bröckelnde Blöcke', 'ud.perk3':'4 Dinos · 23 Sprachen · kinderfreundlich',
 
         'sk.label':'APPLE WATCH · SPIEL',
-        'sk.desc':'Ein Flip-Trick-Spiel am Handgelenk – kein Herumfahren, nur du und das Board. Ducken, flicken für Pop und Spin, tippen zum Fangen – flach landen für ein Perfect. Herrlich direkte Flick-Steuerung mit echtem Skate-Timing, von Ollies bis 360 Flips.',
-        'sk.perk1':'Pure Flip-Tricks – flicken, drehen, fangen', 'sk.perk2':'Von Ollies bis 360 Flips, regular oder goofy', 'sk.perk3':'Vier Modi, Haptik, keine Werbung',
+        'sk.desc':"Flip-Tricks am Handgelenk. Nach unten ziehen zum Ducken, schnippen für Pop und Spin, tippen zum Fangen, und flach landen für ein Perfect.",
+        'sk.perk1':"Von Ollies bis 360 Flips, regular oder goofy", 'sk.perk2':"Vier Modi und Combos bis ×10", 'sk.perk3':"Kostenlos, ohne Werbung · 23 Sprachen",
 
         'about.eyebrow':'T+01 \u00b7 DIE FRAGE', 'about.heading':'Alles begann mit einer <span class="accent">Frage</span>',
         'about.desc':'\u201eWie funktioniert ein Kopf?\u201c Diese Frage f\u00fchrte mich zur Kognitionswissenschaft \u2013 Informatik, KI, Psychologie, Philosophie, Neurowissenschaften. Zur\u00fcck kam ich mit weniger Antworten und deutlich besseren Obsessionen:',
@@ -1827,7 +2021,7 @@ const T = {
 
 
         'tech.eyebrow':'T+02 \u00b7 DAS HANDWERK', 'tech.heading':'Werkzeuge, gesammelt <span class="accent">Problem f\u00fcr Problem</span>',
-        'tech.desc':'Startups, Industriehallen, lange Indie-N\u00e4chte. Jedes Projekt hat ein Werkzeug dagelassen \u2013 von nativem iOS bis zur Cloud-Infrastruktur.',
+        'tech.desc':'Startups, Industriehallen, lange Indie-N\u00e4chte. Jedes Projekt hat ein Werkzeug dagelassen \u2013 und jede Gruppe zeigt, wo es wirklich im Einsatz ist.',
         'tech.lbl.ios':'IOS & APPLE-PLATTFORMEN', 'tech.lbl.cross':'MOBIL & PLATTFORM\u00dcBERGREIFEND',
         'tech.lbl.web':'WEB & BACKEND', 'tech.lbl.cloud':'CLOUD & DEVOPS',
         'tech.lbl.hw':'KONNEKTIVIT\u00c4T & HARDWARE', 'tech.lbl.ai':'KI & MACHINE LEARNING',
@@ -1871,6 +2065,22 @@ const T = {
         'imp.legal.heading':'RECHTLICHER HINWEIS',
         'imp.legal.p1':'Dieses Impressum wird gem\u00e4\u00df den geltenden gesetzlichen Anforderungen bereitgestellt.',
         'imp.legal.p2':'Die Inhalte dieser Website und der zugeh\u00f6rigen Anwendungen dienen ausschlie\u00dflich allgemeinen Informationszwecken. Andrei Achziger \u00fcbernimmt keinerlei Gew\u00e4hr, weder ausdr\u00fccklich noch stillschweigend, hinsichtlich der Vollst\u00e4ndigkeit, Richtigkeit, Zuverl\u00e4ssigkeit, Eignung oder Verf\u00fcgbarkeit der Website oder der darin enthaltenen Informationen, Produkte, Dienstleistungen oder Grafiken f\u00fcr irgendwelche Zwecke. Jegliche Nutzung dieser Informationen erfolgt auf eigenes Risiko.',
+        'hero.sub2':'Ich helfe auch Teams, ihre eigenen zu bauen: natives iOS und Apple Watch, KI-Funktionen, Web und Cloud. Diese Seite erzählt, wie es dazu kam.',
+        'hero.cta_see':'ZU DEN APPS',
+        'stat.apps':'APPS NOCH IM ORBIT', 'stat.first':'ERSTER START', 'stat.plat':'IPHONE · WATCH · ANDROID', 'stat.langs':'SPRACHEN · UP DINO UP',
+        'crew.title':'CREW-AKTE', 'crew.name':'NAME', 'crew.training':'AUSBILDUNG', 'crew.training.v':'Kognitionswissenschaft',
+        'crew.flown':'GEFLOGEN MIT', 'crew.flown.v':'Startups · Industrie · Indie', 'crew.spec':'SPEZIALGEBIET',
+        'crew.launches':'STARTS', 'crew.launches.v':'6 seit 2020', 'crew.channel':'KANAL', 'crew.channel.v':'● Offen',
+        'tp.k.shipped':'IM EINSATZ IN', 'tp.k.android':'AUF GOOGLE PLAY', 'tp.k.built':'GEBAUT', 'tp.k.run':'BETRIEBEN', 'tp.k.prod':'IN PRODUKTION',
+        'tp.ios':'Allen sechs Apps · zwei auf der Apple Watch', 'tp.cross':'Up Dino Up · MergeKey', 'tp.web':'Responsive Web-Apps für Kunden',
+        'tp.cloud':'Containerisierte Produktivsysteme', 'tp.hw':'Weltraum · Medizin- & Fabrikgeräten',
+        'tp.ai':'Echtzeit-ML-Pipelines', 'tp.game':'Fünf Spielen seit 2020',
+        'apps.f.all':'ALLE', 'apps.f.games':'SPIELE', 'apps.f.watch':'WATCH', 'apps.f.tools':'TOOLS', 'apps.f.android':'ANDROID',
+        'app.featured':'IM FOKUS', 'app.case':'ZUR FALLSTUDIE →', 'app.case_short':'FALLSTUDIE →', 'app.play':'Vorschau abspielen', 'app.swipe':'← WISCHEN · IN DER REIHENFOLGE IHRES ERSCHEINENS →',
+        'app.next.title':'Deine App könnte der nächste Start sein', 'app.next.sub':'Ich übernehme Kundenprojekte vom ersten Prototyp bis zum Store-Release.',
+        'app.next.cta':'ERZÄHL MIR DAVON →',
+        'srv.t.arch':'Architektur', 'srv.t.mvp':'MVP-Planung', 'srv.t.review':'Code-Review',
+        'footer.note':'MEINE APPS ERHEBEN KEINE PERSONENBEZOGENEN DATEN',
     }
 };
 
@@ -1883,6 +2093,10 @@ function applyLang(lang) {
     document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
         var v = t[el.dataset.i18nHtml];
         if (v !== undefined) el.innerHTML = v;
+    });
+    document.querySelectorAll('[data-i18n-aria]').forEach(function(el) {
+        var v = t[el.dataset.i18nAria];
+        if (v !== undefined) el.setAttribute('aria-label', el.dataset.ariaSuffix ? v + ': ' + el.dataset.ariaSuffix : v);
     });
     document.documentElement.lang = lang;
     var btn = document.getElementById('lang-btn');
@@ -2024,195 +2238,80 @@ document.querySelectorAll('[data-reveal]').forEach(function(r) { io.observe(r); 
     setTimeout(step, 600);
 })();
 
-// ── App cards: staggered reveal + infinite carousel ───────────────
-var trackWrap = document.querySelector('.app-track-wrap');
-var track = document.querySelector('.app-track');
-if (trackWrap && track) {
-
-    // Clone all cards FOUR times so we have 5 sets total. The track is only
-    // ever translated within [0, setWidth), so the extra sets exist purely to
-    // fill the viewport to the right of the current offset — 5 sets covers any
-    // viewport even when a single set is narrower than the screen.
-    var originalCards = Array.from(track.children);
-    for (var _k = 0; _k < 4; _k++) {
-        originalCards.forEach(function(node) {
-            var clone = node.cloneNode(true);
-            clone.setAttribute('data-clone', 'true');
-            // Re-bind flip handler (cloneNode copies inline onclick, but be safe)
-            clone.onclick = function() { clone.classList.toggle('flipped'); };
-            track.appendChild(clone);
-        });
+// ── Phone menu ───────────────────────────────────────────────────
+(function() {
+    var btn = document.getElementById('menu-btn');
+    var menu = document.getElementById('mobile-menu');
+    if (!btn || !menu) return;
+    function set(open) {
+        menu.hidden = !open;
+        btn.setAttribute('aria-expanded', String(open));
+        hdr.classList.toggle('menu-open', open);
     }
+    btn.addEventListener('click', function() { set(menu.hidden); });
+    menu.addEventListener('click', function(e) { if (e.target.closest('a')) set(false); });
+})();
 
-    // Card videos play only while on screen: the clones make 25 of them, and
-    // decoding all at once would burn battery. Reduced motion keeps the posters.
-    // A rejected play() (e.g. iOS Low Power Mode) simply leaves the poster up.
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        var ioVideo = new IntersectionObserver(function(entries) {
-            entries.forEach(function(e) {
-                var v = e.target;
-                if (e.isIntersecting) {
-                    v.muted = true; // clones don't reliably keep the muted state autoplay needs
-                    var p = v.play();
-                    if (p && p.catch) p.catch(function() {});
-                } else {
-                    v.pause();
-                }
-            });
-        }, { threshold: 0.25 });
-        track.querySelectorAll('video.device-screen').forEach(function(v) { ioVideo.observe(v); });
-    }
-
-    // Staggered reveal for originals; clones fade in with the last original
-    var ioTrack = new IntersectionObserver(function(entries) {
-        entries.forEach(function(e) {
-            if (e.isIntersecting) {
-                var origs = e.target.querySelectorAll('.app-card-wrapper:not([data-clone])');
-                origs.forEach(function(card, i) {
-                    setTimeout(function() { card.classList.add('visible'); }, i * 130);
-                });
-                // Reveal clones once originals have finished staggering in
-                var cloneDelay = origs.length * 130;
-                e.target.querySelectorAll('.app-card-wrapper[data-clone]').forEach(function(card) {
-                    setTimeout(function() { card.classList.add('visible'); }, cloneDelay);
-                });
-                ioTrack.unobserve(e.target);
-            }
-        });
-    }, { threshold: 0.15 });
-    ioTrack.observe(trackWrap);
-
-    // ── Transform-driven infinite loop ───────────────────────────
-    // We DON'T use native scroll. The track is translated by a single
-    // JS-owned `offset` and wrapped with a pure modulo, so there is no
-    // native momentum to fight — the loop seam is always invisible.
-    var setWidth = 0;            // width of one full set of cards (px)
-    var offset = 0;              // current translate (px); kept in [0, setWidth)
-    var SPEED = 0.35;            // auto-scroll px per frame (~21 px/s at 60fps)
-    var FRICTION = 0.95;         // inertia decay per ~16.7ms after a fling
-    var MIN_VEL = 0.003;         // px/ms below which inertia stops
-    var DRAG_THRESHOLD = 6;      // px of movement before a press counts as a drag
-
-    function render() {
-        track.style.transform = 'translate3d(' + (-offset) + 'px,0,0)';
-    }
-    function wrap() {
-        if (setWidth > 0) offset = ((offset % setWidth) + setWidth) % setWidth;
-    }
-    function measureSet() {
-        // Width of one set = offsetLeft of the first clone (layout value,
-        // unaffected by the transform we apply to the track).
-        var firstClone = track.querySelector('.app-card-wrapper[data-clone]');
-        setWidth = firstClone ? firstClone.offsetLeft : Math.floor(track.scrollWidth / 5);
-        wrap();
-        render();
-    }
-    measureSet();
-    window.addEventListener('resize', measureSet);
-    window.addEventListener('load', measureSet);
-    setTimeout(measureSet, 600);
-
-    // ── Shared input / motion state ──────────────────────────────
+// ── App grid: filters + previews ──────────────────────────────────
+(function() {
+    var grid = document.getElementById('app-grid');
+    if (!grid) return;
+    var cards = Array.from(grid.querySelectorAll('.app-card[data-cats]'));
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var canHover = window.matchMedia('(hover: hover)').matches;
-    var isHovering = false;
-    var pageVisible = !document.hidden;
-    var lastUserInput = 0;
-    var USER_COOLDOWN = 2500;    // ms of idle before auto-scroll resumes
-    var velocity = 0;            // offset velocity (px/ms); drives inertia
-    var dragging = false, moved = false;
-    var startX = 0, startOffset = 0, lastX = 0, lastT = 0;
 
-    function markInput() { lastUserInput = Date.now(); velocity = 0; }
-
-    if (canHover) {
-        trackWrap.addEventListener('mouseenter', function() { isHovering = true; });
-        trackWrap.addEventListener('mouseleave', function() { isHovering = false; });
+    // A rejected play() (e.g. iOS Low Power Mode) simply leaves the poster up.
+    function play(card) {
+        var v = card.querySelector('video');
+        v.muted = true;
+        var p = v.play();
+        if (p && p.catch) p.catch(function() {});
+        card.querySelector('.app-play').setAttribute('aria-pressed', 'true');
     }
-    document.addEventListener('visibilitychange', function() { pageVisible = !document.hidden; });
-    trackWrap.addEventListener('dragstart', function(e) { e.preventDefault(); });
+    function pause(card) {
+        card.querySelector('video').pause();
+        card.querySelector('.app-play').setAttribute('aria-pressed', 'false');
+    }
 
-    // ── Pointer drag (mouse + touch, unified) ────────────────────
-    // touch-action:pan-y (CSS) lets vertical page-scroll through while
-    // horizontal gestures arrive here as pointermove events.
-    trackWrap.addEventListener('pointerdown', function(e) {
-        dragging = true; moved = false;
-        startX = lastX = e.clientX;
-        startOffset = offset;
-        lastT = e.timeStamp || Date.now();
-        markInput();
-        // NOTE: do NOT capture here — capturing on press retargets the
-        // follow-up click to this element and bypasses the card's inline
-        // onclick (the flip). Capture only once a real drag begins (below).
-    });
-    trackWrap.addEventListener('pointermove', function(e) {
-        if (!dragging) return;
-        var dx = e.clientX - startX;
-        if (Math.abs(dx) > DRAG_THRESHOLD) {
-            if (!moved) { try { trackWrap.setPointerCapture(e.pointerId); } catch (_) {} }
-            moved = true;
+    cards.forEach(function(card) {
+        var btn = card.querySelector('.app-play');
+        btn.addEventListener('click', function() {
+            if (btn.getAttribute('aria-pressed') === 'true') { card.dataset.pinned = ''; pause(card); }
+            else { card.dataset.pinned = '1'; play(card); }
+        });
+        if (canHover && !reduceMotion) {
+            card.addEventListener('mouseenter', function() { play(card); });
+            card.addEventListener('mouseleave', function() { if (!card.dataset.pinned) pause(card); });
         }
-        offset = startOffset - dx;
-        wrap(); render();
-        var now = e.timeStamp || Date.now();
-        var dt = now - lastT;
-        if (dt > 0) velocity = -(e.clientX - lastX) / dt;   // offset vel = -finger vel
-        lastX = e.clientX; lastT = now;
-        lastUserInput = Date.now();
     });
-    function endDrag(e) {
-        if (!dragging) return;
-        dragging = false;
-        try { trackWrap.releasePointerCapture(e.pointerId); } catch (_) {}
-        lastUserInput = Date.now();   // inertia plays out; cooldown counts from release
+
+    // Touch screens have no hover: play whichever card is centred in the row.
+    if (!canHover && !reduceMotion) {
+        var ioPlay = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) {
+                if (e.isIntersecting) play(e.target);
+                else if (!e.target.dataset.pinned) pause(e.target);
+            });
+        }, { threshold: 0.7 });
+        cards.forEach(function(c) { ioPlay.observe(c); });
     }
-    trackWrap.addEventListener('pointerup', endDrag);
-    trackWrap.addEventListener('pointercancel', endDrag);
 
-    // Swallow the flip-click that fires at the end of a drag
-    trackWrap.addEventListener('click', function(e) {
-        if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; }
-    }, true);
-
-    // ── Wheel / trackpad: horizontal intent only, never hijack page ──
-    trackWrap.addEventListener('wheel', function(e) {
-        var dx = (Math.abs(e.deltaX) > Math.abs(e.deltaY)) ? e.deltaX
-               : (e.shiftKey ? e.deltaY : 0);
-        if (!dx) return;
-        e.preventDefault();
-        offset += dx;
-        wrap(); render();
-        markInput();
-    }, { passive: false });
-
-    // ── Unified RAF loop: inertia first, else gentle auto-scroll ──
-    var lastFrame = 0;
-    function frame(now) {
-        requestAnimationFrame(frame);
-        if (!setWidth || !pageVisible) { lastFrame = now; return; }
-        var dt = lastFrame ? (now - lastFrame) : 16.7;
-        lastFrame = now;
-
-        // Fling inertia (decoupled from native momentum entirely)
-        if (!dragging && Math.abs(velocity) > MIN_VEL) {
-            offset += velocity * dt;
-            velocity *= Math.pow(FRICTION, dt / 16.7);
-            if (Math.abs(velocity) <= MIN_VEL) velocity = 0;
-            wrap(); render();
-            return;
-        }
-
-        // Gentle auto-scroll when idle
-        if (reduceMotion || dragging || isHovering) return;
-        if (Date.now() - lastUserInput < USER_COOLDOWN) return;
-        if (track.querySelector('.app-card-wrapper.flipped')) return;  // freeze to read
-
-        offset += SPEED * (dt / 16.7);
-        wrap(); render();
-    }
-    requestAnimationFrame(frame);
-}
-
+    document.querySelectorAll('.app-filter').forEach(function(f) {
+        f.addEventListener('click', function() {
+            var cat = f.dataset.filter;
+            document.querySelectorAll('.app-filter').forEach(function(o) {
+                o.classList.toggle('active', o === f);
+                o.setAttribute('aria-pressed', String(o === f));
+            });
+            cards.forEach(function(c) {
+                var show = cat === 'all' || c.dataset.cats.split(' ').indexOf(cat) !== -1;
+                c.hidden = !show;
+                if (!show) { c.dataset.pinned = ''; pause(c); }
+            });
+            grid.scrollLeft = 0;
+        });
+    });
+})();
 
 // ── Pixel fluid overlay on cards ─────────────────────────────────
 (function() {
@@ -2283,8 +2382,7 @@ if (trackWrap && track) {
             active = false;
         }
 
-        // For app-card-wrapper, hover is on the wrapper but canvas is in front/back
-        var hoverTarget = card.closest('.app-card-wrapper') || card;
+        var hoverTarget = card;
         hoverTarget.addEventListener('mouseenter', start);
         hoverTarget.addEventListener('mouseleave', stop);
         // Touch support
@@ -2295,7 +2393,7 @@ if (trackWrap && track) {
     }
 
     // Attach to all card faces
-    document.querySelectorAll('.app-card-front, .app-card-back, .tech-card, .srv, .contact-box, .imp-modal').forEach(initFluid);
+    document.querySelectorAll('.app-card, .stat, .tech-card, .srv, .contact-box, .imp-modal').forEach(initFluid);
 })();
 
 // ── Impressum modal ──────────────────────────────────────────────
