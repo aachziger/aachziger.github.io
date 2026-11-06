@@ -8,7 +8,7 @@
         en: {
             'cs.back':'← ALL APPS',
             'cs.f.launched':'LAUNCHED', 'cs.f.platform':'PLATFORM', 'cs.f.platforms':'PLATFORMS',
-            'cs.f.langs':'LANGUAGES', 'cs.f.price':'PRICE', 'cs.f.version':'LATEST VERSION',
+            'cs.f.langs':'LANGUAGES', 'cs.f.price':'PRICE', 'cs.f.version':'LATEST VERSION', 'cs.f.first':'FIRST RELEASED',
             'cs.free':'Free',
             'cs.fig':'FIG. 1 · GAMEPLAY',
             'cs.shots.eyebrow':'02 · SCREENSHOTS', 'cs.shots.title':'From the <span class="accent">App Store</span>',
@@ -19,7 +19,7 @@
         de: {
             'cs.back':'← ALLE APPS',
             'cs.f.launched':'ERSCHIENEN', 'cs.f.platform':'PLATTFORM', 'cs.f.platforms':'PLATTFORMEN',
-            'cs.f.langs':'SPRACHEN', 'cs.f.price':'PREIS', 'cs.f.version':'AKTUELLE VERSION',
+            'cs.f.langs':'SPRACHEN', 'cs.f.price':'PREIS', 'cs.f.version':'AKTUELLE VERSION', 'cs.f.first':'ERSTMALS ERSCHIENEN',
             'cs.free':'Kostenlos',
             'cs.fig':'ABB. 1 · GAMEPLAY',
             'cs.shots.eyebrow':'02 · SCREENSHOTS', 'cs.shots.title':'Aus dem <span class="accent">App Store</span>',
